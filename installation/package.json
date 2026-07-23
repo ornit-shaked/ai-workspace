@@ -1,0 +1,25 @@
+{
+  "name": "@oshaked/ai-workspace",
+  "version": "1.0.0",
+  "description": "AI workspace plugin installer — scaffold project structure with one command",
+  "bin": {
+    "ai-workspace": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "plugins/"
+  ],
+  "keywords": [
+    "ai",
+    "workspace",
+    "claude",
+    "windsurf",
+    "project-brain",
+    "scaffold"
+  ],
+  "author": "oshaked",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}
