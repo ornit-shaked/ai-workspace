@@ -4,9 +4,25 @@ npm package `@oshaked/ai-workspace` — one command to install plugins into any 
 
 ## Usage
 
+### From GitHub (no npm publish needed)
+
+```bash
+npx github:ornit-shaked/ai-workspace install project-brain ~/code/my-project
+npx github:ornit-shaked/ai-workspace install project-brain ~/code/my-project --agent windsurf
+```
+
+### From npm (after publishing)
+
 ```bash
 npx @oshaked/ai-workspace install project-brain ~/code/my-project
 npx @oshaked/ai-workspace install project-brain ~/code/my-project --agent windsurf
+```
+
+### Local development
+
+```bash
+node installation/index.js install project-brain ~/code/my-project
+node installation/index.js install project-brain ~/code/my-project --agent windsurf
 ```
 
 ## Structure
