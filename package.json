@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "AI workspace plugin installer — scaffold project structure with one command",
   "bin": {
-    "ai-workspace": "./installation/index.js"
+    "ai-workspace": "./index.js"
   },
   "files": [
-    "installation/"
+    "index.js",
+    "plugins/"
   ],
   "keywords": [
     "ai",

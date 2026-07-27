@@ -12,6 +12,10 @@ Read this file before every task. Apply everything in it.
 
 How I like AI to respond. Populated over time by corrections during sessions.
 
+- **Extract data before deletion**: Always extract and preserve relevant information from files before deleting them. User explicitly requested this approach.
+- **Avoid duplication in documentation**: CLAUDE.md is the single source of truth; AGENTS.md should be a minimal pointer. Don't duplicate content between them.
+- **Organize by plugin**: Documentation should be organized by plugin (docs/plugins/<plugin-name>/), not in a flat structure.
+
 ---
 
 ## Code style preferences

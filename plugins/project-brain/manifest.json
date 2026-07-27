@@ -1,0 +1,40 @@
+{
+  "name": "project-brain",
+  "version": "1.0.0",
+  "description": "Project memory, tasks, plans, and history with global AI config",
+  "global_files": {
+    "CLAUDE.md": "global/CLAUDE.template.md",
+    "AGENTS.md": "global/AGENTS.template.md",
+    "about-me.md": "global/about-me.template.md",
+    "settings.json": "global/settings.template.json"
+  },
+  "global_dirs": {
+    "commands": "global/commands",
+    "agents": "global/agents",
+    "skills": "global/skills"
+  },
+  "project_files": {
+    "CLAUDE.md": "project/CLAUDE.template.md",
+    "AGENTS.md": "project/AGENTS.template.md"
+  },
+  "brain_dir": ".project-brain",
+  "brain_files": {
+    "tasks/todo.md": "project/template/todo.md",
+    "history.md": "project/template/history.md",
+    "prd.md": "project/template/prd.md",
+    "architecture.md": "project/template/architecture.md"
+  },
+  "brain_dirs": [
+    "plans"
+  ],
+  "agents": {
+    "claude": [
+      ".claude/commands",
+      ".claude/skills",
+      ".claude/agents"
+    ],
+    "windsurf": [
+      ".devin/workflows"
+    ]
+  }
+}

@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const PLUGINS_DIR = path.join(__dirname, "plugins");
 
@@ -45,9 +46,25 @@ function ensureDir(dirPath) {
   return false;
 }
 
+function getGlobalConfigPath(agent) {
+  const home = os.homedir();
+  switch (agent) {
+    case "claude":
+      return path.join(home, ".claude");
+    case "windsurf":
+      const windsurfPath = path.join(home, ".codeium", "windsurf");
+      if (fs.existsSync(windsurfPath)) {
+        return windsurfPath;
+      }
+      return path.join(home, ".devin");
+    default:
+      throw new Error(`Unknown agent: ${agent}`);
+  }
+}
+
 function copyTemplate(templatePath, targetPath, projectName) {
   if (fs.existsSync(targetPath)) {
-    console.log(`  skip  ${path.relative(process.cwd(), targetPath)} (exists)`);
+    console.log(`  skip    ${path.relative(process.cwd(), targetPath)} (exists)`);
     return false;
   }
 
@@ -59,6 +76,40 @@ function copyTemplate(templatePath, targetPath, projectName) {
   fs.writeFileSync(targetPath, content, "utf-8");
   console.log(`  create  ${path.relative(process.cwd(), targetPath)}`);
   return true;
+}
+
+function copyDirectory(sourceDir, targetDir) {
+  if (!fs.existsSync(sourceDir)) {
+    return { created: 0, skipped: 0 };
+  }
+
+  let created = 0;
+  let skipped = 0;
+
+  ensureDir(targetDir);
+
+  const items = fs.readdirSync(sourceDir, { withFileTypes: true });
+  for (const item of items) {
+    const sourcePath = path.join(sourceDir, item.name);
+    const targetPath = path.join(targetDir, item.name);
+
+    if (item.isDirectory()) {
+      const result = copyDirectory(sourcePath, targetPath);
+      created += result.created;
+      skipped += result.skipped;
+    } else {
+      if (fs.existsSync(targetPath)) {
+        console.log(`  skip    ${targetPath} (exists)`);
+        skipped++;
+      } else {
+        fs.copyFileSync(sourcePath, targetPath);
+        console.log(`  create  ${targetPath}`);
+        created++;
+      }
+    }
+  }
+
+  return { created, skipped };
 }
 
 function install(pluginName, targetDir, agent) {
@@ -76,25 +127,74 @@ function install(pluginName, targetDir, agent) {
   console.log(`Project: ${projectName}`);
   console.log(`Agent: ${agent}\n`);
 
-  let created = 0;
-  let skipped = 0;
+  let globalCreated = 0;
+  let globalSkipped = 0;
+  let projectCreated = 0;
+  let projectSkipped = 0;
 
-  const track = (result) => {
-    if (result) created++;
-    else skipped++;
+  const track = (result, isGlobal) => {
+    if (isGlobal) {
+      if (result) globalCreated++;
+      else globalSkipped++;
+    } else {
+      if (result) projectCreated++;
+      else projectSkipped++;
+    }
   };
 
-  // Root-level files
-  if (manifest.root_files) {
+  // === GLOBAL CONFIG DEPLOYMENT ===
+  if (manifest.global_files || manifest.global_dirs) {
+    const globalConfigPath = getGlobalConfigPath(agent);
+    console.log(`--- Global Config (${globalConfigPath}) ---`);
+
+    // Global files
+    if (manifest.global_files) {
+      for (const [targetFile, templateFile] of Object.entries(
+        manifest.global_files
+      )) {
+        track(
+          copyTemplate(
+            path.join(pluginDir, templateFile),
+            path.join(globalConfigPath, targetFile),
+            projectName
+          ),
+          true
+        );
+      }
+    }
+
+    // Global directories
+    if (manifest.global_dirs) {
+      for (const [targetDir, sourceDir] of Object.entries(
+        manifest.global_dirs
+      )) {
+        const result = copyDirectory(
+          path.join(pluginDir, sourceDir),
+          path.join(globalConfigPath, targetDir)
+        );
+        globalCreated += result.created;
+        globalSkipped += result.skipped;
+      }
+    }
+
+    console.log("");
+  }
+
+  // === PROJECT STRUCTURE ===
+  console.log(`--- Project Structure (${projectDir}) ---`);
+
+  // Project root files
+  if (manifest.project_files) {
     for (const [targetFile, templateFile] of Object.entries(
-      manifest.root_files
+      manifest.project_files
     )) {
       track(
         copyTemplate(
           path.join(pluginDir, templateFile),
           path.join(projectDir, targetFile),
           projectName
-        )
+        ),
+        false
       );
     }
   }
@@ -110,7 +210,8 @@ function install(pluginName, targetDir, agent) {
           path.join(pluginDir, templateFile),
           path.join(projectDir, brainDir, targetFile),
           projectName
-        )
+        ),
+        false
       );
     }
   }
@@ -122,10 +223,10 @@ function install(pluginName, targetDir, agent) {
       const dirPath = path.join(projectDir, brainDir, dir);
       if (ensureDir(dirPath)) {
         console.log(`  create  ${path.relative(process.cwd(), dirPath)}/`);
-        created++;
+        projectCreated++;
       } else {
-        console.log(`  skip  ${path.relative(process.cwd(), dirPath)}/ (exists)`);
-        skipped++;
+        console.log(`  skip    ${path.relative(process.cwd(), dirPath)}/ (exists)`);
+        projectSkipped++;
       }
     }
   }
@@ -136,17 +237,17 @@ function install(pluginName, targetDir, agent) {
       const dirPath = path.join(projectDir, dir);
       if (ensureDir(dirPath)) {
         console.log(`  create  ${path.relative(process.cwd(), dirPath)}/`);
-        created++;
+        projectCreated++;
       } else {
-        console.log(`  skip  ${path.relative(process.cwd(), dirPath)}/ (exists)`);
-        skipped++;
+        console.log(`  skip    ${path.relative(process.cwd(), dirPath)}/ (exists)`);
+        projectSkipped++;
       }
     }
   }
 
   console.log(`\n--- Summary ---`);
-  console.log(`  Created: ${created}`);
-  console.log(`  Skipped: ${skipped} (already existed)`);
+  console.log(`  Global:  ${globalCreated} created, ${globalSkipped} skipped`);
+  console.log(`  Project: ${projectCreated} created, ${projectSkipped} skipped`);
   console.log(
     `\n${manifest.name} installed. Edit CLAUDE.md to add your project context.`
   );
