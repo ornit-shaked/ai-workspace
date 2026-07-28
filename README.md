@@ -82,9 +82,10 @@ This prevents agents from reading template files when working on the ai-workspac
 
 ## Documentation
 
-- **`TODO.md`** - Current implementation status and planned features
-- **`docs/plugins/project-brain/`** - Complete project-brain plugin documentation
-  - `PLUGIN.md` - Goal, files, sources, how it works
-  - `ROADMAP.md` - Phase 2 plans
-  - `research/` - Historical research and sources
-- **`docs/plugins/flutter-plugin/`** - Flutter plugin documentation (planned)
+This project uses the project-brain plugin to manage tasks and history.
+you can find it under **`docs/plugins/project-brain/`** folder
+
+in addition to the plugin documentation, here are the key files:
+- `PLUGIN.md` - Goal, files, sources, how it works
+- `ROADMAP.md` - Phase 2 plans
+- `research/` - Historical research and sources

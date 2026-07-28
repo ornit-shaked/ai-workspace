@@ -9,7 +9,7 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-07-28 | ai-workspace | Completed Lesson Capture spec (§4.1-4.8) and implementation plan - inbox/lessons.md template, manifest update, /wrap command redesign | docs/plugins/project-brain/spec.md, .project-brain/plans/2026-07-28-lesson-capture.md
 2026-07-27 | ai-workspace | Documentation reorganization - restructured docs by plugin, created TODO.md, merged system-inventory + brain-plugin-contract into PLUGIN.md, moved research folders, deleted obsolete files
-2026-07-22 | my-agent-workspace | Session start test - created hello.txt file
 
 <!-- Sessions will be appended here by /wrap -->

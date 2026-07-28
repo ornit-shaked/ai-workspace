@@ -22,6 +22,15 @@ This is an **installer/scaffolding tool**, not a runtime application.
 - `plugins/project-brain/` - Plugin definition with global and project templates
 - `shared/` - Shared resources (MEMORY, STANDARDS, etc.)
 
+### Design Principle: Agent Discoverability
+
+**Design memory, skills, and project-brain structure so agents can search it naturally using filesystem tools.**
+
+- Optimize for discoverability, not for manual reading
+- Clear folder names and file paths that agents can grep/find
+- Structured formats that agents can parse and search
+- Predictable locations for common information
+
 ## How to Work on This Project
 
 ### ⚠️ CRITICAL: Two Separate Areas
@@ -80,15 +89,19 @@ node index.js install project-brain ~/code/test-project
 6. **Test**: `node index.js install <plugin-name> ~/code/test-project`
 
 ## Key Files
+
+## Documentation
+
+This project uses the project-brain plugin to manage tasks and history.
+you can find it under **`docs/plugins/project-brain/`** folder
+
+in addition to the plugin documentation, here are the key files:
+- `PLUGIN.md` - Goal, files, sources, how it works
+- `ROADMAP.md` - Phase 2 plans
+- `research/` - Historical research and sources
 - `index.js` - CLI entry point, handles installation logic
 - `plugins/project-brain/manifest.json` - Declares what files/dirs to create
 - `plugins/project-brain/global/` - Templates for global AI config
 - `plugins/project-brain/project/` - Templates for project structure
 - `shared/MEMORY/` - Cross-session memory system
 - `shared/STANDARDS/` - Coding standards
-
-## Documentation
-- `TODO.md` - Implementation status and roadmap
-- `docs/plugins/project-brain/PLUGIN.md` - Complete plugin documentation
-- `docs/plugins/project-brain/ROADMAP.md` - Phase 2 plans
-- `docs/plugins/project-brain/research/` - Research and sources

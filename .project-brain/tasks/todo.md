@@ -1,6 +1,8 @@
-# AI Workspace - TODO
+# TODO — ai-workspace
 
 Track what's implemented and what's planned across all plugins.
+
+<!-- Active tasks. Check off when done. /wrap updates this. -->
 
 ---
 
@@ -25,6 +27,8 @@ Track what's implemented and what's planned across all plugins.
 - [x] PRD and architecture templates
 - [x] Tool-specific config (`--agent claude|windsurf`)
 - [x] Idempotent install (never overwrites existing files)
+- [x] Lesson Capture - implemented (inbox template, manifest, /wrap command with provenance metadata)
+- [ ] Lesson Analyzer - spec in ai-workspace/docs/plugins/project-brain/spec.md
 
 ---
 

@@ -94,17 +94,16 @@ Where each idea came from and how we implemented it.
 | Concept | Source | Implementation |
 |---------|--------|----------------|
 | Hard rules in CLAUDE.md | [Liam Ottley](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-basic/CLAUDE.md) + [Boris Cherny](https://github.com/0xquinto/bcherny-claude) + [Anthropic Docs](https://docs.anthropic.com/en/docs/claude-code) + [Karpathy](https://github.com/multica-ai/andrej-karpathy-skills/blob/main/CLAUDE.md) | `plugins/project-brain/global/CLAUDE.template.md` → `~/.claude/CLAUDE.md` |
-| AGENTS.md pointer | Adapted from workspace AGENTS.md | `plugins/project-brain/global/AGENTS.template.md` → `~/.claude/AGENTS.md` or `~/.codeium/windsurf/AGENTS.md` |
 | about-me.md (identity) | [Liam's ABOUT ME/](https://github.com/liamodev/Claude-Cowork-Folder-Templates/tree/main/cowork-folder-template-basic/ABOUT%20ME) | `plugins/project-brain/global/about-me.template.md` → `~/.claude/about-me.md` |
 | settings.json (permissions/hooks) | [Boris's settings.json](https://github.com/0xquinto/bcherny-claude/blob/main/settings.json) | `plugins/project-brain/global/settings.template.json` → `~/.claude/settings.json` |
 | `/prime` command (session start) | [Liam's CLAUDE.md session start](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-advanced/CLAUDE.md) | `plugins/project-brain/global/commands/prime.md` → `~/.claude/commands/prime.md` |
 | `/wrap` command (session end) | [Liam's wrap.md](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-advanced/SKILLS/wrap.md) | `plugins/project-brain/global/commands/wrap.md` → `~/.claude/commands/wrap.md` |
+| history.md (session index) | [Liam's HISTORY.md](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-advanced/HISTORY.md) | `.project-brain/history.md` (cross-project) |
 
 ### Shared Resources
 
 | Concept | Source | Implementation |
 |---------|--------|----------------|
-| HISTORY.md (session index) | [Liam's HISTORY.md](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-advanced/HISTORY.md) | `shared/MEMORY/HISTORY.md` (cross-project) |
 | INSTRUCTIONS.md (soft preferences) | [Liam's INSTRUCTIONS.md](https://github.com/liamodev/Claude-Cowork-Folder-Templates/blob/main/cowork-folder-template-basic/INSTRUCTIONS.md) + [Boris](https://github.com/0xquinto/bcherny-claude) | `shared/MEMORY/INSTRUCTIONS.md` |
 | Templates (PRD, plan, session report) | Written by us | `shared/TEMPLATES/*.md` |
 | Coding standards | [Karpathy §2-3](https://github.com/multica-ai/andrej-karpathy-skills/blob/main/CLAUDE.md) | `shared/STANDARDS/coding-standards.md` |

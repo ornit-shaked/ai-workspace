@@ -25,7 +25,8 @@
     "architecture.md": "project/template/architecture.md"
   },
   "brain_dirs": [
-    "plans"
+    "plans",
+    "inbox"
   ],
   "agents": {
     "claude": [
