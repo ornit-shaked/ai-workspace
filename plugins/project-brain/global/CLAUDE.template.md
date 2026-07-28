@@ -17,7 +17,7 @@ When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop
 
 - Always plan before writing code
 - Never skip tests
-- Update ~/ai-workspace/shared/MEMORY/INSTRUCTIONS.md when corrected
+- Update `.project-brain/memory/instructions.md` when corrected
 - Prefer small, focused commits
 - Context beats prompting — the file system carries the context
 - Never give the same feedback twice — capture corrections into memory

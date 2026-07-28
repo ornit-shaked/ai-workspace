@@ -170,9 +170,10 @@ function install(pluginName, targetDir, agent) {
 
     // Global directories
     if (manifest.global_dirs) {
-      for (const [targetDir, sourceDir] of Object.entries(
-        manifest.global_dirs
-      )) {
+      // Check if global_dirs is agent-specific (nested object) or legacy (flat object)
+      const dirsToProcess = manifest.global_dirs[agent] || manifest.global_dirs;
+      
+      for (const [targetDir, sourceDir] of Object.entries(dirsToProcess)) {
         const result = copyDirectory(
           path.join(pluginDir, sourceDir),
           path.join(globalConfigPath, targetDir)

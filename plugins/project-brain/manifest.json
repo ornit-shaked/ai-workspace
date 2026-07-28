@@ -9,9 +9,16 @@
     "settings.json": "global/settings.template.json"
   },
   "global_dirs": {
-    "commands": "global/commands",
-    "agents": "global/agents",
-    "skills": "global/skills"
+    "claude": {
+      "commands": "global/commands",
+      "agents": "global/agents",
+      "skills": "global/skills"
+    },
+    "windsurf": {
+      "global_workflows": "global/commands",
+      "agents": "global/agents",
+      "skills": "global/skills"
+    }
   },
   "project_files": {
     "CLAUDE.md": "project/CLAUDE.template.md",
@@ -20,7 +27,8 @@
   "brain_dir": ".project-brain",
   "brain_files": {
     "tasks/todo.md": "project/template/todo.md",
-    "history.md": "project/template/history.md",
+    "memory/history.md": "project/template/memory/history.md",
+    "memory/instructions.md": "project/template/memory/instructions.md",
     "prd.md": "project/template/prd.md",
     "architecture.md": "project/template/architecture.md",
     "inbox/lessons.md": "project/template/inbox/lessons.md"
