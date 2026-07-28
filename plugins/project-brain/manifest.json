@@ -22,11 +22,11 @@
     "tasks/todo.md": "project/template/todo.md",
     "history.md": "project/template/history.md",
     "prd.md": "project/template/prd.md",
-    "architecture.md": "project/template/architecture.md"
+    "architecture.md": "project/template/architecture.md",
+    "inbox/lessons.md": "project/template/inbox/lessons.md"
   },
   "brain_dirs": [
-    "plans",
-    "inbox"
+    "plans"
   ],
   "agents": {
     "claude": [

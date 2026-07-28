@@ -98,6 +98,11 @@ function copyDirectory(sourceDir, targetDir) {
       created += result.created;
       skipped += result.skipped;
     } else {
+      // Skip .gitkeep files silently (they're just placeholders for empty dirs)
+      if (item.name === '.gitkeep') {
+        continue;
+      }
+      
       if (fs.existsSync(targetPath)) {
         console.log(`  skip    ${targetPath} (exists)`);
         skipped++;
