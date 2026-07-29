@@ -28,8 +28,13 @@ Track what's implemented and what's planned across all plugins.
 - [x] Tool-specific config (`--agent claude|windsurf`)
 - [x] Idempotent install (never overwrites existing files)
 - [x] Lesson Capture - implemented (inbox template, manifest, /wrap command with provenance metadata)
-- [ ] Lesson Analyzer - spec in ai-workspace/docs/plugins/project-brain/spec.md, section 5, what defined in phase 2
-- [ ] Lesson Analyzer - spec in ai-workspace/docs/plugins/project-brain/spec.md, section 5, what defined in phase 3
+- [x] Dream Skill (Phase 2) - implemented in plugins/project-brain/global/skills/dream.md
+- [ ] Dream Skill (Phase 3) - scheduled runs, file-based approval queue, confidence-based auto-apply
+Implement this plan: .project-brain/plans/2026-07-29-dream-skill.md
+Read the design spec first for full context: docs/plugins/project-brain/
+2026-07-29-lesson-analyzer-design.md
+Then execute the plan task by task.
+
 
 ---
 

@@ -1,5 +1,5 @@
 # CLAUDE.md — Hard Rules
-Non-negotiable rules. Soft preferences live in INSTRUCTIONS.md.
+Non-negotiable rules. Soft preferences live in `.project-brain/memory/instructions.md`.
 
 ---
 
@@ -17,7 +17,6 @@ When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop
 
 - Always plan before writing code
 - Never skip tests
-- Update `.project-brain/memory/instructions.md` when corrected
 - Prefer small, focused commits
 - Context beats prompting — the file system carries the context
 - Never give the same feedback twice — capture corrections into memory

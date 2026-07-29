@@ -6,6 +6,7 @@
     "CLAUDE.md": "global/CLAUDE.template.md",
     "AGENTS.md": "global/AGENTS.template.md",
     "about-me.md": "global/about-me.template.md",
+    "instructions.md": "global/instructions.template.md",
     "settings.json": "global/settings.template.json"
   },
   "global_dirs": {
@@ -26,7 +27,8 @@
   },
   "brain_dir": ".project-brain",
   "brain_files": {
-    "tasks/todo.md": "project/template/todo.md",
+    "tasks/todo.md": "project/template/tasks/todo.md",
+    "tasks/backlog.md": "project/template/tasks/backlog.md",
     "memory/history.md": "project/template/memory/history.md",
     "memory/instructions.md": "project/template/memory/instructions.md",
     "prd.md": "project/template/prd.md",
@@ -34,7 +36,8 @@
     "inbox/lessons.md": "project/template/inbox/lessons.md"
   },
   "brain_dirs": [
-    "plans"
+    "plans",
+    "inbox/archive"
   ],
   "agents": {
     "claude": [
