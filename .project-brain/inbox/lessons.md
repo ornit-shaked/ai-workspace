@@ -21,8 +21,10 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ---
 
-## 2026-07-29 — dream-impl — cascade
+## 2026-07-29 — workflow-violations — cascade
 
+- [ ] correction | /prime and /wrap not auto-running - CLAUDE.md documents rules but doesn't execute them; need IDE hooks or agent initialization to trigger commands
+- [ ] correction | Lessons written directly to instructions.md instead of inbox - violates inbox → dream → instructions workflow; always write to inbox first
 - [ ] preference | Always use writing-skills methodology when creating skills (YAML frontmatter, SKILL.md structure, When to Use section, token-efficient)
 
 <!-- Lessons will be appended here by /wrap -->

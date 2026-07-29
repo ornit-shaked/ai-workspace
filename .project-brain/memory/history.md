@@ -9,6 +9,7 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-07-29 | ai-workspace | Added PR/Issue tracking (pr.md template, simplified status values), identified workflow violations (/prime and /wrap not auto-running, lessons written to instructions.md instead of inbox), added corrections to inbox for dream skill processing | plugins/project-brain/global/CLAUDE.template.md, plugins/project-brain/project/template/tasks/pr.md, .project-brain/inbox/lessons.md
 2026-07-29 | ai-workspace | Restructured dream skill with writing-skills best practices - YAML frontmatter, SDO optimization, token-efficient content, proper directory structure (skills/dream/SKILL.md), added lesson to inbox workflow | plugins/project-brain/global/skills/dream/SKILL.md, .project-brain/inbox/lessons.md
 2026-07-29 | ai-workspace | Implemented dream skill (Phase 2) - lesson analyzer with routing matrix, backlog template, archive structure, moved todo.md to tasks/ subdirectory | plugins/project-brain/global/skills/dream.md, project/template/tasks/backlog.md, manifest.json
 2026-07-28 | ai-workspace | Fixed agent-specific directory bug - commands now copy to global_workflows/ for Windsurf, moved history/instructions to .project-brain/memory/, updated /prime paths | manifest.json, index.js, CLAUDE.template.md, prime.md, memory/ structure
