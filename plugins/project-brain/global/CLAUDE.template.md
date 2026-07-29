@@ -1,5 +1,5 @@
 # CLAUDE.md — Hard Rules
-Non-negotiable rules. Soft preferences live in `.project-brain/memory/instructions.md`.
+Non-negotiable rules. Soft preferences live in `.instructions.md` in this folder.
 
 ---
 
@@ -10,6 +10,15 @@ At the beginning of every new session, automatically run the `/prime` command be
 
 ## Session end
 When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop"), automatically run the `/wrap` command before closing.
+
+---
+
+## PR/Issue Tracking
+When user creates, mentions, or links to a PR or issue, automatically add it to `.project-brain/tasks/pr.md` with:
+- Title
+- Status (screening, in progress, closed)
+- Link
+- Related task (if applicable)
 
 ---
 

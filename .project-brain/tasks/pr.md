@@ -6,5 +6,5 @@ Track open and recent pull requests.
 |---|---|---|---|---|
 | | | | | |
 
-**Status values:** screening, in progress, closed
+**Status values:** draft, review, ready, merged, closed
 
