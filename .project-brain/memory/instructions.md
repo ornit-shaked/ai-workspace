@@ -36,9 +36,6 @@ Anti-patterns and mistakes that have been corrected. Each entry earned through a
 
 Running record of explicit corrections. Format: `YYYY-MM-DD | What was wrong → What to do instead`
 
-- **2026-07-28** | Inefficient tool calls - read same files multiple times in separate batches → Batch all independent file reads in single tool call block, verify paths before calling
-- **2026-07-28** | Agent-specific directories not handled - all agents got `commands/` directory → Use agent-aware manifest structure: Claude uses `commands/`, Windsurf uses `global_workflows/`
-
 ---
 
 *This file grows over time. It is the institutional memory of how to work with you.*

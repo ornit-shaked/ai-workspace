@@ -21,4 +21,8 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ---
 
+## 2026-07-29 — dream-impl — cascade
+
+- [ ] preference | Always use writing-skills methodology when creating skills (YAML frontmatter, SKILL.md structure, When to Use section, token-efficient)
+
 <!-- Lessons will be appended here by /wrap -->
