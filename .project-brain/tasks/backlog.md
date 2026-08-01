@@ -29,3 +29,7 @@ Items are added by the dream skill or manually.
 - [ ] **idea** Global INSTRUCTIONS.md — create ~/.claude/INSTRUCTIONS.md for cross-project preferences
   - Scope: global
   - Origin: 2026-07-29 | dream-impl
+
+- [ ] **idea** Reference tracking and update automation — when file paths or names change, automatically update all references across the project (especially in markdown). Explore industry best practices and tooling.
+  - Scope: global
+  - Origin: 2026-07-29 | workflow-violations

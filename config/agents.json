@@ -1,0 +1,16 @@
+{
+  "agents": {
+    "claude": {
+      "config_dir": "~/.claude",
+      "name": "Claude"
+    },
+    "devin": {
+      "config_dir": "~/.devin",
+      "name": "Devin"
+    },
+    "windsurf": {
+      "config_dir": "~/.codeium/windsurf",
+      "name": "Windsurf"
+    }
+  }
+}

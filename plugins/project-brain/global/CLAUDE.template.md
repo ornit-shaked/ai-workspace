@@ -1,24 +1,17 @@
 # CLAUDE.md — Hard Rules
-Non-negotiable rules. Soft preferences live in `.instructions.md` in this folder.
+- Non-negotiable rules. Soft preferences live in `.instructions.md` in this folder.
+- Project context, tasks, plans, and history live in `.project-brain/` at the project root.
+- When you discover a preference, lesson, pattern, correction, PR or issue, or reusable knowledge, record it in `.project-brain/inbox/lessons.md`. The inbox is a staging area for observations that can later be reviewed and promoted into long-term memory.
 
 ---
 
 ## Session start
-At the beginning of every new session, automatically run the `/prime` command before doing anything else.
+At the beginning of every new session, ask user to run the `/prime` command before doing anything else.
 
 ---
 
 ## Session end
-When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop"), automatically run the `/wrap` command before closing.
-
----
-
-## PR/Issue Tracking
-When user creates, mentions, or links to a PR or issue, automatically add it to `.project-brain/tasks/pr.md` with:
-- Title
-- Status (screening, in progress, closed)
-- Link
-- Related task (if applicable)
+When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop"), remind user to run the `/wrap` command before closing.
 
 ---
 
@@ -31,10 +24,6 @@ When user creates, mentions, or links to a PR or issue, automatically add it to 
 - Never give the same feedback twice — capture corrections into memory
 
 ---
-
-## Workspace
-
-Project context, tasks, plans, and history live in `.project-brain/` at the project root.
 
 ## Guardrails
 
@@ -63,4 +52,4 @@ For multi-step tasks, state a brief plan:
 
 - Don't over-explain. Deliver the work.
 - Don't be sycophantic. Surface counter-arguments unprompted.
-- Use coding standards from ~/ai-workspace/shared/STANDARDS/ when writing code.
+- Use coding standards - @todo Ornit add link to coding standards

@@ -23,8 +23,10 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ## 2026-07-29 — workflow-violations — cascade
 
-- [ ] correction | /prime and /wrap not auto-running - CLAUDE.md documents rules but doesn't execute them; need IDE hooks or agent initialization to trigger commands
-- [ ] correction | Lessons written directly to instructions.md instead of inbox - violates inbox → dream → instructions workflow; always write to inbox first
-- [ ] preference | Always use writing-skills methodology when creating skills (YAML frontmatter, SKILL.md structure, When to Use section, token-efficient)
+## 2026-08-01 — skill-creation-strategy — cascade
 
+- [ ] candidate-rule | Skill creation methodology — writing-skills vs built-in approaches (Claude has built-in skill writing, Devin uses downloaded skills). Need to decide if writing-skills methodology should be global/project instruction or tool-specific guidance.
+consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposing any skill, you MUST first use the skill-creation-standard skill. Never create or edit SKILL.md directly without applying that workflow" and to add skill-creation-standard as a skill.
+
+- [ ] missing-knowledge | Boris Cherny's repo structure — has .claude/commands/, .claude/agents/, settings.json with guidance like "Create reusable skills and commit them to git" and "Turn workflows into skills, then loop them." Strong practice but not enforced. Research: how to enforce skill-creation workflow vs guidance-only approach.
 <!-- Lessons will be appended here by /wrap -->

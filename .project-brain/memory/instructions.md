@@ -16,7 +16,9 @@ How I like AI to respond. Populated over time by corrections during sessions.
 
 ## Code style preferences
 
-Coding patterns, naming conventions, architecture choices discovered through feedback.
+Coding patterns, naming conventions, architecture choices discovered 
+
+- **Skill creation:** Use writing-skills methodology — YAML frontmatter, SKILL.md structure, When to Use section, token-efficient content. See plugins/project-brain/global/skills/dream/SKILL.md as reference.
 
 ---
 

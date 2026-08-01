@@ -62,7 +62,7 @@ function getGlobalConfigPath(agent) {
   }
 }
 
-function copyTemplate(templatePath, targetPath, projectName) {
+function copyTemplate(templatePath, targetPath, projectName, agent) {
   if (fs.existsSync(targetPath)) {
     console.log(`  skip    ${path.relative(process.cwd(), targetPath)} (exists)`);
     return false;
@@ -72,6 +72,18 @@ function copyTemplate(templatePath, targetPath, projectName) {
 
   let content = fs.readFileSync(templatePath, "utf-8");
   content = content.replace(/\[project-name\]/g, projectName);
+  
+  // Inject agent-specific config
+  if (agent) {
+    const configPath = path.join(__dirname, "config", "agents.json");
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+      const agentConfig = config.agents[agent];
+      if (agentConfig) {
+        content = content.replace(/\{\{AGENT_CONFIG_DIR\}\}/g, agentConfig.config_dir);
+      }
+    }
+  }
 
   fs.writeFileSync(targetPath, content, "utf-8");
   console.log(`  create  ${path.relative(process.cwd(), targetPath)}`);
@@ -161,7 +173,8 @@ function install(pluginName, targetDir, agent) {
           copyTemplate(
             path.join(pluginDir, templateFile),
             path.join(globalConfigPath, targetFile),
-            projectName
+            projectName,
+            agent
           ),
           true
         );
@@ -198,7 +211,8 @@ function install(pluginName, targetDir, agent) {
         copyTemplate(
           path.join(pluginDir, templateFile),
           path.join(projectDir, targetFile),
-          projectName
+          projectName,
+          agent
         ),
         false
       );
@@ -215,7 +229,8 @@ function install(pluginName, targetDir, agent) {
         copyTemplate(
           path.join(pluginDir, templateFile),
           path.join(projectDir, brainDir, targetFile),
-          projectName
+          projectName,
+          agent
         ),
         false
       );

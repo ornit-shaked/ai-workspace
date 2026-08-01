@@ -20,7 +20,6 @@ This is an **installer/scaffolding tool**, not a runtime application.
 
 - `index.js` - CLI entry point, reads plugin manifests and copies templates
 - `plugins/project-brain/` - Plugin definition with global and project templates
-- `shared/` - Shared resources (MEMORY, STANDARDS, etc.)
 
 ### Design Principle: Agent Discoverability
 
@@ -35,14 +34,14 @@ This is an **installer/scaffolding tool**, not a runtime application.
 
 ### ⚠️ CRITICAL: Two Separate Areas
 
-- **`plugins/`** = Plugin development & maintenance (templates for OTHER projects)
-- **`.project-brain/`** = Project management (tasks, history, learning for THIS project)
+- **`plugins/`** = Include the supported plugins and their stracture and templates
+- **`.project-brain/`** = The project brain for this project, built by install plugins/project-brain (this folder will be build in every project that will install the project-brain plugin)
 
 Don't confuse them!
 
 ### Important: Avoid Duplication
 - **CLAUDE.md** (this file) = Single source of truth for project context and instructions
-- **AGENTS.md** = Minimal pointer to this file (don't duplicate content between them)
+- **AGENTS.md** = Minimal pointer to this file to support other agents such as Devin, Cursor and etc (don't duplicate content between them, AGENTS.md contains the reference to this file and the gap between CLAUDE.md and other agents)
 - When adding instructions, add them HERE, not in AGENTS.md
 
 ### Testing Changes

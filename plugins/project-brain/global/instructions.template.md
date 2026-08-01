@@ -1,37 +1,36 @@
 # instructions.md — Global Preferences
-
 Cross-project preferences, working style, and learned behaviors that apply to all projects.
 
 ---
 
 ## Communication preferences
-
 How I like AI to respond across all projects.
 
-- Prefer shell commands over agent file reads when I just need to check file contents — suggest `grep`, `ls`, `cat`, `head` instead of reading files yourself
+For large knowledge stores, logs, research collections, transcripts, or memory archives, use `grep`, `ls`, `cat`, `head` instead of reading all files by yourself
+- Explore before reading.
+- Use filesystem search and discovery techniques.
+- Identify relevant files first.
+- Read selectively rather than loading everything.
+- Prefer targeted search over exhaustive reading.
 
 ---
 
 ## Code style preferences
-
 Coding patterns, naming conventions, architecture choices that apply globally.
 
 ---
 
 ## Tooling preferences
-
 Tool-specific behaviors (git workflow, testing approach, IDE conventions).
 
 ---
 
 ## Things to avoid
-
 Anti-patterns and mistakes that have been corrected across projects.
 
 ---
 
 ## Corrections log
-
 Running record of explicit corrections. Format: `YYYY-MM-DD | What was wrong → What to do instead`
 
 ---
