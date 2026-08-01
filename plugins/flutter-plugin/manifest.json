@@ -1,0 +1,52 @@
+{
+  "name": "flutter-plugin",
+  "version": "1.0.0",
+  "description": "Flutter development standards, architecture patterns, and project scaffolding",
+  "global_files": {},
+  "global_dirs": {
+    "claude": {
+      "rules": "global/rules"
+    },
+    "windsurf": {
+      "rules": "global/rules"
+    }
+  },
+  "project_files": {
+    "CLAUDE.md": "project/CLAUDE.template.md",
+    "AGENTS.md": "project/AGENTS.template.md"
+  },
+  "brain_files": {
+    "docs/adr/README.md": "project/template/docs/adr/README.md",
+    "docs/adr/ADR-0001-state-management-bloc.md": "project/template/docs/adr/ADR-0001-state-management-bloc.md",
+    "docs/adr/ADR-0002-freezed-everywhere.md": "project/template/docs/adr/ADR-0002-freezed-everywhere.md",
+    "docs/adr/ADR-0003-linting-very-good.md": "project/template/docs/adr/ADR-0003-linting-very-good.md",
+    "docs/adr/ADR-0004-flavors.md": "project/template/docs/adr/ADR-0004-flavors.md",
+    "docs/adr/ADR-0005-folder-structure.md": "project/template/docs/adr/ADR-0005-folder-structure.md",
+    "docs/adr/ADR-0006-adr-process.md": "project/template/docs/adr/ADR-0006-adr-process.md",
+    "docs/adr/ADR-0007-project-rules.md": "project/template/docs/adr/ADR-0007-project-rules.md",
+    "analysis_options.yaml": "project/template/analysis_options.yaml"
+  },
+  "brain_dir": ".project-brain",
+  "brain_dirs": [],
+  "agents": {
+    "claude": [],
+    "windsurf": []
+  },
+  "pubspec_deps": {
+    "dependencies": {
+      "flutter_bloc": "^8.1.3",
+      "freezed_annotation": "^2.4.1",
+      "json_annotation": "^4.8.1",
+      "go_router": "^13.0.0",
+      "provider": "^6.1.1"
+    },
+    "dev_dependencies": {
+      "bloc_test": "^9.1.5",
+      "freezed": "^2.4.6",
+      "json_serializable": "^6.7.1",
+      "build_runner": "^2.4.7",
+      "very_good_analysis": "^5.1.0",
+      "mocktail": "^1.0.2"
+    }
+  }
+}

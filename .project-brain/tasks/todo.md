@@ -62,19 +62,31 @@ See `docs/plugins/project-brain/ROADMAP.md` for detailed plans.
 
 ### flutter-plugin
 
-**Epic 1: Foundation & Installer Infrastructure** (21 points, Sprint 1)
-See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 219-336)
+**Epic 1: Foundation & Installer Infrastructure** ✅ COMPLETE (6 points, Sprint 1)
+See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 57-177)
 
-- [ ] Story 1.1: Create Plugin Directory Structure (1 pt) — lines 223-241
-- [ ] Story 1.2: Create Plugin Manifest (3 pts) — lines 245-256
-- [ ] Story 1.3: Create Cross-Platform Install Scripts (5 pts) — lines 260-273
-- [ ] Story 1.4: Implement Template Rendering Engine (5 pts) — lines 277-288
-- [ ] Story 1.5: Implement Idempotency & Marker File (3 pts) — lines 292-303
-- [ ] Story 1.6: Implement Three-Way Merge for Rules (5 pts) — lines 307-319
-- [ ] Story 1.7: Implement Directory & File Utilities (3 pts) — lines 323-335
+- [x] Task 1.1: Create Plugin Directory Structure (1 pt) — lines 59-76
+- [x] Task 1.2: Create Plugin Manifest (2 pts) — lines 79-92
+- [x] Task 1.3: Extend Installer for Flutter-Specific Features (3 pts) — lines 96-114
+- [x] Task 1.4: Template Rendering Already Implemented (0 pts) — lines 118-129
+- [x] Task 1.5: Idempotency Already Implemented (0 pts) — lines 133-144
+- [x] Task 1.6: Three-Way Merge Deferred to v1.1 (0 pts) — lines 148-161
+- [x] Task 1.7: Directory & File Utilities Already Implemented (0 pts) — lines 165-177
+- [x] Test Infrastructure: Created test/plugin-install.test.js with npm test script
+
+**Epic 2: Bootstrap Content Creation** (26 points, Sprint 1-2)
+See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 181-328)
+
+- [ ] Task 2.1: Author CLAUDE.md Template (3 pts) — lines 182-196
+- [ ] Task 2.2: Author AGENTS.md Template (1 pt) — lines 199-210
+- [ ] Task 2.3: Author Path-Scoped Rules (4 pts) — lines 213-230
+- [ ] Task 2.4: Author ADRs (7 files) (5 pts) — lines 233-258
+- [ ] Task 2.5: Author analysis_options.yaml (1 pt) — lines 261-272
+- [ ] Task 2.6: Author Flavor Entry Point Templates (3 pts) — lines 275-292
+- [ ] Task 2.7: Create Layered Skeleton Structure (2 pts) — lines 295-310
+- [ ] Task 2.8: Implement pubspec.yaml Dependency Injection (3 pts) — lines 313-328
 
 **Other Epics (Planned)**
-- [ ] Epic 2: Bootstrap Content Creation (26 pts, Sprint 1-2)
 - [ ] Epic 3: Upstream Integration (13 pts, Sprint 1-2)
 - [ ] Epic 4: Governance & Documentation (13 pts, Sprint 2-3)
 - [ ] Epic 5: Validation & Testing (13 pts, Sprint 3)

@@ -61,114 +61,119 @@ This plan breaks down the Flutter Delta plugin implementation into **6 epics**, 
 **Effort:** 1 hour  
 **Dependencies:** None  
 **Acceptance:**
-- [ ] `installation/plugins/flutter-delta/` exists
-- [ ] Subdirectories: `docs/`, `payload/`, `scripts/`, `skills/`, `commands/`, `hooks/`
-- [ ] Empty placeholder files for future expansion
+- [ ] `plugins/flutter-plugin/` exists
+- [ ] Subdirectories: `global/`, `project/`
+- [ ] `manifest.json` created (see Task 1.2)
 
 **Files Created:**
 ```
-installation/plugins/flutter-delta/
-├── docs/
-├── payload/
-├── scripts/
-├── skills/           # Reserved for future
-├── commands/         # Reserved for future
-└── hooks/            # Reserved for future
+plugins/flutter-plugin/
+├── manifest.json
+├── global/           # Global AI config templates
+└── project/          # Project-level templates
+    └── template/     # Nested templates for .project-brain/
 ```
 
 ---
 
-#### Task 1.2: Create Plugin Manifest (plugin.json)
+#### Task 1.2: Create Plugin Manifest (manifest.json)
 **Priority:** P0 (Critical Path)  
 **Effort:** 2 hours  
 **Dependencies:** Task 1.1  
 **Acceptance:**
-- [ ] `plugin.json` follows Project Brain schema
-- [ ] Declares plugin name, version (1.0.0), description
-- [ ] Lists required upstream dependencies
-- [ ] Specifies install script entry points
+- [ ] `manifest.json` follows project-brain schema (see `plugins/project-brain/manifest.json`)
+- [ ] Declares: `name`, `version` (1.0.0), `description`
+- [ ] Defines `global_files`, `global_dirs` (agent-specific: claude/windsurf)
+- [ ] Defines `project_files`, `brain_files`, `brain_dirs`
+- [ ] Includes `agents` section for agent-specific directories
 
 **Files Created:**
-- `installation/plugins/flutter-delta/plugin.json`
+- `plugins/flutter-plugin/manifest.json`
 
 ---
 
-#### Task 1.3: Create Cross-Platform Install Scripts
-**Priority:** P0 (Critical Path)  
-**Effort:** 4 hours  
-**Dependencies:** Task 1.2  
-**Acceptance:**
-- [ ] `scripts/install.js` (Node.js, cross-platform)
-- [ ] `scripts/install.ps1` (PowerShell, Windows fallback)
-- [ ] Both scripts can be invoked by Project Brain installer
-- [ ] Scripts detect target project root
-- [ ] Scripts can read plugin.json for configuration
-
-**Files Created:**
-- `installation/plugins/flutter-delta/scripts/install.js`
-- `installation/plugins/flutter-delta/scripts/install.ps1`
-
----
-
-#### Task 1.4: Implement Template Rendering Engine
+#### Task 1.3: Extend Installer for Flutter-Specific Features
 **Priority:** P0 (Critical Path)  
 **Effort:** 3 hours  
-**Dependencies:** Task 1.3  
+**Dependencies:** Task 1.2  
 **Acceptance:**
-- [ ] Supports placeholders: `{{APP_NAME}}`, `{{ORG}}`, `{{PACKAGE_NAME}}`
-- [ ] Reads `.tpl` files and renders to target location
-- [ ] Handles missing placeholders gracefully (prompts user or uses defaults)
+- [ ] `index.js` can inject dependencies into `pubspec.yaml` (NEW)
+- [ ] Detects target `pubspec.yaml` in project root
+- [ ] Adds runtime deps: `flutter_bloc`, `freezed_annotation`, `json_annotation`, `go_router`, `provider`
+- [ ] Adds dev deps: `bloc_test`, `freezed`, `json_serializable`, `build_runner`, `very_good_analysis`, `mocktail`
+- [ ] Avoids duplicates (checks if already present)
+- [ ] Preserves existing formatting and comments
 
 **Implementation Note:**
-- Add to `install.js` as a utility function
-- Use simple regex replacement (no need for complex templating library)
+- Extend `index.js` with new function: `injectPubspecDependencies(pubspecPath, deps, devDeps)`
+- Use YAML parser (e.g., `js-yaml` npm package) or simple regex for basic injection
+- Only runs if `pubspec.yaml` exists in target project
+
+**Files Modified:**
+- `index.js` (add pubspec injection logic)
 
 ---
 
-#### Task 1.5: Implement Idempotency & Marker File
+#### Task 1.4: Template Rendering Already Implemented
 **Priority:** P0 (Critical Path)  
-**Effort:** 2 hours  
-**Dependencies:** Task 1.4  
-**Acceptance:**
-- [ ] Creates `.claude-flutter-delta.installed` on first install
-- [ ] Marker contains: `{ "version": "1.0.0", "installedAt": "<ISO timestamp>" }`
-- [ ] Subsequent installs detect marker and enter upgrade mode
-- [ ] Upgrade mode skips user-modified files
+**Effort:** 0 hours (ALREADY DONE)  
+**Dependencies:** None  
+**Status:** ✅ Complete in `index.js` (lines 65-91)
 
-**Files Created:**
-- `.claude-flutter-delta.installed` (in target project root)
+**Already supports:**
+- Placeholder replacement: `[project-name]` (via `copyTemplate` function)
+- Agent-specific config injection: `{{AGENT_CONFIG_DIR}}`
+- Idempotent file creation (skips existing files)
+
+**Note:** For flutter-plugin, use `.template.md` extension (not `.tpl`) to match project-brain convention
 
 ---
 
-#### Task 1.6: Implement Three-Way Merge for Rules
+#### Task 1.5: Idempotency Already Implemented
+**Priority:** P0 (Critical Path)  
+**Effort:** 0 hours (ALREADY DONE)  
+**Dependencies:** None  
+**Status:** ✅ Complete in `index.js` (lines 66-68)
+
+**Already supports:**
+- Skips existing files (idempotent by default)
+- No marker file needed — file existence is the marker
+- Safe to re-run installation multiple times
+
+**Note:** For updates/upgrades, use `--force` flag (planned in todo.md line 88)
+
+---
+
+#### Task 1.6: Three-Way Merge Deferred to v1.1
 **Priority:** P1 (High)  
-**Effort:** 4 hours  
-**Dependencies:** Task 1.5  
-**Acceptance:**
-- [ ] Detects if rule file was modified by user
-- [ ] Performs three-way merge: original + user edits + new version
-- [ ] Flags conflicts for manual resolution
-- [ ] Logs merge actions to console
+**Effort:** 0 hours (DEFERRED)  
+**Status:** ⏸️ Planned for v1.1 (post-release)
 
-**Implementation Note:**
-- Use `diff3` or similar algorithm
-- For v1.0, simple "skip if modified" is acceptable (defer full merge to v1.1)
+**Current behavior (v1.0):**
+- Skips existing files (safe, non-destructive)
+- User modifications are preserved
+- No merge conflicts
+
+**Future (v1.1):**
+- Implement three-way merge for rule files
+- Detect user modifications and merge intelligently
+- Flag conflicts for manual resolution
 
 ---
 
-#### Task 1.7: Implement Directory & File Creation Utilities
+#### Task 1.7: Directory & File Utilities Already Implemented
 **Priority:** P0 (Critical Path)  
-**Effort:** 2 hours  
-**Dependencies:** Task 1.4  
-**Acceptance:**
-- [ ] `createDirectory(path)` — idempotent, creates parent dirs
-- [ ] `copyFile(src, dest, options)` — respects overwrite flags
-- [ ] `renderTemplate(tpl, dest, vars)` — renders and writes
-- [ ] `fileExists(path)`, `readFile(path)`, `writeFile(path, content)`
+**Effort:** 0 hours (ALREADY DONE)  
+**Dependencies:** None  
+**Status:** ✅ Complete in `index.js`
 
-**Implementation Note:**
-- Add to `install.js` as utility functions
-- Use Node.js `fs` and `path` modules
+**Already available:**
+- `ensureDir(dirPath)` — idempotent directory creation (line 41)
+- `copyTemplate(templatePath, targetPath, projectName, agent)` — template rendering (line 65)
+- `copyDirectory(sourceDir, targetDir)` — recursive directory copy (line 93)
+- All use Node.js `fs` and `path` modules
+
+**No additional work needed for flutter-plugin**
 
 ---
 
@@ -179,15 +184,15 @@ installation/plugins/flutter-delta/
 **Effort:** 3 hours  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/CLAUDE.md.tpl` exists
+- [ ] `project/CLAUDE.template.md` exists
 - [ ] Contains project-specific rules referencing upstream
-- [ ] Includes placeholders for `{{APP_NAME}}`, `{{ORG}}`
+- [ ] Includes placeholders for `[project-name]` (installer will replace)
 - [ ] Documents Bloc/Cubit, Freezed Everywhere, very_good_analysis
 - [ ] Points to `.claude/rules/*.md` for path-scoped overrides
 - [ ] References official Flutter Architecture Guide and AI Rules
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/CLAUDE.md.tpl`
+- `plugins/flutter-plugin/project/CLAUDE.template.md`
 
 ---
 
@@ -196,12 +201,12 @@ installation/plugins/flutter-delta/
 **Effort:** 1 hour  
 **Dependencies:** Task 2.1  
 **Acceptance:**
-- [ ] `payload/AGENTS.md.tpl` exists
-- [ ] Content identical to CLAUDE.md.tpl (mirrored for Devin)
-- [ ] Installer renders both from same source or copies
+- [ ] `project/AGENTS.template.md` exists
+- [ ] Content identical to CLAUDE.template.md (mirrored for Devin/other agents)
+- [ ] Installer deploys to project root
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/AGENTS.md.tpl`
+- `plugins/flutter-plugin/project/AGENTS.template.md`
 
 ---
 
@@ -210,17 +215,18 @@ installation/plugins/flutter-delta/
 **Effort:** 4 hours  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/.claude/rules/state-management.md` (scoped to `lib/ui/**`, `test/ui/**`)
-- [ ] `payload/.claude/rules/models.md` (scoped to `lib/**`)
-- [ ] `payload/.claude/rules/linting.md` (global)
-- [ ] `payload/.claude/rules/flavors.md` (global)
+- [ ] `global/rules/state-management.md` (scoped to `lib/ui/**`, `test/ui/**`)
+- [ ] `global/rules/models.md` (scoped to `lib/**`)
+- [ ] `global/rules/linting.md` (global)
+- [ ] `global/rules/flavors.md` (global)
 - [ ] Each rule cites upstream source and ADR reference
+- [ ] Installer deploys to `~/.claude/rules/` (global config)
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/.claude/rules/state-management.md`
-- `installation/plugins/flutter-delta/payload/.claude/rules/models.md`
-- `installation/plugins/flutter-delta/payload/.claude/rules/linting.md`
-- `installation/plugins/flutter-delta/payload/.claude/rules/flavors.md`
+- `plugins/flutter-plugin/global/rules/state-management.md`
+- `plugins/flutter-plugin/global/rules/models.md`
+- `plugins/flutter-plugin/global/rules/linting.md`
+- `plugins/flutter-plugin/global/rules/flavors.md`
 
 ---
 
@@ -229,7 +235,7 @@ installation/plugins/flutter-delta/
 **Effort:** 5 hours  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/docs/adr/README.md` (explains ADR process)
+- [ ] `project/template/docs/adr/README.md` (explains ADR process)
 - [ ] `ADR-0001-state-management-bloc.md`
 - [ ] `ADR-0002-freezed-everywhere.md`
 - [ ] `ADR-0003-linting-very-good.md`
@@ -241,14 +247,14 @@ installation/plugins/flutter-delta/
 - [ ] Each ADR cites Section 3 sources and Section 5 Decision Matrix rows
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/docs/adr/README.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0001-state-management-bloc.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0002-freezed-everywhere.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0003-linting-very-good.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0004-flavors.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0005-folder-structure.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0006-adr-process.md`
-- `installation/plugins/flutter-delta/payload/docs/adr/ADR-0007-project-rules.md`
+- `plugins/flutter-plugin/project/template/docs/adr/README.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0001-state-management-bloc.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0002-freezed-everywhere.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0003-linting-very-good.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0004-flavors.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0005-folder-structure.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0006-adr-process.md`
+- `plugins/flutter-plugin/project/template/docs/adr/ADR-0007-project-rules.md`
 
 ---
 
@@ -257,12 +263,12 @@ installation/plugins/flutter-delta/
 **Effort:** 1 hour  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/analysis_options.yaml` exists
+- [ ] `project/template/analysis_options.yaml` exists
 - [ ] Includes `package:very_good_analysis/analysis_options.yaml`
 - [ ] No custom overrides (use upstream defaults)
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/analysis_options.yaml`
+- `plugins/flutter-plugin/project/template/analysis_options.yaml`
 
 ---
 
@@ -271,18 +277,18 @@ installation/plugins/flutter-delta/
 **Effort:** 3 hours  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/lib/main.dart.tpl` (delegates to production)
-- [ ] `payload/lib/main_development.dart.tpl`
-- [ ] `payload/lib/main_staging.dart.tpl`
-- [ ] `payload/lib/main_production.dart.tpl`
+- [ ] `project/template/lib/main.dart.template` (delegates to production)
+- [ ] `project/template/lib/main_development.dart.template`
+- [ ] `project/template/lib/main_staging.dart.template`
+- [ ] `project/template/lib/main_production.dart.template`
 - [ ] Each entry point boots a minimal MaterialApp with go_router
-- [ ] Placeholders for `{{APP_NAME}}`, `{{PACKAGE_NAME}}`
+- [ ] Placeholders for `[project-name]` (installer will replace)
 
 **Files Created:**
-- `installation/plugins/flutter-delta/payload/lib/main.dart.tpl`
-- `installation/plugins/flutter-delta/payload/lib/main_development.dart.tpl`
-- `installation/plugins/flutter-delta/payload/lib/main_staging.dart.tpl`
-- `installation/plugins/flutter-delta/payload/lib/main_production.dart.tpl`
+- `plugins/flutter-plugin/project/template/lib/main.dart.template`
+- `plugins/flutter-plugin/project/template/lib/main_development.dart.template`
+- `plugins/flutter-plugin/project/template/lib/main_staging.dart.template`
+- `plugins/flutter-plugin/project/template/lib/main_production.dart.template`
 
 ---
 
@@ -291,23 +297,23 @@ installation/plugins/flutter-delta/
 **Effort:** 2 hours  
 **Dependencies:** Task 1.7  
 **Acceptance:**
-- [ ] `payload/lib/config/.keep` + `app_config.dart` placeholder
-- [ ] `payload/lib/routing/.keep` + `router.dart` placeholder (go_router)
-- [ ] `payload/lib/data/{repositories,services,models}/.keep`
-- [ ] `payload/lib/domain/{models,use_cases}/.keep`
-- [ ] `payload/lib/ui/core/{themes,ui}/.keep`
-- [ ] `payload/lib/ui/features/.keep`
-- [ ] `payload/testing/.keep`
+- [ ] `project/template/lib/config/.gitkeep` + `app_config.dart` placeholder
+- [ ] `project/template/lib/routing/.gitkeep` + `router.dart` placeholder (go_router)
+- [ ] `project/template/lib/data/{repositories,services,models}/.gitkeep`
+- [ ] `project/template/lib/domain/{models,use_cases}/.gitkeep`
+- [ ] `project/template/lib/ui/core/{themes,ui}/.gitkeep`
+- [ ] `project/template/lib/ui/features/.gitkeep`
+- [ ] `project/template/testing/.gitkeep`
 
 **Files Created:**
-- Multiple `.keep` files and placeholders in `payload/lib/` and `payload/testing/`
+- Multiple `.gitkeep` files and placeholders in `project/template/lib/` and `project/template/testing/`
 
 ---
 
 #### Task 2.8: Implement pubspec.yaml Dependency Injection
 **Priority:** P0 (Critical Path)  
 **Effort:** 3 hours  
-**Dependencies:** Task 1.7  
+**Dependencies:** Task 1.3 (pubspec injection in index.js)  
 **Acceptance:**
 - [ ] Installer reads target `pubspec.yaml`
 - [ ] Adds runtime deps: `flutter_bloc`, `freezed_annotation`, `json_annotation`, `go_router`, `provider`
@@ -316,7 +322,8 @@ installation/plugins/flutter-delta/
 - [ ] Preserves existing formatting and comments
 
 **Implementation Note:**
-- Use YAML parser (e.g., `js-yaml` in Node.js)
+- Implemented in Task 1.3 (`index.js` pubspec injection)
+- Use YAML parser (e.g., `js-yaml` npm package) or simple regex
 - Append to dependencies/dev_dependencies sections
 
 ---

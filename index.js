@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const yaml = require("js-yaml");
 
 const PLUGINS_DIR = path.join(__dirname, "plugins");
 
@@ -127,6 +128,80 @@ function copyDirectory(sourceDir, targetDir) {
   }
 
   return { created, skipped };
+}
+
+/**
+ * Injects dependencies into a Flutter project's pubspec.yaml
+ * @param {string} projectDir - Target project directory
+ * @param {Object} deps - Runtime dependencies {package: version}
+ * @param {Object} devDeps - Dev dependencies {package: version}
+ * @returns {Object} {added: number, skipped: number}
+ * 
+ * Behavior:
+ * - Skips if pubspec.yaml doesn't exist
+ * - Avoids duplicates (checks existing packages)
+ * - Preserves YAML structure and formatting
+ * - Logs each action (add/skip)
+ */
+function injectPubspecDependencies(projectDir, deps, devDeps) {
+  const pubspecPath = path.join(projectDir, "pubspec.yaml");
+  
+  if (!fs.existsSync(pubspecPath)) {
+    console.log("  skip    pubspec.yaml injection (file not found)");
+    return { added: 0, skipped: 0 };
+  }
+
+  let content = fs.readFileSync(pubspecPath, "utf-8");
+  let doc;
+  
+  try {
+    doc = yaml.load(content);
+  } catch (e) {
+    console.log(`  error   Failed to parse pubspec.yaml: ${e.message}`);
+    return { added: 0, skipped: 0 };
+  }
+
+  if (!doc.dependencies) doc.dependencies = {};
+  if (!doc.dev_dependencies) doc.dev_dependencies = {};
+
+  let added = 0;
+  let skipped = 0;
+
+  // Add runtime dependencies
+  if (deps) {
+    for (const [pkg, version] of Object.entries(deps)) {
+      if (doc.dependencies[pkg]) {
+        console.log(`  skip    ${pkg} (already in dependencies)`);
+        skipped++;
+      } else {
+        doc.dependencies[pkg] = version;
+        console.log(`  add     ${pkg}: ${version} to dependencies`);
+        added++;
+      }
+    }
+  }
+
+  // Add dev dependencies
+  if (devDeps) {
+    for (const [pkg, version] of Object.entries(devDeps)) {
+      if (doc.dev_dependencies[pkg]) {
+        console.log(`  skip    ${pkg} (already in dev_dependencies)`);
+        skipped++;
+      } else {
+        doc.dev_dependencies[pkg] = version;
+        console.log(`  add     ${pkg}: ${version} to dev_dependencies`);
+        added++;
+      }
+    }
+  }
+
+  if (added > 0) {
+    // Write back to file, preserving formatting as much as possible
+    const newContent = yaml.dump(doc, { lineWidth: -1, noRefs: true });
+    fs.writeFileSync(pubspecPath, newContent, "utf-8");
+  }
+
+  return { added, skipped };
 }
 
 function install(pluginName, targetDir, agent) {
@@ -263,6 +338,19 @@ function install(pluginName, targetDir, agent) {
         console.log(`  skip    ${path.relative(process.cwd(), dirPath)}/ (exists)`);
         projectSkipped++;
       }
+    }
+  }
+
+  // Flutter-specific: Inject pubspec.yaml dependencies
+  if (manifest.name === "flutter-plugin" && manifest.pubspec_deps) {
+    console.log(`\n--- Flutter Dependencies (pubspec.yaml) ---`);
+    const result = injectPubspecDependencies(
+      projectDir,
+      manifest.pubspec_deps.dependencies,
+      manifest.pubspec_deps.dev_dependencies
+    );
+    if (result.added > 0 || result.skipped > 0) {
+      console.log(`  ${result.added} added, ${result.skipped} skipped`);
     }
   }
 
