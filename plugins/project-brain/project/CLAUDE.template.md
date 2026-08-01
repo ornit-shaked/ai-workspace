@@ -23,5 +23,5 @@ See `.project-brain/architecture.md` for component layout and data flow.
 ## Key Files
 - `.project-brain/prd.md` — Product requirements
 - `.project-brain/architecture.md` — Component layout
-- `.project-brain/tasks/todo.md` — Current active plan
+- `.project-brain/tasks/` — Current active plan
 - `.project-brain/plans/` — Plan-mode outputs

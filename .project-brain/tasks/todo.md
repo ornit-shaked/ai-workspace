@@ -28,12 +28,11 @@ Track what's implemented and what's planned across all plugins.
 - [x] Tool-specific config (`--agent claude|windsurf`)
 - [x] Idempotent install (never overwrites existing files)
 - [x] Lesson Capture - implemented (inbox template, manifest, /wrap command with provenance metadata)
-- [x] Dream Skill (Phase 2) - implemented in plugins/project-brain/global/skills/dream.md
+- [x] Dream Skill (Phase 2) - implemented in plugins/project-brain/global/skills/dream/SKILL.md with semantic analysis and enhanced duplicate detection
 - [ ] Dream Skill (Phase 3) - scheduled runs, file-based approval queue, confidence-based auto-apply
-Implement this plan: .project-brain/plans/2026-07-29-dream-skill.md
-Read the design spec first for full context: docs/plugins/project-brain/
-2026-07-29-lesson-analyzer-design.md
-Then execute the plan task by task.
+  Implement this plan: .project-brain/plans/2026-07-29-dream-skill.md
+  Read the design spec first for full context: docs/plugins/project-brain/2026-07-29-lesson-analyzer-design.md
+  Then execute the plan task by task.
 
 
 ---
@@ -62,9 +61,24 @@ See `docs/plugins/project-brain/ROADMAP.md` for detailed plans.
 - [ ] `shared/` folder managed by brain plugin
 
 ### flutter-plugin
-- [ ] Define plugin goals and structure
-- [ ] Create manifest and templates
-- [ ] Document in `docs/plugins/flutter-plugin/PLUGIN.md`
+
+**Epic 1: Foundation & Installer Infrastructure** (21 points, Sprint 1)
+See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 219-336)
+
+- [ ] Story 1.1: Create Plugin Directory Structure (1 pt) — lines 223-241
+- [ ] Story 1.2: Create Plugin Manifest (3 pts) — lines 245-256
+- [ ] Story 1.3: Create Cross-Platform Install Scripts (5 pts) — lines 260-273
+- [ ] Story 1.4: Implement Template Rendering Engine (5 pts) — lines 277-288
+- [ ] Story 1.5: Implement Idempotency & Marker File (3 pts) — lines 292-303
+- [ ] Story 1.6: Implement Three-Way Merge for Rules (5 pts) — lines 307-319
+- [ ] Story 1.7: Implement Directory & File Utilities (3 pts) — lines 323-335
+
+**Other Epics (Planned)**
+- [ ] Epic 2: Bootstrap Content Creation (26 pts, Sprint 1-2)
+- [ ] Epic 3: Upstream Integration (13 pts, Sprint 1-2)
+- [ ] Epic 4: Governance & Documentation (13 pts, Sprint 2-3)
+- [ ] Epic 5: Validation & Testing (13 pts, Sprint 3)
+- [ ] Epic 6: Release & Handoff (3 pts, Sprint 3)
 
 ### General
 - [ ] Publish to npm as `@oshaked/ai-workspace`

@@ -34,21 +34,36 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 | Candidate artifact (command, skill, hook, rule, standard) | `backlog.md` | Recommend |
 | Session-only note, one-off | Archive only | Discard |
 
-**Classifier logic:** Tag is a hint, not final. When uncertain between `instructions.md` (agent behavior) vs `CLAUDE.md` (project facts), default to `instructions.md` (safer).
+**Classifier logic:** Tag is a hint, not final decision. Analyze lesson content semantically:
+- **Agent behavior** (how to work, preferences, corrections) → `instructions.md`
+- **Project knowledge** (architecture, tech stack, domain facts) → `CLAUDE.md`
+- **Future work** (ideas, candidates) → `backlog.md`
+- **One-off notes** → Archive only
+
+When uncertain between `instructions.md` vs `CLAUDE.md`, default to `instructions.md` (safer).
 
 ## Files to Read
 
 | File | Purpose |
 |---|---|
 | `.project-brain/inbox/lessons.md` | Unprocessed lessons (primary input) |
-| `.project-brain/memory/instructions.md` | Where to add preferences/corrections |
-| `CLAUDE.md` (project root) | Where to add hard rules/knowledge |
+| `.project-brain/memory/instructions.md` | Where to add preferences/corrections + check for duplicates |
+| `CLAUDE.md` (project root) | Where to add hard rules/knowledge + check for duplicates |
 | `.project-brain/tasks/todo.md` | Check for duplicate tasks |
 | `.project-brain/tasks/backlog.md` | Check for duplicate ideas/artifacts |
 
 ## Approval Flow
 
-Process one lesson at a time. Present proposal with routing decision and wait for approval.
+Process one lesson at a time. Present proposal with **semantic analysis** and routing decision, then wait for approval.
+
+**Proposal format:**
+```
+**Lesson:** [original text]
+**Tag:** [tag from inbox]
+**Analysis:** [What is this about? Agent behavior, project fact, or future work?]
+**Routing Decision:** → [destination] ([reason])
+**Proposal:** [exact text to add, with section if applicable]
+```
 
 **User responses:**
 - **y** — apply immediately
@@ -56,7 +71,7 @@ Process one lesson at a time. Present proposal with routing decision and wait fo
 - **edit** — user provides revised text, apply that instead
 - **skip** — leave unprocessed for next run
 
-**For diffs:** Show proposed line to add to `instructions.md` or `CLAUDE.md`
+**For diffs:** Show proposed line to add to `instructions.md` or `CLAUDE.md` with target section
 
 **For backlog items:** Show entry format:
 ```
@@ -69,7 +84,15 @@ Process one lesson at a time. Present proposal with routing decision and wait fo
 
 ## Duplicate Detection
 
-Check `tasks/todo.md` and `tasks/backlog.md` only. Match on keywords, artifact type, and goal. Do NOT check `instructions.md` or `CLAUDE.md` — corrections shouldn't recur if learning loop works.
+Check all relevant destinations:
+- `tasks/todo.md` and `tasks/backlog.md` — match on keywords, artifact type, goal
+- `instructions.md` — check if similar preference/correction already exists
+- `CLAUDE.md` — check if similar rule/knowledge already exists
+
+If duplicate found, alert user and ask whether to:
+- Skip (already covered)
+- Refine existing entry
+- Add anyway (different nuance)
 
 ## Archive Format
 
@@ -91,9 +114,16 @@ Summarize, don't copy verbatim. Archive is write-only.
 
 1. Read input files (Files to Read section)
 2. Parse `inbox/lessons.md` — find unchecked lessons
-3. For each lesson: classify, check duplicates, present proposal, wait for approval, apply or mark
-4. Move processed block to `inbox/archive/YYYY-MM-DD.md`
-5. Print summary: lessons processed, diffs applied, items added to backlog, discarded/duplicates
+3. For each lesson:
+   - **Analyze content** semantically (not just tag)
+   - **Determine destination** with reasoning
+   - **Check duplicates** in all relevant files
+   - **Present proposal** with analysis and reasoning
+   - **Wait for approval**
+   - **Apply changes** if approved
+4. **Remove processed lessons** from `inbox/lessons.md` (keep only session header if all processed)
+5. **Archive** processed block to `inbox/archive/YYYY-MM-DD.md`
+6. Print summary: lessons processed, diffs applied, items added to backlog, discarded/duplicates
 
 ## Constraints
 
@@ -108,3 +138,6 @@ Summarize, don't copy verbatim. Archive is write-only.
 - **Summarizing workflow in description** — agents may follow description instead of reading full skill. Description = when to use only.
 - **Auto-applying changes** — always present proposal and wait for approval first
 - **Verbose archive entries** — summarize lessons, don't copy verbatim text
+- **Tag-only routing** — must analyze lesson content, not just rely on tag hint
+- **Leaving processed lessons in inbox** — remove from inbox after archiving
+- **Skipping duplicate detection** — always check instructions.md and CLAUDE.md for similar rules

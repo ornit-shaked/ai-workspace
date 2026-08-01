@@ -33,3 +33,7 @@ Items are added by the dream skill or manually.
 - [ ] **idea** Reference tracking and update automation — when file paths or names change, automatically update all references across the project (especially in markdown). Explore industry best practices and tooling.
   - Scope: global
   - Origin: 2026-07-29 | workflow-violations
+
+  - [ ] **idea** need to create skill that will run automaticly and learn the nes from the respurces and will suggest improvmrnts to this a-workspacw, for each plugin, to prevent manual maintanance.
+  - Scope: ai-workspace project itself
+  - Origin: 2026-07-29 | unknown
