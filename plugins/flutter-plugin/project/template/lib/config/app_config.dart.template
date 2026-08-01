@@ -1,0 +1,37 @@
+/// The build flavor this app was launched with.
+enum Flavor {
+  /// Local development builds.
+  development,
+
+  /// Pre-production builds used for QA and stakeholder review.
+  staging,
+
+  /// Builds shipped to end users.
+  production,
+}
+
+/// Environment-dependent configuration selected by the active [Flavor].
+///
+/// Entry points (`main_development.dart`, `main_staging.dart`,
+/// `main_production.dart`) set [AppConfig.flavor] before calling `runApp`.
+/// Add environment-dependent values here rather than branching on the
+/// flavor inside feature code. See `.claude/rules/flavors.md`.
+class AppConfig {
+  AppConfig._();
+
+  /// The flavor the running app was launched with.
+  static Flavor flavor = Flavor.development;
+
+  /// A human-readable label for the active flavor, suitable for display
+  /// in a debug banner or app title.
+  static String get label {
+    switch (flavor) {
+      case Flavor.development:
+        return 'Development';
+      case Flavor.staging:
+        return 'Staging';
+      case Flavor.production:
+        return 'Production';
+    }
+  }
+}

@@ -74,17 +74,37 @@ See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 57-177)
 - [x] Task 1.7: Directory & File Utilities Already Implemented (0 pts) — lines 165-177
 - [x] Test Infrastructure: Created test/plugin-install.test.js with npm test script
 
-**Epic 2: Bootstrap Content Creation** (26 points, Sprint 1-2)
+**Epic 2: Bootstrap Content Creation** ✅ COMPLETE (26 points, Sprint 1-2)
 See: `docs/plugins/flutter-plugin/IMPLEMENTATION_PLAN.md` (lines 181-328)
 
-- [ ] Task 2.1: Author CLAUDE.md Template (3 pts) — lines 182-196
-- [ ] Task 2.2: Author AGENTS.md Template (1 pt) — lines 199-210
-- [ ] Task 2.3: Author Path-Scoped Rules (4 pts) — lines 213-230
-- [ ] Task 2.4: Author ADRs (7 files) (5 pts) — lines 233-258
-- [ ] Task 2.5: Author analysis_options.yaml (1 pt) — lines 261-272
-- [ ] Task 2.6: Author Flavor Entry Point Templates (3 pts) — lines 275-292
-- [ ] Task 2.7: Create Layered Skeleton Structure (2 pts) — lines 295-310
-- [ ] Task 2.8: Implement pubspec.yaml Dependency Injection (3 pts) — lines 313-328
+- [x] Task 2.1: Author CLAUDE.md Template (3 pts) — lines 182-196
+- [x] Task 2.2: Author AGENTS.md Template (1 pt) — lines 199-210
+- [x] Task 2.3: Author Path-Scoped Rules (4 pts) — lines 213-230 — deployed **project-scoped**
+      (`.claude/rules/`), not global; see "Design Principle: Global vs Project Scope" in root
+      `CLAUDE.md`. manifest.json's `global_dirs` mapping was a bug, fixed as part of this task.
+- [x] Task 2.4: Author ADRs (7 files + README) (5 pts) — lines 233-258
+- [x] Task 2.5: Author analysis_options.yaml (1 pt) — lines 261-272
+- [x] Task 2.6: Author Flavor Entry Point Templates (3 pts) — lines 275-292
+- [x] Task 2.7: Create Layered Skeleton Structure (2 pts) — lines 295-310
+- [x] Task 2.8: Implement pubspec.yaml Dependency Injection (3 pts) — lines 313-328 (done in Epic 1)
+
+Verified end-to-end against the real Flutter SDK (not just file-existence checks): fresh
+`flutter create` → install → `flutter pub get` → `flutter analyze` (0 issues) →
+`dart run build_runner build` → `flutter test` (1 passed) → reinstall (idempotent, no
+duplication, user edits preserved). Required two small `index.js` additions beyond the original
+task list: a `[package-name]` placeholder for `package:` imports (very_good_analysis requires
+`always_use_package_imports`, not relative imports as originally assumed) and auto-sorting of
+Dart import blocks / injected pubspec deps (their correct order depends on the target's own
+package name, which a static template can't know ahead of time). Also bumped the `pubspec_deps`
+version pins from Epic 1 — they no longer resolved against the current Flutter SDK.
+
+**Known gap for Epic 3/5 to address:** `flutter create` seeds its own default `lib/main.dart`,
+`test/widget_test.dart`, and `analysis_options.yaml`. Because the installer's `copyTemplate` skips
+existing files, installing flutter-plugin right after `flutter create` (the realistic first-use
+flow) silently leaves the *default* counter-app files in place instead of ours. Validation this
+session worked around it by deleting those three files before installing. Needs a real answer —
+e.g. detect-and-prompt, a documented "delete these first" step in the plugin README, or an
+explicit `--force` for first-run only — before Epic 5 (Validation & Testing) can be called done.
 
 **Other Epics (Planned)**
 - [ ] Epic 3: Upstream Integration (13 pts, Sprint 1-2)

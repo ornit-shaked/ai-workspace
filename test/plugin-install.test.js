@@ -88,7 +88,23 @@ function testPluginInstall(pluginName, testProjectDir) {
       "flutter-plugin": [
         "CLAUDE.md",
         "AGENTS.md",
-        "pubspec.yaml"
+        "pubspec.yaml",
+        ".claude/rules/state-management.md",
+        ".claude/rules/models.md",
+        ".claude/rules/linting.md",
+        ".claude/rules/flavors.md",
+        "docs/adr/README.md",
+        "docs/adr/ADR-0001-state-management-bloc.md",
+        "docs/adr/ADR-0007-project-rules.md",
+        "analysis_options.yaml",
+        "lib/main.dart",
+        "lib/main_development.dart",
+        "lib/main_staging.dart",
+        "lib/main_production.dart",
+        "lib/config/app_config.dart",
+        "lib/routing/router.dart",
+        "lib/ui/features/.gitkeep",
+        "testing/.gitkeep"
       ]
     };
     

@@ -63,7 +63,48 @@ function getGlobalConfigPath(agent) {
   }
 }
 
-function copyTemplate(templatePath, targetPath, projectName, agent) {
+/**
+ * Reads the `name:` field from a target project's pubspec.yaml, if present.
+ * Used to render `package:<name>/...` imports in Dart templates (Flutter/Dart
+ * style requires the actual pub package name, not the directory name).
+ * @returns {string|null} the package name, or null if no pubspec.yaml exists
+ */
+function getPubspecPackageName(projectDir) {
+  const pubspecPath = path.join(projectDir, "pubspec.yaml");
+  if (!fs.existsSync(pubspecPath)) {
+    return null;
+  }
+  try {
+    const doc = yaml.load(fs.readFileSync(pubspecPath, "utf-8"));
+    return (doc && doc.name) || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Sorts the leading contiguous block of `import '...';` lines alphabetically
+ * by URI. Dart templates only ever have one such group at the top of the
+ * file (package: imports; no dart:/relative mixed in), so this is enough to
+ * satisfy the `directives_ordering` lint regardless of what the target
+ * project's package name happens to sort next to (e.g. `package:flutter/...`
+ * vs `package:<package-name>/...` — the correct order depends on the actual
+ * package name, which isn't known until install time).
+ */
+function sortDartImportBlock(content) {
+  const lines = content.split(/\r?\n/);
+  let i = 0;
+  while (i < lines.length && /^import\s+'[^']+';\s*$/.test(lines[i])) {
+    i++;
+  }
+  if (i > 1) {
+    const sortedImports = lines.slice(0, i).sort();
+    return sortedImports.concat(lines.slice(i)).join("\n");
+  }
+  return content;
+}
+
+function copyTemplate(templatePath, targetPath, projectName, agent, packageName) {
   if (fs.existsSync(targetPath)) {
     console.log(`  skip    ${path.relative(process.cwd(), targetPath)} (exists)`);
     return false;
@@ -73,7 +114,13 @@ function copyTemplate(templatePath, targetPath, projectName, agent) {
 
   let content = fs.readFileSync(templatePath, "utf-8");
   content = content.replace(/\[project-name\]/g, projectName);
-  
+  if (packageName) {
+    content = content.replace(/\[package-name\]/g, packageName);
+  }
+  if (targetPath.endsWith(".dart")) {
+    content = sortDartImportBlock(content);
+  }
+
   // Inject agent-specific config
   if (agent) {
     const configPath = path.join(__dirname, "config", "agents.json");
@@ -196,6 +243,18 @@ function injectPubspecDependencies(projectDir, deps, devDeps) {
   }
 
   if (added > 0) {
+    // Sort keys alphabetically (very_good_analysis's sort_pub_dependencies
+    // lint expects this; also keeps diffs predictable across installs)
+    const sortKeys = (obj) =>
+      Object.keys(obj)
+        .sort()
+        .reduce((sorted, key) => {
+          sorted[key] = obj[key];
+          return sorted;
+        }, {});
+    doc.dependencies = sortKeys(doc.dependencies);
+    doc.dev_dependencies = sortKeys(doc.dev_dependencies);
+
     // Write back to file, preserving formatting as much as possible
     const newContent = yaml.dump(doc, { lineWidth: -1, noRefs: true });
     fs.writeFileSync(pubspecPath, newContent, "utf-8");
@@ -209,6 +268,7 @@ function install(pluginName, targetDir, agent) {
   const pluginDir = path.join(PLUGINS_DIR, pluginName);
   const projectDir = path.resolve(targetDir);
   const projectName = path.basename(projectDir);
+  const packageName = getPubspecPackageName(projectDir);
 
   if (!fs.existsSync(projectDir)) {
     console.error(`Error: Target directory "${projectDir}" does not exist.`);
@@ -287,7 +347,8 @@ function install(pluginName, targetDir, agent) {
           path.join(pluginDir, templateFile),
           path.join(projectDir, targetFile),
           projectName,
-          agent
+          agent,
+          packageName
         ),
         false
       );

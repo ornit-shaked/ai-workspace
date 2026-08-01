@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+/// The application's root router.
+///
+/// Add feature routes here as they're built; see
+/// `docs/adr/ADR-0005-folder-structure.md` for where feature code lives.
+final GoRouter router = GoRouter(
+  initialLocation: '/',
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (context, state) {
+        return const _PlaceholderPage();
+      },
+    ),
+  ],
+);
+
+class _PlaceholderPage extends StatelessWidget {
+  const _PlaceholderPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Ready for the first feature.'),
+      ),
+    );
+  }
+}

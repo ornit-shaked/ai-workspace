@@ -3,19 +3,16 @@
   "version": "1.0.0",
   "description": "Flutter development standards, architecture patterns, and project scaffolding",
   "global_files": {},
-  "global_dirs": {
-    "claude": {
-      "rules": "global/rules"
-    },
-    "windsurf": {
-      "rules": "global/rules"
-    }
-  },
+  "global_dirs": {},
   "project_files": {
     "CLAUDE.md": "project/CLAUDE.template.md",
-    "AGENTS.md": "project/AGENTS.template.md"
-  },
-  "brain_files": {
+    "AGENTS.md": "project/AGENTS.template.md",
+
+    ".claude/rules/state-management.md": "project/rules/state-management.md",
+    ".claude/rules/models.md": "project/rules/models.md",
+    ".claude/rules/linting.md": "project/rules/linting.md",
+    ".claude/rules/flavors.md": "project/rules/flavors.md",
+
     "docs/adr/README.md": "project/template/docs/adr/README.md",
     "docs/adr/ADR-0001-state-management-bloc.md": "project/template/docs/adr/ADR-0001-state-management-bloc.md",
     "docs/adr/ADR-0002-freezed-everywhere.md": "project/template/docs/adr/ADR-0002-freezed-everywhere.md",
@@ -24,9 +21,30 @@
     "docs/adr/ADR-0005-folder-structure.md": "project/template/docs/adr/ADR-0005-folder-structure.md",
     "docs/adr/ADR-0006-adr-process.md": "project/template/docs/adr/ADR-0006-adr-process.md",
     "docs/adr/ADR-0007-project-rules.md": "project/template/docs/adr/ADR-0007-project-rules.md",
-    "analysis_options.yaml": "project/template/analysis_options.yaml"
+
+    "analysis_options.yaml": "project/template/analysis_options.yaml",
+
+    "lib/main.dart": "project/template/lib/main.dart.template",
+    "lib/main_development.dart": "project/template/lib/main_development.dart.template",
+    "lib/main_staging.dart": "project/template/lib/main_staging.dart.template",
+    "lib/main_production.dart": "project/template/lib/main_production.dart.template",
+
+    "lib/config/app_config.dart": "project/template/lib/config/app_config.dart.template",
+    "lib/routing/router.dart": "project/template/lib/routing/router.dart.template",
+
+    "lib/data/repositories/.gitkeep": "project/template/lib/data/repositories/.gitkeep",
+    "lib/data/services/.gitkeep": "project/template/lib/data/services/.gitkeep",
+    "lib/data/models/.gitkeep": "project/template/lib/data/models/.gitkeep",
+    "lib/domain/models/.gitkeep": "project/template/lib/domain/models/.gitkeep",
+    "lib/domain/use_cases/.gitkeep": "project/template/lib/domain/use_cases/.gitkeep",
+    "lib/ui/core/themes/.gitkeep": "project/template/lib/ui/core/themes/.gitkeep",
+    "lib/ui/core/ui/.gitkeep": "project/template/lib/ui/core/ui/.gitkeep",
+    "lib/ui/features/.gitkeep": "project/template/lib/ui/features/.gitkeep",
+    "testing/.gitkeep": "project/template/testing/.gitkeep",
+
+    "test/widget_test.dart": "project/template/test/widget_test.dart.template"
   },
-  "brain_dir": ".project-brain",
+  "brain_files": {},
   "brain_dirs": [],
   "agents": {
     "claude": [],
@@ -34,18 +52,18 @@
   },
   "pubspec_deps": {
     "dependencies": {
-      "flutter_bloc": "^8.1.3",
-      "freezed_annotation": "^2.4.1",
+      "flutter_bloc": "^9.1.1",
+      "freezed_annotation": "^3.1.0",
       "json_annotation": "^4.8.1",
-      "go_router": "^13.0.0",
+      "go_router": "^17.3.0",
       "provider": "^6.1.1"
     },
     "dev_dependencies": {
-      "bloc_test": "^9.1.5",
-      "freezed": "^2.4.6",
+      "bloc_test": "^10.0.0",
+      "freezed": "^3.2.5",
       "json_serializable": "^6.7.1",
       "build_runner": "^2.4.7",
-      "very_good_analysis": "^5.1.0",
+      "very_good_analysis": "^10.3.0",
       "mocktail": "^1.0.2"
     }
   }
