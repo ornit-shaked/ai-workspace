@@ -38,6 +38,8 @@ Anti-patterns and mistakes that have been corrected. Each entry earned through a
 
 Running record of explicit corrections. Format: `YYYY-MM-DD | What was wrong → What to do instead`
 
+2026-08-01 | `/prime` was reading `instructions.md` (already auto-loaded by CLAUDE.md) → `/prime` should only read project-specific context (history.md, todo.md) to avoid token duplication
+
 ---
 
 *This file grows over time. It is the institutional memory of how to work with you.*

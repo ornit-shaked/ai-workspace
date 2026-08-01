@@ -1,5 +1,12 @@
 # CLAUDE.md — Hard Rules
-- Non-negotiable rules. Soft preferences live in `.instructions.md` in this folder.
+
+**About me:** See `about-me.md` in this directory.
+
+**My preferences:** See `instructions.md` in this directory.
+
+---
+
+- Non-negotiable rules. Soft preferences live in `instructions.md` in this folder.
 - Project context, tasks, plans, and history live in `.project-brain/` at the project root.
 - When you discover a preference, lesson, pattern, correction, PR or issue, or reusable knowledge, record it in `.project-brain/inbox/lessons.md`. The inbox is a staging area for observations that can later be reviewed and promoted into long-term memory.
 
@@ -22,6 +29,16 @@ When I signal session end (e.g., "done", "wrap", "that's it", "bye", "let's stop
 - Prefer small, focused commits
 - Context beats prompting — the file system carries the context
 - Never give the same feedback twice — capture corrections into memory
+
+---
+
+## Document accepted outcomes, not explored alternatives
+
+History entries, wrap summaries, commit messages, and changelogs
+must reflect the final accepted state.
+
+Do not record rejected proposals, abandoned approaches,
+or reverted changes as completed work.
 
 ---
 
