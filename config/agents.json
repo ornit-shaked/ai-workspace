@@ -1,16 +1,43 @@
 {
   "agents": {
     "claude": {
-      "config_dir": "~/.claude",
-      "name": "Claude"
+      "name": "Claude",
+      "global_config_dir": "~/.claude",
+      "project_dir_name": ".claude",
+      "mcp_config_filename": ".mcp.json",
+      "project_mcp_config_filename": "mcp_config.json",
+      "subdirs": {
+        "rules": "rules",
+        "commands": "commands",
+        "skills": "skills",
+        "agents": "agents"
+      }
     },
     "devin": {
-      "config_dir": "~/.devin",
-      "name": "Devin"
+      "name": "Devin",
+      "global_config_dir": "~/.devin",
+      "project_dir_name": ".devin",
+      "mcp_config_filename": "mcp_config.json",
+      "project_mcp_config_filename": "mcp_config.json",
+      "subdirs": {
+        "rules": "rules",
+        "workflows": "workflows",
+        "skills": "skills",
+        "agents": "agents"
+      }
     },
     "windsurf": {
-      "config_dir": "~/.codeium/windsurf",
-      "name": "Windsurf"
+      "name": "Windsurf",
+      "global_config_dir": "~/.codeium/windsurf",
+      "project_dir_name": ".windsurf",
+      "mcp_config_filename": "mcp_config.json",
+      "project_mcp_config_filename": "mcp_config.json",
+      "subdirs": {
+        "rules": "rules",
+        "workflows": "workflows",
+        "skills": "skills",
+        "agents": "agents"
+      }
     }
   }
 }

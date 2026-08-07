@@ -8,10 +8,10 @@
     "CLAUDE.md": "project/CLAUDE.template.md",
     "AGENTS.md": "project/AGENTS.template.md",
 
-    ".claude/rules/state-management.md": "project/rules/state-management.md",
-    ".claude/rules/models.md": "project/rules/models.md",
-    ".claude/rules/linting.md": "project/rules/linting.md",
-    ".claude/rules/flavors.md": "project/rules/flavors.md",
+    "{{AGENT_RULES}}/state-management.md": "project/rules/state-management.md",
+    "{{AGENT_RULES}}/models.md": "project/rules/models.md",
+    "{{AGENT_RULES}}/linting.md": "project/rules/linting.md",
+    "{{AGENT_RULES}}/flavors.md": "project/rules/flavors.md",
 
     "docs/adr/README.md": "project/template/docs/adr/README.md",
     "docs/adr/ADR-0001-state-management-bloc.md": "project/template/docs/adr/ADR-0001-state-management-bloc.md",
