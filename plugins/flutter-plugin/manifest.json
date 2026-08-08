@@ -5,8 +5,7 @@
   "global_files": {},
   "global_dirs": {},
   "project_files": {
-    "CLAUDE.md": "project/CLAUDE.template.md",
-    "AGENTS.md": "project/AGENTS.template.md",
+    "FLUTTER-PLUGIN.md": "project/FLUTTER-PLUGIN.template.md",
 
     "{{AGENT_RULES}}/state-management.md": "project/rules/state-management.md",
     "{{AGENT_RULES}}/models.md": "project/rules/models.md",

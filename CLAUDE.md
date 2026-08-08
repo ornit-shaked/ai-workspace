@@ -18,8 +18,28 @@ npm publish
 ## Architecture
 This is an **installer/scaffolding tool**, not a runtime application.
 
-- `index.js` - CLI entry point, reads plugin manifests and copies templates
-- `plugins/project-brain/` - Plugin definition with global and project templates
+```
+index.js                    — CLI entry point (arg parsing only, ~60 lines)
+lib/
+  installer.js              — Core infrastructure (manifest, copy, hooks, install)
+plugins/
+  project-brain/
+    manifest.json            — Declares what files/dirs to create
+    global/                  — Templates for global AI config
+    project/                 — Templates for project structure
+  flutter-plugin/
+    manifest.json            — Plugin manifest
+    hooks.js                 — Plugin-specific logic (preInstall, postInstall, contentTransformers)
+    project/                 — Templates for Flutter projects
+```
+
+- **Core installer** (`lib/installer.js`) handles generic operations: loading manifests,
+  copying templates, rendering placeholders, deploying global/project files.
+- **Plugin hooks** (`plugins/<name>/hooks.js`) export optional `preInstall(context)`,
+  `postInstall(context)`, and `contentTransformers[]` for plugin-specific behavior.
+  The core installer loads and calls them automatically if the file exists.
+- **No `if (manifest.name === "...")` branching** in core — all plugin-specific logic
+  lives in the plugin's own `hooks.js`.
 
 ### Design Principle: Agent Discoverability
 
@@ -88,13 +108,13 @@ node index.js install project-brain ~/code/test-project
   "version": "1.0.0",
   "description": "What this plugin does",
   "global_files": {
-    "CLAUDE.md": "global/CLAUDE.template.md"
+    "BRAIN-PLUGIN-INSTRUCTIONS.md": "global/BRAIN-PLUGIN-INSTRUCTIONS.template.md"
   },
   "global_dirs": {
     "commands": "global/commands"
   },
   "project_files": {
-    "CLAUDE.md": "project/CLAUDE.template.md"
+    "PLUGIN-NAME.md": "project/PLUGIN-NAME.template.md"
   },
   "brain_files": {},
   "brain_dirs": [],
@@ -104,6 +124,16 @@ node index.js install project-brain ~/code/test-project
   }
 }
 ```
+
+**Important naming conventions:**
+- **Global instructions:** `PLUGIN-NAME-INSTRUCTIONS.md` (e.g., `BRAIN-PLUGIN-INSTRUCTIONS.md`)
+  - Contains rules, preferences, and behaviors
+  - User edits this over time
+- **Project reference:** `PLUGIN-NAME.md` (e.g., `FLUTTER-PLUGIN.md`, `BRAIN-PLUGIN.md`)
+  - Minimal pointer to actual sources of truth (ADRs, rules, directories)
+  - Usually no need for user to edit
+
+This eliminates duplication and allows users to control integration.
 
 3. **Create template directories**:
    - `plugins/<plugin-name>/global/` - Files for `~/.claude/`
@@ -126,7 +156,9 @@ in addition to the plugin documentation, here are the key files:
 - `PLUGIN.md` - Goal, files, sources, how it works
 - `ROADMAP.md` - Phase 2 plans
 - `research/` - Historical research and sources
-- `index.js` - CLI entry point, handles installation logic
+- `index.js` - Thin CLI entry point (argument parsing only)
+- `lib/installer.js` - Core installer infrastructure (manifest loading, file copying, template rendering, hook system)
+- `plugins/<name>/hooks.js` - Optional plugin-specific hooks (preInstall, postInstall, contentTransformers)
 - `plugins/project-brain/manifest.json` - Declares what files/dirs to create
 - `plugins/project-brain/global/` - Templates for global AI config
 - `plugins/project-brain/project/` - Templates for project structure

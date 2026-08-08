@@ -45,15 +45,17 @@ npx @oshaked/ai-workspace install project-brain ~/my-project
 The `project-brain` plugin installs in **two locations**:
 
 1. **Global AI config** (`~/.claude/` or `~/.codeium/windsurf/`)
-   - Hard rules (session start/end procedures)
-   - Commands (`/prime`, `/wrap`, etc.)
-   - User profile template
-   - Settings
+   - `BRAIN-PLUGIN-INSTRUCTIONS.md` — Global rules, preferences, and behaviors
+   - `about-me.md` — User profile template (edit to describe yourself)
+   - `settings.json` — Configuration settings
+   - `commands/` — Session management commands (`/prime`, `/wrap`, etc.)
+   - `skills/` — Reusable skills
+   - `agents/` — Agent-specific configurations
 
 2. **Project structure** (target project directory)
-   - Project-specific CLAUDE.md and AGENTS.md
-   - `.project-brain/` directory with tasks, history, PRD, architecture
-   - Agent-specific directories (`.claude/`, `.devin/`)
+   - `BRAIN-PLUGIN.md` — Reference pointer to `.project-brain/` structure
+   - `.project-brain/` directory with tasks, history, PRD, architecture, and memory
+   - Agent-specific directories (`.claude/`, `.windsurf/`, `.devin/`)
 
 # User Guide
 
@@ -75,15 +77,27 @@ The `project-brain` plugin installs in **two locations**:
 
 **What you can edit:**
 - **`~/.claude/about-me.md`** — Edit to describe yourself (global, applies to all projects)
-- **`~/.claude/CLAUDE.md`** — Add custom hard rules and recognize `/prime`/`/wrap` by keywords for auto-execution
-- **`~/.claude/instructions.md`** — Add global preferences and learned behaviors (cross-project)
-- **Project `CLAUDE.md`** — Initialize with project-specific context, hard rules, and architecture decisions
+- **`~/.claude/BRAIN-PLUGIN-INSTRUCTIONS.md`** — Global rules, preferences, and learned behaviors (cross-project)
+- **Project `BRAIN-PLUGIN.md`** — Reference pointer (minimal, usually no need to edit)
 - **`.project-brain/memory/instructions.md`** — Add project-specific preferences and corrections
 
+**Integration with your agent:**
+After installation, add these references to your agent's main instruction file:
+
+**Global (in `~/.claude/CLAUDE.md` or `~/.codeium/windsurf/AGENTS.md`):**
+```markdown
+Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
+```
+
+**Project (in `.claude/CLAUDE.md` or `.windsurf/AGENTS.md`):**
+```markdown
+Read BRAIN-PLUGIN.md for project memory structure and session commands.
+```
+
 **Installation behavior:**
-- Plugin installation does NOT override existing files
-- If files already exist, you must manually copy content or merge changes
-- Future versions may support override/merge options
+- Plugin-specific files are always created (no conflicts with existing CLAUDE.md/AGENTS.md)
+- You control integration by adding references to your main instruction file
+- Plugins never overwrite your existing agent configuration
 
 ## Plugin Structure
 
@@ -101,10 +115,9 @@ Each plugin lives in `plugins/<name>/` with:
 - `project/` — templates for project structure (`.template.md` files)
 
 Template files (`.template.md`, `.template.json`) are renamed during installation:
-- `CLAUDE.template.md` → `CLAUDE.md`
-- `AGENTS.template.md` → `AGENTS.md`
-
-This prevents agents from reading template files when working on the ai-workspace project itself.
+- `FLUTTER-PLUGIN.template.md` → `FLUTTER-PLUGIN.md`
+- `BRAIN-PLUGIN.template.md` → `BRAIN-PLUGIN.md`
+- `BRAIN-PLUGIN-INSTRUCTIONS.template.md` → `BRAIN-PLUGIN-INSTRUCTIONS.md`
 
 ---
 

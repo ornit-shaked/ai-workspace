@@ -77,9 +77,9 @@ Flutter Delta provides **9 project-specific components** that are not covered by
 - **Why:** Enforce project overrides at agent level without re-prompting
 - **Source:** [ADR-0007](./project/.claude/adr/ADR-0007-project-rules.md)
 
-### 8. **Governance Files (CLAUDE.md + AGENTS.md)**
-- **What:** Top-level rules files for Claude Code and Devin
-- **Why:** Multi-agent compatibility with mirrored content
+### 8. **Governance File (FLUTTER-PLUGIN.md)**
+- **What:** Plugin-specific instruction file with Flutter architecture and conventions
+- **Why:** Eliminates duplication, integrates with any agent's main instruction file
 
 ### 9. **Dependency Scaffold**
 - **What:** Required project defaults in `pubspec.yaml`
@@ -123,12 +123,12 @@ Flutter Delta automatically verifies and installs upstream dependencies:
 Flutter Delta creates the following in your target project:
 
 **Governance Files:**
-- `CLAUDE.md` — Project architecture guide
-- `AGENTS.md` — Multi-agent compatibility
-- `.claude/rules/state-management.md` — Bloc/Cubit enforcement
-- `.claude/rules/models.md` — Freezed Everywhere enforcement
-- `.claude/rules/linting.md` — very_good_analysis enforcement
-- `.claude/rules/flavors.md` — Flavor conventions
+- `FLUTTER-PLUGIN.md` — Flutter architecture guide and conventions
+- Agent rules directory (see `config/agents.json` for authoritative paths per agent):
+  - `state-management.md` — Bloc/Cubit enforcement
+  - `models.md` — Freezed Everywhere enforcement
+  - `linting.md` — very_good_analysis enforcement
+  - `flavors.md` — Flavor conventions
 
 **ADRs:**
 - `docs/adr/README.md`
@@ -208,7 +208,7 @@ When you reinstall Flutter Delta with a newer version:
 | **analysis_options.yaml** | Overwrite if unchanged | If user modified, flag and skip |
 | **Flavor entry points** (`main_*.dart`) | Re-render only if greenfield | Skip if user modified |
 | **Folder skeleton** (`lib/config/`, etc.) | Create only if missing | Never delete or overwrite user content |
-| **CLAUDE.md / AGENTS.md** | Three-way merge | User sections preserved |
+| **FLUTTER-PLUGIN.md** | Overwrite with new version | User should reference from their own CLAUDE.md/AGENTS.md |
 
 ### What Never Gets Touched
 

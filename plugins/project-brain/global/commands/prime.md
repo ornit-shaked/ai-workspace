@@ -6,7 +6,7 @@ Read the following files to understand the current project context:
 2. Read `.project-brain/tasks/todo.md` (if it exists) — identify what's active
 
 Then print a summary:
-- Project name and what it does (from project CLAUDE.md)
+- Project name and what it does
 - What tasks are currently active
 - What happened in the last few sessions
 
