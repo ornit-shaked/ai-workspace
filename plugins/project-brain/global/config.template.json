@@ -1,18 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Exec(git commit)",
-      "Exec(git push)",
-      "Exec(git pull)",
-      "Exec(git checkout)",
-      "Exec(git branch)",
-      "Exec(git log)",
-      "Exec(git diff)",
-      "Exec(git status)",
-      "Exec(git add)",
-      "Exec(npm test)",
-      "Exec(npm run)",
+      "Exec(git)",
+      "Exec(npm)",
       "Exec(npx)",
+      "Exec(node)",
       "Read(**)",
       "Write(src/**)",
       "Write(tests/**)",
