@@ -9,7 +9,9 @@
     "settings.json": "global/settings.template.json"
   },
   "global_dirs": ["skills", "agents"],
-  "project_files": {},
+  "project_files": {
+    "work-state.md": "project/template/work-state.md"
+  },
   "brain_dir": ".project-brain",
   "brain_files": {
     "memory/history.md": "project/template/memory/history.md",
