@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Project memory, tasks, plans, and history with global AI config",
   "global_files": {
+    "CLAUDE.md": "global/CLAUDE.template.md",
     "BRAIN-PLUGIN-INSTRUCTIONS.md": "global/BRAIN-PLUGIN-INSTRUCTIONS.template.md",
     "about-me.md": "global/about-me.template.md",
     "settings.json": "global/settings.template.json"
