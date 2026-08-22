@@ -1,3 +1,11 @@
+---
+name: plan-product
+description: Generate a phased feature roadmap from raw product ideas
+triggers:
+  - user
+disable-model-invocation: true
+---
+
 # /plan-product — Product Feature Roadmap
 
 Usage: `/plan-product [product description or raw ideas]`

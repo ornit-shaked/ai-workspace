@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Flutter development standards, architecture patterns, and project scaffolding",
   "global_files": {},
-  "global_dirs": {},
+  "global_dirs": [],
   "project_files": {
     "FLUTTER-PLUGIN.md": "project/FLUTTER-PLUGIN.template.md",
 
@@ -45,10 +45,7 @@
   },
   "brain_files": {},
   "brain_dirs": [],
-  "agents": {
-    "claude": [],
-    "windsurf": []
-  },
+  "project_agent_dirs": [],
   "pubspec_deps": {
     "dependencies": {
       "flutter_bloc": "^9.1.1",

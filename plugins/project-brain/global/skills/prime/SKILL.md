@@ -1,3 +1,12 @@
+---
+name: prime
+description: Session start - read project context and history
+model: haiku
+triggers:
+  - user
+disable-model-invocation: true
+---
+
 # /prime — Session Start
 
 Read the following files to understand the current project context:

@@ -37,6 +37,4 @@ All project-specific memory, tasks, and documentation are in `.project-brain/`:
 ## Global Configuration
 
 For global rules and preferences, see your agent's global config directory:
-- `~/.claude/` (Claude)
-- `~/.codeium/windsurf/` (Windsurf/Cascade)  
-- `~/.devin/` (Devin)
+- `{{AGENT_CONFIG_DIR}}/`

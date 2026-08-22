@@ -11,13 +11,14 @@ Each stage produces artifacts under `features/<slug>/` and tracks state in `work
 
 ## What It Installs
 
-### Commands (Global)
+### Skills (Global)
 - `/plan-product [description]` — Generate a phased feature roadmap from raw product ideas
 - `/promote-feature <slug> <title>` — Create a new feature from an idea
 - `/write-spec <slug>` — Draft the specification
 - `/write-plan <slug>` — Draft the implementation plan
 - `/decompose-tasks <slug>` — Break plan into executable tasks
 - `/full-prime` — Show all features, stages, and comprehensive suggestions
+- `/archive-feature <slug>` — Archive a completed feature
 
 ### Project Files
 - `work-state.md` — Canonical work-state file at project root (shared with Project Brain)
@@ -34,12 +35,34 @@ Each feature creates a directory at `features/<slug>/`:
 ## Installation
 
 ```bash
-# Install Project Brain first (required dependency)
-node index.js install project-brain ~/code/your-project
+# Install Project Brain first (recommended)
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project
 
 # Then install Lifecycle Management
-node index.js install lifecycle-management ~/code/your-project
+npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project
+
+# For Devin, add --agent devin to either command
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project --agent devin
+npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project --agent devin
 ```
+
+---
+
+## Integration with Your Agent
+
+After installation, add references to your agent's main instruction file:
+
+**Project config** (in your project root):
+```markdown
+Read LIFECYCLE-PLUGIN.md for feature lifecycle and skills.
+```
+
+This ensures your agent knows about:
+- Global skills: `/plan-product`, `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
+- Project structure: `features/`, `work-state.md`, `product-roadmap.md`
+- Feature lifecycle workflow and approval gates
+
+---
 
 ## Dependencies
 

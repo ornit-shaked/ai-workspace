@@ -5,15 +5,21 @@ Plugin installer for AI-assisted development — one command to set up memory, l
 ## Quick Start
 
 ```bash
-# Install a plugin
-npx @oshaked/ai-workspace install <plugin-name> ~/your-project
+# Install a plugin (Claude is default)
+npx github:ornit-shaked/ai-workspace install <plugin-name> ~/your-project
 
-# Example: Install both recommended plugins
-npx @oshaked/ai-workspace install project-brain ~/your-project
-npx @oshaked/ai-workspace install lifecycle-management ~/your-project
+# Install all recommended plugins
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project
+npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project
+npx github:ornit-shaked/ai-workspace install flutter-plugin ~/your-project
+
+# For Devin, add --agent devin
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project --agent devin
+npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project --agent devin
+npx github:ornit-shaked/ai-workspace install flutter-plugin ~/your-project --agent devin
 ```
 
-**Supported agents:** Claude (default), Windsurf (`--agent windsurf`)
+**Supported agents:** Claude (default), Devin (`--agent devin`)
 
 ---
 
@@ -34,8 +40,7 @@ npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 ### project-brain
 **Manages:** Memory, learning, session management  
 **Installs:** Global AI config + `.project-brain/` directory  
-**Commands:** `/prime`, `/wrap`, `/quick-commit`, `/commit-push-pr`, `/grill-branch`  
-**Skills:** `dream` (lesson analyzer)
+**Skills:** `/prime`, `/wrap`, `/quick-commit`, `/commit-push-pr`, `/grill-branch`, `dream` (lesson analyzer)
 
 **You get:**
 - Cross-session memory (history.md, instructions.md)
@@ -49,7 +54,7 @@ npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 ### lifecycle-management
 **Manages:** Features, backlog, PRs, task tracking  
 **Installs:** `work-state.md` + `features/` directory  
-**Commands:** `/plan-product`, `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
+**Skills:** `/plan-product`, `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
 
 **You get:**
 - Feature lifecycle: product planning → idea → spec → plan → todo → done
@@ -95,20 +100,23 @@ npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 
 ## Installation Options
 
-### From npm (after publishing)
-```bash
-npx @oshaked/ai-workspace install <plugin-name> ~/your-project
-npx @oshaked/ai-workspace install <plugin-name> ~/your-project --agent windsurf
-```
-
-### From GitHub (development)
+### From GitHub (recommended)
 ```bash
 npx github:ornit-shaked/ai-workspace install <plugin-name> ~/your-project
+npx github:ornit-shaked/ai-workspace install <plugin-name> ~/your-project --agent devin
 ```
 
 ### Local development
 ```bash
+cd C:\Users\oshaked\ai-workspace
 node index.js install <plugin-name> ~/your-project
+node index.js install <plugin-name> ~/your-project --agent devin
+```
+
+### From npm (after publishing)
+```bash
+npx @oshaked/ai-workspace install <plugin-name> ~/your-project
+npx @oshaked/ai-workspace install <plugin-name> ~/your-project --agent devin
 ```
 
 ---
@@ -117,14 +125,14 @@ node index.js install <plugin-name> ~/your-project
 
 **1. Integrate with your agent:**
 
-Add references to your agent's main instruction file:
+Add references to your agent's main instruction file (see installation output for specific paths):
 
-**Global** (`~/.claude/CLAUDE.md` or `~/.codeium/windsurf/AGENTS.md`):
+**Global config:**
 ```markdown
 Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
 ```
 
-**Project** (`.claude/CLAUDE.md` or `.windsurf/AGENTS.md`):
+**Project config:**
 ```markdown
 Read BRAIN-PLUGIN.md for project memory structure.
 Read LIFECYCLE-PLUGIN.md for feature lifecycle commands.

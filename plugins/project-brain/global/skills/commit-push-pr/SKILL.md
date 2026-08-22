@@ -1,5 +1,10 @@
 ---
-description: "Commit, push, and open a PR"
+name: commit-push-pr
+description: Commit, push, and open a PR
+model: haiku
+triggers:
+  - user
+disable-model-invocation: true
 ---
 
 Follow these steps in order:

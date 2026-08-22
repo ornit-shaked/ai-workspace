@@ -52,8 +52,8 @@ plugins/
 
 ### Design Principle: Global vs Project Scope (locked)
 
-**Global config (`~/.claude/`, `~/.codeium/windsurf/`, etc.) stays framework-agnostic.** It holds
-tooling that's useful across every project regardless of tech stack — commands, skills, memory
+**Global config (e.g. `~/.claude/` for Claude, `~/.config/devin/` for Devin) stays framework-agnostic.** It holds
+tooling that's useful across every project regardless of tech stack — skills, memory
 conventions (this is what `project-brain` deploys via `global_files`/`global_dirs`).
 
 **Framework/technology-specific content is project-scoped, not global.** Rules, templates,
@@ -68,7 +68,7 @@ turned out to generalize beyond one stack) — but that scope doesn't exist yet,
 content doesn't default into it just because it's reusable in theory.
 
 Applying this today:
-- `project-brain` plugin → **Global & Project** (it *is* the cross-project tooling: commands,
+- `project-brain` plugin → **Global & Project** (it *is* the cross-project tooling: skills,
   memory conventions go global; per-project task/history tracking goes to `.project-brain/`).
 - `flutter-plugin` → **Project only** (all of it — rules, ADRs, templates, skills — is Flutter-
   specific and has no reason to exist outside a Flutter project).
@@ -110,18 +110,13 @@ node index.js install project-brain ~/code/test-project
   "global_files": {
     "BRAIN-PLUGIN-INSTRUCTIONS.md": "global/BRAIN-PLUGIN-INSTRUCTIONS.template.md"
   },
-  "global_dirs": {
-    "commands": "global/commands"
-  },
+  "global_dirs": ["skills"],
   "project_files": {
     "PLUGIN-NAME.md": "project/PLUGIN-NAME.template.md"
   },
   "brain_files": {},
   "brain_dirs": [],
-  "agents": {
-    "claude": [".claude/commands"],
-    "windsurf": [".devin/workflows"]
-  }
+  "project_agent_dirs": ["skills"]
 }
 ```
 

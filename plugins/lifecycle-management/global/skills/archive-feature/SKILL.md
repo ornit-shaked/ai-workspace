@@ -1,5 +1,10 @@
 ---
+name: archive-feature
 description: Archive a completed feature to Completed Features section
+model: haiku
+triggers:
+  - user
+disable-model-invocation: true
 ---
 
 # /archive-feature — Archive Completed Feature

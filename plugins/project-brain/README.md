@@ -21,18 +21,17 @@ Project Brain manages **memory and learning**, not tasks or features:
 ## What It Installs
 
 ### Global AI Config
-Installed in `~/.claude/` or `~/.codeium/windsurf/` (agent-specific):
+Installed in your agent's global config directory (see installation output for path):
 
 - `BRAIN-PLUGIN-INSTRUCTIONS.md` — Global rules and preferences
 - `about-me.md` — User profile (edit to describe yourself)
 - `settings.json` — Configuration settings
-- `commands/` — Session management commands
+- `skills/` — All skills (SKILL.md format, compatible with both Claude Code and Devin)
   - `/prime` — Session start
   - `/wrap` — Session end
   - `/quick-commit` — Fast commit workflow
   - `/commit-push-pr` — Commit, push, and open PR
   - `/grill-branch` — Review branch changes
-- `skills/` — Reusable skills
   - `dream` — Lesson analyzer (routes inbox → permanent destinations)
 
 ### Project Structure
@@ -51,12 +50,33 @@ Installed in your project directory:
 ## Installation
 
 ```bash
-# Install Project Brain
-npx @oshaked/ai-workspace install project-brain ~/your-project
+# Install Project Brain (default: Claude)
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project
 
-# For Windsurf
-npx @oshaked/ai-workspace install project-brain ~/your-project --agent windsurf
+# For Devin
+npx github:ornit-shaked/ai-workspace install project-brain ~/your-project --agent devin
 ```
+
+---
+
+## Integration with Your Agent
+
+After installation, add references to your agent's main instruction file:
+
+**Global config** (in your agent's global config directory):
+```markdown
+Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
+```
+
+**Project config** (in your project root):
+```markdown
+Read BRAIN-PLUGIN.md for project memory structure and session commands.
+```
+
+This ensures your agent knows about:
+- Global skills: `/prime`, `/wrap`, `/quick-commit`, `/commit-push-pr`, `/grill-branch`, `dream`
+- Project structure: `.project-brain/memory/`, `.project-brain/inbox/`
+- Session workflow and memory conventions
 
 ---
 
@@ -142,16 +162,16 @@ When both plugins are installed, they share `work-state.md`:
 
 ---
 
-## Commands Reference
+## Skills Reference
 
-| Command | Purpose | Reads | Writes |
-|---------|---------|-------|--------|
+| Skill | Purpose | Reads | Writes |
+|-------|---------|-------|--------|
 | `/prime` | Session start | history.md, work-state.md | — |
 | `/wrap` | Session end | — | history.md, inbox/lessons.md |
 | `/quick-commit` | Fast commit | — | git commit |
 | `/commit-push-pr` | Commit + push + PR | — | git commit, git push, PR |
 | `/grill-branch` | Review branch | git diff | — |
-| `dream` (skill) | Process lessons | inbox/lessons.md, instructions.md, CLAUDE.md, work-state.md | instructions.md, CLAUDE.md, work-state.md, inbox/archive/ |
+| `dream` | Process lessons | inbox/lessons.md, instructions.md, CLAUDE.md, work-state.md | instructions.md, CLAUDE.md, work-state.md, inbox/archive/ |
 
 ---
 
@@ -181,14 +201,14 @@ When both plugins are installed, they share `work-state.md`:
 
 **Integration with your agent:**
 
-Add to your agent's main instruction file:
+Add to your agent's main instruction file (see installation output for specific paths):
 
-**Global** (`~/.claude/CLAUDE.md` or `~/.codeium/windsurf/AGENTS.md`):
+**Global config:**
 ```markdown
 Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
 ```
 
-**Project** (`.claude/CLAUDE.md` or `.windsurf/AGENTS.md`):
+**Project config:**
 ```markdown
 Read BRAIN-PLUGIN.md for project memory structure and session commands.
 ```
@@ -210,7 +230,7 @@ Read BRAIN-PLUGIN.md for project memory structure and session commands.
 **Idempotent:** Safe to re-run installation.
 
 **What gets upgraded:**
-- Global commands (overwritten with new versions)
+- Global skills (overwritten with new versions)
 - Global instructions template (merged with user edits)
 - Project templates (created if missing, never overwrites existing)
 

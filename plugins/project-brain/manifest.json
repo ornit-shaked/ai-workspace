@@ -7,18 +7,7 @@
     "about-me.md": "global/about-me.template.md",
     "settings.json": "global/settings.template.json"
   },
-  "global_dirs": {
-    "claude": {
-      "commands": "global/commands",
-      "agents": "global/agents",
-      "skills": "global/skills"
-    },
-    "windsurf": {
-      "global_workflows": "global/commands",
-      "agents": "global/agents",
-      "skills": "global/skills"
-    }
-  },
+  "global_dirs": ["skills", "agents"],
   "project_files": {
     "BRAIN-PLUGIN.md": "project/BRAIN-PLUGIN.template.md"
   },
@@ -32,14 +21,8 @@
     "plans",
     "inbox/archive"
   ],
-  "agents": {
-    "claude": [
-      ".claude/commands",
-      ".claude/skills",
-      ".claude/agents"
-    ],
-    "windsurf": [
-      ".devin/workflows"
-    ]
-  }
+  "project_agent_dirs": [
+    "skills",
+    "agents"
+  ]
 }

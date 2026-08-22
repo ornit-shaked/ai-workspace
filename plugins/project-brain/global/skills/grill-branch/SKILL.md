@@ -1,3 +1,11 @@
+---
+name: grill-branch
+description: Adversarial code review - scrutinize changes before shipping
+triggers:
+  - user
+disable-model-invocation: true
+---
+
 Adversarial code review. Don't let me ship until the changes pass your scrutiny.
 
 Steps:

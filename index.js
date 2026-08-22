@@ -10,17 +10,17 @@ const { install } = require("./lib/installer");
 
 function printUsage() {
   console.log(`
-Usage: ai-workspace install <plugin> <target-dir> [--agent claude|windsurf|devin]
+Usage: ai-workspace install <plugin> <target-dir> [--agent claude|devin]
 
 Commands:
   install   Install a plugin into a project directory
 
 Options:
-  --agent   AI tool to configure (claude, windsurf, devin). Default: claude
+  --agent   AI tool to configure (claude, devin). Default: claude
 
 Examples:
   npx @oshaked/ai-workspace install project-brain ~/code/my-project
-  npx @oshaked/ai-workspace install project-brain . --agent windsurf
+  npx @oshaked/ai-workspace install project-brain . --agent devin
   npx @oshaked/ai-workspace install flutter-plugin ~/code/flutter-app --agent devin
 `);
 }
@@ -44,7 +44,7 @@ if (command !== "install") {
 
 if (args.length < 3) {
   console.error("Error: Missing arguments.");
-  console.error("Usage: ai-workspace install <plugin> <target-dir> [--agent claude|windsurf|devin]");
+  console.error("Usage: ai-workspace install <plugin> <target-dir> [--agent claude|devin]");
   process.exit(1);
 }
 
@@ -55,7 +55,7 @@ let agent = "claude";
 const agentIndex = args.indexOf("--agent");
 if (agentIndex !== -1 && args[agentIndex + 1]) {
   agent = args[agentIndex + 1];
-  const validAgents = ["claude", "windsurf", "devin"];
+  const validAgents = ["claude", "devin"];
   if (!validAgents.includes(agent)) {
     console.error(`Error: Invalid agent "${agent}". Valid: ${validAgents.join(", ")}`);
     process.exit(1);

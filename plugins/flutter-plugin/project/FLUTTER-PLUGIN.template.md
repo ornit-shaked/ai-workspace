@@ -21,11 +21,7 @@ All Flutter-specific architectural decisions are documented in `docs/adr/`:
 
 ## Coding Conventions
 
-Path-scoped coding conventions are enforced via agent rules directory:
-
-- `.claude/rules/` (Claude)
-- `.windsurf/rules/` (Windsurf/Cascade)
-- `.devin/rules/` (Devin)
+Path-scoped coding conventions are enforced via agent rules directory ({{AGENT_DIR}}/rules/).
 
 Read these before editing matching file paths.
 

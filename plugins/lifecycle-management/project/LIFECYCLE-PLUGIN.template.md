@@ -7,16 +7,17 @@
 Features move through a structured pipeline: product planning → idea → spec → plan → todo → implementation.
 Product planning identifies all features; each then progresses individually through the lifecycle.
 
-### Commands
+### Skills
 
-| Command | Purpose | Approval Gate |
-|---------|---------|---------------|
+| Skill | Purpose | Approval Gate |
+|-------|---------|---------------|
 | `/plan-product [description]` | Generate phased feature roadmap from raw ideas | Required before finalizing |
 | `/promote-feature <slug> <title>` | Create a new feature from an idea | None |
 | `/write-spec <slug>` | Draft the specification | Required before `spec_ok` |
 | `/write-plan <slug>` | Draft the implementation plan | Required before `plan_ok` |
 | `/decompose-tasks <slug>` | Break plan into executable tasks | Required before `todo_ok` |
 | `/full-prime` | Show all features, stages, and next actions | None |
+| `/archive-feature <slug>` | Archive a completed feature | None (`todo_ok = ✅` required) |
 
 ### Rules
 

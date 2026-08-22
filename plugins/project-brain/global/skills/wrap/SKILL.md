@@ -1,3 +1,12 @@
+---
+name: wrap
+description: Session end - update history and capture learnings
+model: haiku
+triggers:
+  - user
+disable-model-invocation: true
+---
+
 # /wrap — Session End
 
 Perform the following end-of-session tasks:

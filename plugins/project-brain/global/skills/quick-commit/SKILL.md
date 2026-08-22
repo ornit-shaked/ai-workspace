@@ -1,5 +1,10 @@
 ---
-description: "Stage all changes and commit with a descriptive message"
+name: quick-commit
+description: Stage all changes and commit with a descriptive message
+model: haiku
+triggers:
+  - user
+disable-model-invocation: true
 ---
 
 1. Run `git status` to see the current state

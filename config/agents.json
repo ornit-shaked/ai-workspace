@@ -8,33 +8,19 @@
       "project_mcp_config_filename": "mcp_config.json",
       "subdirs": {
         "rules": "rules",
-        "commands": "commands",
         "skills": "skills",
         "agents": "agents"
       }
     },
     "devin": {
       "name": "Devin",
-      "global_config_dir": "~/.devin",
+      "global_config_dir": "~/.config/devin",
+      "global_config_dir_win": "%APPDATA%/devin",
       "project_dir_name": ".devin",
       "mcp_config_filename": "mcp_config.json",
       "project_mcp_config_filename": "mcp_config.json",
       "subdirs": {
         "rules": "rules",
-        "workflows": "workflows",
-        "skills": "skills",
-        "agents": "agents"
-      }
-    },
-    "windsurf": {
-      "name": "Windsurf",
-      "global_config_dir": "~/.codeium/windsurf",
-      "project_dir_name": ".windsurf",
-      "mcp_config_filename": "mcp_config.json",
-      "project_mcp_config_filename": "mcp_config.json",
-      "subdirs": {
-        "rules": "rules",
-        "workflows": "workflows",
         "skills": "skills",
         "agents": "agents"
       }

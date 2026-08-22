@@ -197,7 +197,7 @@ function verifyFlutterMcpConfiguration(projectDir) {
   console.log(`\n  Manual setup using CLI:`);
   console.log(`  - Claude:   claude mcp add flutter -- npx @flutter/agent-plugins mcp`);
   console.log(`  - Devin:    devin mcp add flutter -- npx @flutter/agent-plugins mcp`);
-  console.log(`  - Windsurf: Settings > Tools > Add Server (no CLI available)`);
+  // Windsurf removed — now part of Devin
   
   console.log(`\n  Or manually edit your MCP config file and restart your AI tool.`);
   
@@ -209,7 +209,7 @@ function verifyFlutterMcpConfiguration(projectDir) {
  * Creates agent-specific MCP config file with Flutter MCP server configuration
  * Uses agent config from config/agents.json for all path and filename resolution
  * Tries project-level config first (.devin/mcp_config.json), falls back to user-level (~/.config/devin/mcp_config.json)
- * @param {string} agent - Agent name (claude, windsurf, devin)
+ * @param {string} agent - Agent name (claude, devin)
  * @param {Object} utils - Installer utilities with getGlobalConfigPath and getAgentConfig
  * @param {string} projectDir - Project directory path
  * @returns {boolean} true if successful, false otherwise
@@ -314,8 +314,6 @@ function autoInstallFlutterMcp(agent, utils, projectDir) {
       console.log(`  claude mcp add flutter -- npx @flutter/agent-plugins mcp`);
     } else if (agent === "devin") {
       console.log(`  devin mcp add flutter -- npx @flutter/agent-plugins mcp`);
-    } else if (agent === "windsurf") {
-      console.log(`  Windsurf: Use Settings > Tools > Add Server (no CLI available)`);
     }
     
     console.log(`\n  Or manually edit your MCP config file:`);

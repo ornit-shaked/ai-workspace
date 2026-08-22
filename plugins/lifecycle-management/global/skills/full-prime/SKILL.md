@@ -1,3 +1,11 @@
+---
+name: full-prime
+description: Show all features, stages, and comprehensive suggestions
+triggers:
+  - user
+disable-model-invocation: true
+---
+
 # /full-prime — Full Session Context
 
 Read the following files to understand the full project state:
