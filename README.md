@@ -22,7 +22,7 @@ npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 | Plugin | Purpose | Key Features | README |
 |--------|---------|--------------|--------|
 | **project-brain** | Memory & learning | Session history, lesson capture, dream skill, `/prime`, `/wrap` | [README](plugins/project-brain/README.md) |
-| **lifecycle-management** | Feature lifecycle | Feature tracking, backlog, PRs, `/promote-feature`, `/write-spec`, `/full-prime` | [README](plugins/lifecycle-management/README.md) |
+| **lifecycle-management** | Feature lifecycle | Feature tracking, backlog, PRs, `/plan-product`, `/promote-feature`, `/write-spec`, `/full-prime` | [README](plugins/lifecycle-management/README.md) |
 | **flutter-plugin** | Flutter project bootstrap | Bloc/Cubit, Freezed, flavors, ADRs, folder structure | [README](plugins/flutter-plugin/README.md) |
 
 **Recommended combo:** `project-brain` + `lifecycle-management` for full memory + task management.
@@ -49,10 +49,10 @@ npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 ### lifecycle-management
 **Manages:** Features, backlog, PRs, task tracking  
 **Installs:** `work-state.md` + `features/` directory  
-**Commands:** `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
+**Commands:** `/plan-product`, `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
 
 **You get:**
-- Feature lifecycle: idea → spec → plan → todo → done
+- Feature lifecycle: product planning → idea → spec → plan → todo → done
 - Backlog for ideas not yet promoted to features
 - PR tracking linked to features
 - Boolean state tracking (spec_gen/spec_ok, plan_gen/plan_ok, todo_gen/todo_ok)

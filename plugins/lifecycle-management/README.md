@@ -5,13 +5,14 @@ Feature lifecycle management for AI-assisted development — structured progress
 ## What It Does
 
 Provides a structured pipeline for moving features through stages:
-- **idea** → **spec** → **plan** → **todo** → **implementation** → **done**
+- **product planning** → **idea** → **spec** → **plan** → **todo** → **implementation** → **done**
 
 Each stage produces artifacts under `features/<slug>/` and tracks state in `work-state.md` at project root.
 
 ## What It Installs
 
 ### Commands (Global)
+- `/plan-product [description]` — Generate a phased feature roadmap from raw product ideas
 - `/promote-feature <slug> <title>` — Create a new feature from an idea
 - `/write-spec <slug>` — Draft the specification
 - `/write-plan <slug>` — Draft the implementation plan
@@ -20,6 +21,7 @@ Each stage produces artifacts under `features/<slug>/` and tracks state in `work
 
 ### Project Files
 - `work-state.md` — Canonical work-state file at project root (shared with Project Brain)
+- `product-roadmap.md` — Phased feature catalog (created by `/plan-product`)
 - `LIFECYCLE-PLUGIN.md` — Documentation and rules reference
 
 ### Per-Feature Artifacts

@@ -10,7 +10,7 @@
 ---
 
 ## 📋 Features
-*Active features moving through the lifecycle: idea → spec → plan → todo → done*
+*Active features moving through the lifecycle: product planning → idea → spec → plan → todo → done*
 
 <!-- lifecycle:features-begin -->
 | Feature | spec_gen | spec_ok | plan_gen | plan_ok | todo_gen | todo_ok | done |

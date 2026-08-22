@@ -10,7 +10,7 @@ Lifecycle Management plugin complete — all 16 tasks done (Groups A-D)
 ---
 
 ## 📋 Features
-*Structured features moving through the lifecycle: idea → spec → plan → todo → done*
+*Structured features moving through the lifecycle: product planning → idea → spec → plan → todo → done*
 
 <!-- lifecycle:features-begin -->
 | Feature | spec_gen | spec_ok | plan_gen | plan_ok | todo_gen | todo_ok |

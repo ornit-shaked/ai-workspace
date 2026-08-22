@@ -4,13 +4,14 @@
 
 ## Feature Lifecycle
 
-Features move through a structured pipeline: idea → spec → plan → todo → implementation.
-Each stage produces an artifact under `features/<slug>/` and advances state in `work-state.md`.
+Features move through a structured pipeline: product planning → idea → spec → plan → todo → implementation.
+Product planning identifies all features; each then progresses individually through the lifecycle.
 
 ### Commands
 
 | Command | Purpose | Approval Gate |
 |---------|---------|---------------|
+| `/plan-product [description]` | Generate phased feature roadmap from raw ideas | Required before finalizing |
 | `/promote-feature <slug> <title>` | Create a new feature from an idea | None |
 | `/write-spec <slug>` | Draft the specification | Required before `spec_ok` |
 | `/write-plan <slug>` | Draft the implementation plan | Required before `plan_ok` |
@@ -25,6 +26,7 @@ Each stage produces an artifact under `features/<slug>/` and advances state in `
 
 ### File Locations
 
+- **`product-roadmap.md`** — Project root, phased feature catalog (created by `/plan-product`)
 - **`work-state.md`** — Project root, canonical work-state file (shared with Brain)
 - **`features/<slug>/feature.md`** — Feature goal, sources, principles, provenance
 - **`features/<slug>/spec.md`** — Specification (WHAT + WHY-recap)
