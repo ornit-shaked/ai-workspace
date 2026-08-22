@@ -8,9 +8,7 @@
     "settings.json": "global/settings.template.json"
   },
   "global_dirs": ["skills", "agents"],
-  "project_files": {
-    "BRAIN-PLUGIN.md": "project/BRAIN-PLUGIN.template.md"
-  },
+  "project_files": {},
   "brain_dir": ".project-brain",
   "brain_files": {
     "memory/history.md": "project/template/memory/history.md",

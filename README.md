@@ -6,7 +6,7 @@ Plugin installer for AI-assisted development — one command to set up memory, l
 
 ```bash
 # Install a plugin (Claude is default)
-npx github:ornit-shaked/ai-workspace install <plugin-name> ~/your-project
+npx github:ornit-shaked/ai-workspace install <plugin-name> <project-path>
 
 # Install all recommended plugins
 npx github:ornit-shaked/ai-workspace install project-brain ~/your-project
@@ -20,6 +20,11 @@ npx github:ornit-shaked/ai-workspace install flutter-plugin ~/your-project --age
 ```
 
 **Supported agents:** Claude (default), Devin (`--agent devin`)
+
+**Example:**
+```bash
+npx github:ornit-shaked/ai-workspace install project-brain . --agent devin
+```
 
 ---
 
