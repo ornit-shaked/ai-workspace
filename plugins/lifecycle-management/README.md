@@ -20,10 +20,12 @@ Each stage produces artifacts under `features/<slug>/` and tracks state in `work
 - `/full-prime` — Show all features, stages, and comprehensive suggestions
 - `/archive-feature <slug>` — Archive a completed feature
 
+### Global Files
+- `LIFECYCLE-PLUGIN-INSTRUCTIONS.md` — Agent instructions (installed to `~/.claude/` or `~/.config/devin/`)
+
 ### Project Files
 - `work-state.md` — Canonical work-state file at project root (shared with Project Brain)
 - `product-roadmap.md` — Phased feature catalog (created by `/plan-product`)
-- `LIFECYCLE-PLUGIN.md` — Documentation and rules reference
 
 ### Per-Feature Artifacts
 Each feature creates a directory at `features/<slug>/`:
@@ -50,11 +52,10 @@ npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project
 
 ## Integration with Your Agent
 
-After installation, add references to your agent's main instruction file:
+After installation, add this to your global agent config (e.g., `~/.claude/CLAUDE.md` or `~/.config/devin/DEVIN.md`):
 
-**Project config** (in your project root):
 ```markdown
-Read LIFECYCLE-PLUGIN.md for feature lifecycle and skills.
+Read and follow all rules in LIFECYCLE-PLUGIN-INSTRUCTIONS.md
 ```
 
 This ensures your agent knows about:
