@@ -30,14 +30,14 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 |---|---|---|
 | Soft preference, correction, behavioral fix | `instructions.md` | Diff |
 | Missing knowledge, project-specific rule | `CLAUDE.md` | Diff |
-| Idea, not actionable | `backlog.md` | Route |
-| Candidate artifact (command, skill, hook, rule, standard) | `backlog.md` | Recommend |
+| Idea, not actionable | `work-state.md` (Backlog section) | Route |
+| Candidate artifact (command, skill, hook, rule, standard) | `work-state.md` (Backlog section) | Recommend |
 | Session-only note, one-off | Archive only | Discard |
 
 **Classifier logic:** Tag is a hint, not final decision. Analyze lesson content semantically:
 - **Agent behavior** (how to work, preferences, corrections) → `instructions.md`
 - **Project knowledge** (architecture, tech stack, domain facts) → `CLAUDE.md`
-- **Future work** (ideas, candidates) → `backlog.md`
+- **Future work** (ideas, candidates) → `work-state.md` (Backlog section)
 - **One-off notes** → Archive only
 
 When uncertain between `instructions.md` vs `CLAUDE.md`, default to `instructions.md` (safer).
@@ -49,8 +49,7 @@ When uncertain between `instructions.md` vs `CLAUDE.md`, default to `instruction
 | `.project-brain/inbox/lessons.md` | Unprocessed lessons (primary input) |
 | `.project-brain/memory/instructions.md` | Where to add preferences/corrections + check for duplicates |
 | `CLAUDE.md` (project root) | Where to add hard rules/knowledge + check for duplicates |
-| `.project-brain/tasks/todo.md` | Check for duplicate tasks |
-| `.project-brain/tasks/backlog.md` | Check for duplicate ideas/artifacts |
+| `work-state.md` | Check Backlog section for duplicate ideas/artifacts |
 
 ## Approval Flow
 
@@ -85,7 +84,7 @@ Process one lesson at a time. Present proposal with **semantic analysis** and ro
 ## Duplicate Detection
 
 Check all relevant destinations:
-- `tasks/todo.md` and `tasks/backlog.md` — match on keywords, artifact type, goal
+- `work-state.md` (Backlog section) — match on keywords, artifact type, goal
 - `instructions.md` — check if similar preference/correction already exists
 - `CLAUDE.md` — check if similar rule/knowledge already exists
 

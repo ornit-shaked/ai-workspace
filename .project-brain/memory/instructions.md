@@ -19,7 +19,7 @@ How I like AI to respond. Populated over time by corrections during sessions.
 Coding patterns, naming conventions, architecture choices discovered 
 
 - **Skill creation:** Use writing-skills methodology — YAML frontmatter, SKILL.md structure, When to Use section, token-efficient content. See plugins/project-brain/global/skills/dream/SKILL.md as reference.
-- **Agent-specific paths:** Never hardcode agent directories in plugin manifests (e.g., `.claude/rules/`). Use placeholders (`{{AGENT_RULES}}`, `{{AGENT_DIR}}`, `{{AGENT_COMMANDS}}`) that resolve to correct paths per agent (Claude, Windsurf, Devin). All agent config lives in `config/agents.json` with `global_config_dir`, `project_dir_name`, and `subdirs`. See `docs/feature-multi-agent-support.md` for full details.
+- **Agent-specific paths:** Never hardcode agent directories in plugin manifests (e.g., `.claude/rules/`). All agent config lives in `config/agents.json`
 
 ---
 

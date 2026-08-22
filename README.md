@@ -1,132 +1,157 @@
-# Installation
+# AI Workspace
 
-npm package `@oshaked/ai-workspace` — one command to install plugins into any project.
+Plugin installer for AI-assisted development — one command to set up memory, learning, and feature lifecycle management.
 
-## Usage
-
-### From GitHub (no npm publish needed)
+## Quick Start
 
 ```bash
-npx github:ornit-shaked/ai-workspace install project-brain ~/code/my-project
-npx github:ornit-shaked/ai-workspace install project-brain ~/code/my-project --agent windsurf
+# Install a plugin
+npx @oshaked/ai-workspace install <plugin-name> ~/your-project
+
+# Example: Install both recommended plugins
+npx @oshaked/ai-workspace install project-brain ~/your-project
+npx @oshaked/ai-workspace install lifecycle-management ~/your-project
 ```
 
-### From npm (after publishing)
+**Supported agents:** Claude (default), Windsurf (`--agent windsurf`)
 
-```bash
-npx @oshaked/ai-workspace install project-brain ~/code/my-project
-npx @oshaked/ai-workspace install project-brain ~/code/my-project --agent windsurf
-```
-
-### Local development
-
-```bash
-node index.js install project-brain ~/code/my-project
-node index.js install project-brain ~/code/my-project --agent windsurf
-```
+---
 
 ## Available Plugins
 
+| Plugin | Purpose | Key Features | README |
+|--------|---------|--------------|--------|
+| **project-brain** | Memory & learning | Session history, lesson capture, dream skill, `/prime`, `/wrap` | [README](plugins/project-brain/README.md) |
+| **lifecycle-management** | Feature lifecycle | Feature tracking, backlog, PRs, `/promote-feature`, `/write-spec`, `/full-prime` | [README](plugins/lifecycle-management/README.md) |
+| **flutter-plugin** | Flutter project bootstrap | Bloc/Cubit, Freezed, flavors, ADRs, folder structure | [README](plugins/flutter-plugin/README.md) |
+
+**Recommended combo:** `project-brain` + `lifecycle-management` for full memory + task management.
+
+---
+
+## What Each Plugin Does
+
 ### project-brain
-**Purpose**: Complete AI workspace setup with session management, task tracking, and learning capabilities.
+**Manages:** Memory, learning, session management  
+**Installs:** Global AI config + `.project-brain/` directory  
+**Commands:** `/prime`, `/wrap`, `/quick-commit`, `/commit-push-pr`, `/grill-branch`  
+**Skills:** `dream` (lesson analyzer)
 
-**What it installs**:
-- Global AI config with `/prime` and `/wrap` commands for session management
-- Project structure with `.project-brain/` for tasks, history, PRD, and architecture
-- Memory system for cross-session learning
+**You get:**
+- Cross-session memory (history.md, instructions.md)
+- Lesson capture inbox → dream skill routes to permanent destinations
+- Session start/end workflow
 
-**Installation**:
+**[Read more →](plugins/project-brain/README.md)**
+
+---
+
+### lifecycle-management
+**Manages:** Features, backlog, PRs, task tracking  
+**Installs:** `work-state.md` + `features/` directory  
+**Commands:** `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
+
+**You get:**
+- Feature lifecycle: idea → spec → plan → todo → done
+- Backlog for ideas not yet promoted to features
+- PR tracking linked to features
+- Boolean state tracking (spec_gen/spec_ok, plan_gen/plan_ok, todo_gen/todo_ok)
+
+**[Read more →](plugins/lifecycle-management/README.md)**
+
+---
+
+### flutter-plugin
+**Manages:** Flutter project bootstrap with architectural decisions  
+**Installs:** ADRs, rules, folder structure, dependencies  
+**Upstream:** Auto-installs `flutter/agent-plugins`, `dart-lang/skills`, Flutter MCP
+
+**You get:**
+- Bloc/Cubit state management (overrides Flutter default)
+- Freezed everywhere (models, states, events)
+- very_good_analysis linting
+- 3 flavors (dev/staging/prod)
+- Layered folder structure + ADRs
+
+**[Read more →](plugins/flutter-plugin/README.md)**
+
+---
+
+## Plugin Responsibilities
+
+| What | project-brain | lifecycle-management | flutter-plugin |
+|------|---------------|----------------------|----------------|
+| **Memory** | ✅ | — | — |
+| **Learning** | ✅ | — | — |
+| **Features** | — | ✅ | — |
+| **Backlog** | Writes (dream) | ✅ Owns | — |
+| **PRs** | — | ✅ | — |
+| **Tasks** | — | ✅ | — |
+| **Bootstrap** | — | — | ✅ |
+
+**Integration:** `project-brain` + `lifecycle-management` share `work-state.md` with HTML comment fences for multi-writer safety.
+
+---
+
+## Installation Options
+
+### From npm (after publishing)
 ```bash
-npx @oshaked/ai-workspace install project-brain ~/my-project
+npx @oshaked/ai-workspace install <plugin-name> ~/your-project
+npx @oshaked/ai-workspace install <plugin-name> ~/your-project --agent windsurf
 ```
 
-## What Gets Installed
-
-The `project-brain` plugin installs in **two locations**:
-
-1. **Global AI config** (`~/.claude/` or `~/.codeium/windsurf/`)
-   - `BRAIN-PLUGIN-INSTRUCTIONS.md` — Global rules, preferences, and behaviors
-   - `about-me.md` — User profile template (edit to describe yourself)
-   - `settings.json` — Configuration settings
-   - `commands/` — Session management commands (`/prime`, `/wrap`, etc.)
-   - `skills/` — Reusable skills
-   - `agents/` — Agent-specific configurations
-
-2. **Project structure** (target project directory)
-   - `BRAIN-PLUGIN.md` — Reference pointer to `.project-brain/` structure
-   - `.project-brain/` directory with tasks, history, PRD, architecture, and memory
-   - Agent-specific directories (`.claude/`, `.windsurf/`, `.devin/`)
-
-# User Guide
-
-## Session Management
-
-**At session start:** : You need to manually run '/prime' command to Reads global and project context (about-me, instructions, history, todo) to understand current state.:
+### From GitHub (development)
 ```bash
-/prime
+npx github:ornit-shaked/ai-workspace install <plugin-name> ~/your-project
 ```
 
-**At session end:** : You need to manually run 'wrap' command to Updates history, instructions, and todo based on session work. Processes lessons from inbox.:
+### Local development
 ```bash
-/wrap
+node index.js install <plugin-name> ~/your-project
 ```
 
-**Note:** Future versions may add IDE hooks for automatic execution.
+---
 
-## User Customization
+## After Installation
 
-**What you can edit:**
-- **`~/.claude/about-me.md`** — Edit to describe yourself (global, applies to all projects)
-- **`~/.claude/BRAIN-PLUGIN-INSTRUCTIONS.md`** — Global rules, preferences, and learned behaviors (cross-project)
-- **Project `BRAIN-PLUGIN.md`** — Reference pointer (minimal, usually no need to edit)
-- **`.project-brain/memory/instructions.md`** — Add project-specific preferences and corrections
+**1. Integrate with your agent:**
 
-**Integration with your agent:**
-After installation, add these references to your agent's main instruction file:
+Add references to your agent's main instruction file:
 
-**Global (in `~/.claude/CLAUDE.md` or `~/.codeium/windsurf/AGENTS.md`):**
+**Global** (`~/.claude/CLAUDE.md` or `~/.codeium/windsurf/AGENTS.md`):
 ```markdown
 Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
 ```
 
-**Project (in `.claude/CLAUDE.md` or `.windsurf/AGENTS.md`):**
+**Project** (`.claude/CLAUDE.md` or `.windsurf/AGENTS.md`):
 ```markdown
-Read BRAIN-PLUGIN.md for project memory structure and session commands.
+Read BRAIN-PLUGIN.md for project memory structure.
+Read LIFECYCLE-PLUGIN.md for feature lifecycle commands.
+Read FLUTTER-PLUGIN.md for Flutter architecture and conventions.
 ```
 
-**Installation behavior:**
-- Plugin-specific files are always created (no conflicts with existing CLAUDE.md/AGENTS.md)
-- You control integration by adding references to your main instruction file
-- Plugins never overwrite your existing agent configuration
+**2. Start using commands:**
+- `/prime` — Session start (project-brain)
+- `/full-prime` — Feature overview (lifecycle-management)
+- `/wrap` — Session end (project-brain)
 
-## Plugin Structure
-
-| Path | Purpose |
-|------|---------|
-| `package.json` | npm package definition |
-| `index.js` | CLI entry point |
-| `plugins/project-brain/` | Project Brain plugin (manifest + templates) |
-| `plugins/project-brain/global/` | Templates for global AI config (`~/.claude/`) |
-| `plugins/project-brain/project/` | Templates for project structure |
-
-Each plugin lives in `plugins/<name>/` with:
-- `manifest.json` — declares what files/dirs to create and where
-- `global/` — templates for global AI config (`.template.md` files)
-- `project/` — templates for project structure (`.template.md` files)
-
-Template files (`.template.md`, `.template.json`) are renamed during installation:
-- `FLUTTER-PLUGIN.template.md` → `FLUTTER-PLUGIN.md`
-- `BRAIN-PLUGIN.template.md` → `BRAIN-PLUGIN.md`
-- `BRAIN-PLUGIN-INSTRUCTIONS.template.md` → `BRAIN-PLUGIN-INSTRUCTIONS.md`
+See each plugin's README for detailed usage.
 
 ---
 
-## Documentation
+## For Plugin Developers
 
-This project uses the project-brain plugin to manage tasks and history.
-you can find it under **`docs/plugins/project-brain/`** folder
+Each plugin lives in `plugins/<name>/` with:
+- `manifest.json` — Declares what files/dirs to create and where
+- `global/` — Templates for global AI config (`.template.md` → installed as `.md`)
+- `project/` — Templates for project structure (`.template.md` → installed as `.md`)
+- `README.md` — User-facing documentation
 
-in addition to the plugin documentation, here are the key files:
-- `PLUGIN.md` - Goal, files, sources, how it works
-- `ROADMAP.md` - Phase 2 plans
-- `research/` - Historical research and sources
+See existing plugins for examples.
+
+---
+
+## License
+
+MIT

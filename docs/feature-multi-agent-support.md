@@ -1,7 +1,7 @@
 # Agent Path Resolution — ai-workspace
 
 **Status:** Implemented (2026-08-07)  
-**Related:** Epic 4 (Flutter Delta), Multi-agent support
+**Related:** Multi-agent support
 
 ---
 

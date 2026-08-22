@@ -5,13 +5,26 @@ Cross-project preferences, working style, and learned behaviors that apply to al
 
 ## Project Brain Plugin Rules
 
+### What This Plugin Does
+
+Project Brain manages **memory and learning**, not tasks or features:
+- ✅ Session history (`memory/history.md`)
+- ✅ Project preferences (`memory/instructions.md`)
+- ✅ Lesson capture (`inbox/lessons.md`)
+- ✅ Dream skill (routes lessons to permanent destinations)
+- ❌ Tasks (managed by lifecycle-management plugin in `work-state.md` and `features/*/todo.md`)
+
 ### Session Management
 
 **At session start:**  
-Ask user to run the `/prime` command before doing anything else.
+Ask user to run the `/prime` command before doing anything else. This reads:
+- `.project-brain/memory/history.md` (last 10 sessions)
+- `work-state.md` (current focus and active features)
 
 **At session end:**  
-When user signals session end (e.g., "done", "wrap", "that's it", "bye", "let's stop"), remind them to run the `/wrap` command before closing.
+When user signals session end (e.g., "done", "wrap", "that's it", "bye", "let's stop"), remind them to run the `/wrap` command before closing. This updates:
+- `.project-brain/memory/history.md` (append 1-line summary)
+- `.project-brain/inbox/lessons.md` (capture corrections, preferences, ideas)
 
 ### Universal Rules
 
@@ -31,7 +44,12 @@ Do not record rejected proposals, abandoned approaches, or reverted changes as c
 
 ### Memory System
 
-When you discover a preference, lesson, pattern, correction, PR or issue, or reusable knowledge, record it in `.project-brain/inbox/lessons.md`. The inbox is a staging area for observations that can later be reviewed and promoted into long-term memory.
+When you discover a preference, lesson, pattern, correction, or reusable knowledge, record it in `.project-brain/inbox/lessons.md`. The inbox is a staging area for observations that can later be reviewed and promoted into long-term memory.
+
+**Lesson routing (via dream skill):**
+- Preferences/corrections → `.project-brain/memory/instructions.md`
+- Project knowledge → `CLAUDE.md`
+- Ideas/candidates → `work-state.md` (Backlog section)
 
 ### Guardrails
 

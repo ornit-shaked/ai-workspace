@@ -60,10 +60,6 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] standard | Global vs project plugin file naming — Global instruction files should use `-INSTRUCTIONS` suffix (e.g., `BRAIN-PLUGIN-INSTRUCTIONS.md`) to indicate they contain rules/preferences that users edit over time. Project reference files use just `-PLUGIN` suffix (e.g., `FLUTTER-PLUGIN.md`) as they're typically read-only pointers. This naming convention clarifies purpose and editability.
 
-- [ ] behavioral | Use explicit directives in agent integration instructions — Instead of passive "See BRAIN-PLUGIN-INSTRUCTIONS.md", use directive language "Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md". This ensures agents actually read and apply the files rather than just being aware they exist. User confirmed this is more effective.
-
 - [ ] correction | Pattern matching for plugin files should match naming convention — Initially checked for `-PLUGIN.md`, `-PLUGIN-GLOBAL.md`, and `-PLUGIN-INSTRUCTIONS.md` in global files. After standardizing on `-PLUGIN-INSTRUCTIONS.md` for global and removing `-PLUGIN-GLOBAL.md`, simplified to only match `-PLUGIN-INSTRUCTIONS.md`. Keep pattern matching aligned with actual naming conventions.
-
-- [ ] preference | User prefers minimal global plugin files — When discussing whether to keep BRAIN-PLUGIN-GLOBAL.md separate from instructions.md, user preferred merging them and using single BRAIN-PLUGIN-INSTRUCTIONS.md file. Rationale: Commands are global (reusable tools), data is local (project-specific), rules should be in one place (not scattered). Simpler mental model.
 
 <!-- Lessons will be appended here by /wrap -->

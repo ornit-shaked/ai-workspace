@@ -105,6 +105,10 @@ function testPluginInstall(pluginName, testProjectDir) {
         "lib/routing/router.dart",
         "lib/ui/features/.gitkeep",
         "testing/.gitkeep"
+      ],
+      "lifecycle-management": [
+        "work-state.md",
+        "LIFECYCLE-PLUGIN.md"
       ]
     };
     
@@ -138,6 +142,30 @@ function testPluginInstall(pluginName, testProjectDir) {
             log(`  ✗ pubspec.yaml missing ${dep}`);
             failed++;
           }
+        }
+      }
+    }
+    
+    // Lifecycle-management specific validation (global commands)
+    if (pluginName === "lifecycle-management") {
+      const globalConfigPath = path.join(os.homedir(), ".claude");
+      const commandsPath = path.join(globalConfigPath, "commands");
+      const requiredCommands = [
+        "promote-feature.md",
+        "write-spec.md",
+        "write-plan.md",
+        "decompose-tasks.md",
+        "full-prime.md"
+      ];
+      
+      for (const cmd of requiredCommands) {
+        const cmdPath = path.join(commandsPath, cmd);
+        if (fs.existsSync(cmdPath)) {
+          log(`  ✓ ~/.claude/commands/${cmd}`);
+          passed++;
+        } else {
+          log(`  ✗ ~/.claude/commands/${cmd} (MISSING)`);
+          failed++;
         }
       }
     }

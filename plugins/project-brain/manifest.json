@@ -24,13 +24,8 @@
   },
   "brain_dir": ".project-brain",
   "brain_files": {
-    "tasks/todo.md": "project/template/tasks/todo.md",
-    "tasks/backlog.md": "project/template/tasks/backlog.md",
-    "tasks/pr.md": "project/template/tasks/pr.md",
     "memory/history.md": "project/template/memory/history.md",
     "memory/instructions.md": "project/template/memory/instructions.md",
-    "prd.md": "project/template/prd.md",
-    "architecture.md": "project/template/architecture.md",
     "inbox/lessons.md": "project/template/inbox/lessons.md"
   },
   "brain_dirs": [

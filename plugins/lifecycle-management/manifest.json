@@ -1,0 +1,35 @@
+{
+  "name": "lifecycle-management",
+  "version": "1.0.0",
+  "description": "Feature lifecycle management — structured progression from idea to implementation",
+  "global_files": {},
+  "global_dirs": {
+    "claude": {
+      "commands": "global/commands"
+    },
+    "windsurf": {
+      "global_workflows": "global/commands"
+    },
+    "devin": {
+      "workflows": "global/commands"
+    }
+  },
+  "project_files": {
+    "LIFECYCLE-PLUGIN.md": "project/LIFECYCLE-PLUGIN.template.md",
+    "work-state.md": "project/work-state.template.md"
+  },
+  "brain_dir": "",
+  "brain_files": {},
+  "brain_dirs": [],
+  "agents": {
+    "claude": [
+      ".claude/commands"
+    ],
+    "windsurf": [
+      ".devin/workflows"
+    ],
+    "devin": [
+      ".devin/workflows"
+    ]
+  }
+}
