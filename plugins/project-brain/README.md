@@ -23,7 +23,8 @@ Project Brain manages **memory and learning**, not tasks or features:
 ### Global AI Config
 Installed in your agent's global config directory (see installation output for path):
 
-- `BRAIN-PLUGIN-INSTRUCTIONS.md` — Global rules and preferences
+- `CLAUDE.md` — Main instruction file (works for both Claude and Devin)
+- `BRAIN-PLUGIN-INSTRUCTIONS.md` — Plugin-specific instructions
 - `about-me.md` — User profile (edit to describe yourself)
 - `settings.json` — Configuration settings
 - `skills/` — All skills (SKILL.md format, compatible with both Claude Code and Devin)
@@ -37,13 +38,11 @@ Installed in your agent's global config directory (see installation output for p
 ### Project Structure
 Installed in your project directory:
 
-- `BRAIN-PLUGIN.md` — Reference pointer to `.project-brain/` structure
 - `.project-brain/` directory:
   - `memory/history.md` — Session history (1-line summaries)
   - `memory/instructions.md` — Project-specific preferences and corrections
   - `inbox/lessons.md` — Lesson capture staging area
   - `inbox/archive/` — Processed lessons archive
-  - `plans/` — Implementation plans (optional)
 
 ---
 
@@ -61,16 +60,14 @@ npx github:ornit-shaked/ai-workspace install project-brain ~/your-project --agen
 
 ## Integration with Your Agent
 
-After installation, add references to your agent's main instruction file:
+The plugin installs `CLAUDE.md` in your agent's global config directory. This file:
+- Works for both Claude Code and Devin
+- Contains universal rules and communication preferences
+- References `BRAIN-PLUGIN-INSTRUCTIONS.md` for plugin-specific instructions
 
-**Global config** (in your agent's global config directory):
+**If `CLAUDE.md` already exists** (installer skips it), add this line:
 ```markdown
 Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
-```
-
-**Project config** (in your project root):
-```markdown
-Read BRAIN-PLUGIN.md for project memory structure and session commands.
 ```
 
 This ensures your agent knows about:
