@@ -26,7 +26,7 @@ Installed in your agent's global config directory (see installation output for p
 - `CLAUDE.md` — Main instruction file (works for both Claude and Devin)
 - `BRAIN-PLUGIN-INSTRUCTIONS.md` — Plugin-specific instructions
 - `about-me.md` — User profile (edit to describe yourself)
-- `settings.json` — Configuration settings
+- `settings.json` (Claude) or `config.json` (Devin) — Agent-specific permissions configuration
 - `skills/` — All skills (SKILL.md format, compatible with both Claude Code and Devin)
   - `/prime` — Session start
   - `/wrap` — Session end
