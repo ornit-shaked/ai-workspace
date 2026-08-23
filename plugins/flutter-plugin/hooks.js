@@ -132,7 +132,7 @@ function autoInstallFlutterAgentPlugins(globalConfigPath) {
   
   console.log(`  install flutter/agent-plugins...`);
   try {
-    execSync("npx skills add @flutter/agent-plugins", {
+    execSync("npx skills add flutter/agent-plugins", {
       stdio: "inherit",
       shell: true
     });
@@ -140,7 +140,7 @@ function autoInstallFlutterAgentPlugins(globalConfigPath) {
     return true;
   } catch (e) {
     console.error(`  ✗ Failed to auto-install flutter/agent-plugins`);
-    console.error(`  Manual installation: npx skills add @flutter/agent-plugins`);
+    console.error(`  Manual installation: npx skills add flutter/agent-plugins`);
     return false;
   }
 }
@@ -153,7 +153,7 @@ function autoInstallDartLangSkills(globalConfigPath) {
   
   console.log(`  install dart-lang/skills...`);
   try {
-    execSync("npx skills add @dart-lang/skills", {
+    execSync("npx skills add dart-lang/skills", {
       stdio: "inherit",
       shell: true
     });
@@ -161,7 +161,7 @@ function autoInstallDartLangSkills(globalConfigPath) {
     return true;
   } catch (e) {
     console.error(`  ✗ Failed to auto-install dart-lang/skills`);
-    console.error(`  Manual installation: npx skills add @dart-lang/skills`);
+    console.error(`  Manual installation: npx skills add dart-lang/skills`);
     return false;
   }
 }
@@ -440,17 +440,14 @@ module.exports = {
     }
     
     verifyFlutterMcpConfiguration(projectDir);
-    
-    // Auto-install MCP configuration (tries project-level first, falls back to user-level)
-    autoInstallFlutterMcp(agent, utils, projectDir);
   },
 
   /**
    * Runs after the core installer deploys files.
-   * Injects pubspec.yaml dependencies.
+   * Injects pubspec.yaml dependencies and configures MCP.
    */
   postInstall(context) {
-    const { projectDir, manifest } = context;
+    const { projectDir, manifest, agent, utils } = context;
 
     if (manifest.pubspec_deps) {
       console.log(`\n--- Flutter Dependencies (pubspec.yaml) ---`);
@@ -463,5 +460,8 @@ module.exports = {
         console.log(`  ${result.added} added, ${result.skipped} skipped`);
       }
     }
+
+    // Auto-install MCP configuration (runs after project files are created)
+    autoInstallFlutterMcp(agent, utils, projectDir);
   }
 };
