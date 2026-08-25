@@ -15,7 +15,7 @@ enum Flavor {
 /// Entry points (`main_development.dart`, `main_staging.dart`,
 /// `main_production.dart`) set [AppConfig.flavor] before calling `runApp`.
 /// Add environment-dependent values here rather than branching on the
-/// flavor inside feature code. See `.claude/rules/flavors.md`.
+/// flavor inside feature code. See the flavors rule in the agent rules directory.
 class AppConfig {
   AppConfig._();
 

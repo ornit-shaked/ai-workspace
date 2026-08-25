@@ -6,21 +6,14 @@
 
 ## Architectural Decisions
 
-All Flutter-specific architectural decisions are documented in `docs/adr/`:
-
-- **State Management** → `docs/adr/ADR-0001-state-management-bloc.md`
-- **Immutable Models** → `docs/adr/ADR-0002-freezed-everywhere.md`
-- **Linting** → `docs/adr/ADR-0003-linting-very-good.md`
-- **Flavors** → `docs/adr/ADR-0004-flavors.md`
-- **Folder Structure** → `docs/adr/ADR-0005-folder-structure.md`
-- **ADR Process** → `docs/adr/ADR-0006-adr-process.md`
-- **Project Rules** → `docs/adr/ADR-0007-project-rules.md`
+All Flutter-specific architectural decisions are documented in `docs/adr/`.
+See `docs/adr/README.md` for the full index.
 
 ---
 
 ## Coding Conventions
 
-Path-scoped coding conventions are enforced via agent rules directory ({{AGENT_DIR}}/rules/).
+Path-scoped coding conventions are enforced via the agent rules directory.
 
 Read these before editing matching file paths.
 

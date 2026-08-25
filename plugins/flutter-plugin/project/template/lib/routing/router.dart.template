@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 
 /// The application's root router.
 ///
-/// Add feature routes here as they're built; see
-/// `docs/adr/ADR-0005-folder-structure.md` for where feature code lives.
+/// Add feature routes here as they're built; see the folder structure ADR
+/// in `docs/adr/` for where feature code lives.
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: <RouteBase>[

@@ -29,7 +29,7 @@ sections:
 1. Copy the format above into a new numbered file.
 2. Never renumber or rewrite an existing ADR's decision — if a decision changes, write a new ADR
    that supersedes it and say so explicitly in both files.
-3. Reference the relevant ADR from `.claude/rules/*.md` and `CLAUDE.md`/`AGENTS.md` wherever the
+3. Reference the relevant ADR from the agent rule files and project instructions wherever the
    rule it justifies is stated.
 
 See `docs/adr/ADR-0006-adr-process.md` for the full rationale behind this process.

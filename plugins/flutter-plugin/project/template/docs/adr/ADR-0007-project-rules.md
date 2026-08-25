@@ -10,16 +10,14 @@ session.
 
 ## Decision
 
-Project-specific overrides are enforced at the agent level via `.claude/rules/*.md`, deployed
-into this project (not globally — see the "Global vs Project Scope" design principle in the
-Flutter Delta plugin's own workspace). `CLAUDE.md`/`AGENTS.md` point to these files and to the
-path each one is scoped to. Each rule file states what it overrides and cites the ADR with the
-full rationale, rather than restating the upstream baseline.
+Project-specific overrides are enforced at the agent level via rule files in the agent rules
+directory (e.g. `.claude/rules/`, `.devin/rules/`). Each rule file states what it overrides and
+cites the ADR with the full rationale, rather than restating the upstream baseline.
 
 ## Consequences
 
-- **Easier:** an agent reads `CLAUDE.md`, follows the pointers, and gets exactly this project's
-  overrides without needing them repeated in every prompt.
+- **Easier:** an agent reads the project instructions, follows the pointers, and gets exactly
+  this project's overrides without needing them repeated in every prompt.
 - **Harder:** rule files need to stay in sync with the ADRs they cite — an ADR change that isn't
   reflected in the corresponding rule file leaves the agent following stale guidance.
 - **Forecloses:** relying on the generic Flutter AI Rules baseline alone for anything this
