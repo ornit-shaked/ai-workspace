@@ -19,6 +19,24 @@ Read these before editing matching file paths.
 
 ---
 
+## Plugin-Owned Files
+
+The following files were created by the Flutter Delta plugin. Understand their edit policy before modifying.
+
+**Do not modify** (change via new ADR or plugin update):
+- `docs/adr/*.md` — Architectural decisions (append new ADRs, never rewrite existing ones)
+- Agent rules directory (`state-management.md`, `models.md`, `linting.md`, `flavors.md`)
+- `analysis_options.yaml` — Lint configuration
+
+**Scaffold — extend freely:**
+- `lib/main*.dart` — Entry points (add initialization logic as needed)
+- `lib/config/app_config.dart` — Add environment-dependent values here
+- `lib/routing/router.dart` — Add feature routes here
+- `lib/data/`, `lib/domain/`, `lib/ui/` — Your application code goes here
+- `test/` — Replace scaffold test with real tests
+
+---
+
 ## Upstream Sources
 
 This project builds on the official Flutter ecosystem:
