@@ -36,6 +36,8 @@ Flutter Delta **does not replace or duplicate** any of the following:
 
 All of these are **referenced, not copied**. Flutter Delta installs and configures them automatically.
 
+**Why this approach?** See [docs/adr/ADR-0001-delta-strategy.md](./docs/adr/ADR-0001-delta-strategy.md)
+
 ---
 
 ## What Flutter Delta Adds
