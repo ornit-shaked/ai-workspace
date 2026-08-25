@@ -8,4 +8,4 @@ Design decisions about how the plugin itself is built.
 
 | ADR | Title |
 |-----|-------|
-| [ADR-0001](ADR-0001-rules-vs-adrs-separation.md) | Rules vs ADRs Separation |
+| [ADR-0001](ADR-0001-delta-strategy.md) | Delta Strategy — What to Include |
