@@ -48,31 +48,38 @@ function sortDartImportBlock(content, targetPath) {
 
 /**
  * Checks if flutter/agent-plugins is installed
- * Looks for .claude/skills/ or .devin/workflows/ directories
+ * Looks for .devin/skills/ or .claude/skills/ directories in the project
  */
-function isFlutterAgentPluginsInstalled(globalConfigPath) {
-  const skillsPath = path.join(globalConfigPath, "skills");
-  const workflowsPath = path.join(globalConfigPath, "workflows");
-  return fs.existsSync(skillsPath) || fs.existsSync(workflowsPath);
+function isFlutterAgentPluginsInstalled(projectDir) {
+  const devinSkillsPath = path.join(projectDir, ".devin", "skills");
+  const claudeSkillsPath = path.join(projectDir, ".claude", "skills");
+  return fs.existsSync(devinSkillsPath) || fs.existsSync(claudeSkillsPath);
 }
 
 /**
  * Checks if dart-lang/skills is installed
- * Looks for dart-specific skills in .claude/skills/ or .devin/workflows/
+ * Looks for dart-specific skills in .devin/skills/ or .claude/skills/ directories in the project
  */
-function isDartLangSkillsInstalled(globalConfigPath) {
-  const skillsPath = path.join(globalConfigPath, "skills");
+function isDartLangSkillsInstalled(projectDir) {
+  const devinSkillsPath = path.join(projectDir, ".devin", "skills");
+  const claudeSkillsPath = path.join(projectDir, ".claude", "skills");
   
-  if (!fs.existsSync(skillsPath)) {
-    return false;
+  for (const skillsPath of [devinSkillsPath, claudeSkillsPath]) {
+    if (!fs.existsSync(skillsPath)) {
+      continue;
+    }
+    
+    try {
+      const skills = fs.readdirSync(skillsPath);
+      if (skills.some(skill => skill.includes("dart") || skill.includes("flutter"))) {
+        return true;
+      }
+    } catch (e) {
+      // continue to next path
+    }
   }
   
-  try {
-    const skills = fs.readdirSync(skillsPath);
-    return skills.some(skill => skill.includes("dart") || skill.includes("flutter"));
-  } catch (e) {
-    return false;
-  }
+  return false;
 }
 
 /**
@@ -94,12 +101,12 @@ function isFlutterMcpConfigured(projectDir) {
 /**
  * Verifies upstream dependencies for Flutter plugin installation
  */
-function verifyUpstreamDependencies(projectDir, globalConfigPath) {
+function verifyUpstreamDependencies(projectDir) {
   console.log(`\n--- Upstream Dependency Verification ---`);
   
   const results = {
-    flutterAgentPlugins: isFlutterAgentPluginsInstalled(globalConfigPath),
-    dartLangSkills: isDartLangSkillsInstalled(globalConfigPath),
+    flutterAgentPlugins: isFlutterAgentPluginsInstalled(projectDir),
+    dartLangSkills: isDartLangSkillsInstalled(projectDir),
     flutterMcp: isFlutterMcpConfigured(projectDir),
     allOk: false
   };
@@ -124,57 +131,59 @@ function verifyUpstreamDependencies(projectDir, globalConfigPath) {
 // Auto-Install
 // ---------------------------------------------------------------------------
 
-function autoInstallFlutterAgentPlugins(globalConfigPath) {
-  if (isFlutterAgentPluginsInstalled(globalConfigPath)) {
+function autoInstallFlutterAgentPlugins(projectDir) {
+  if (isFlutterAgentPluginsInstalled(projectDir)) {
     console.log(`  skip    flutter/agent-plugins (already installed)`);
     return true;
   }
   
   console.log(`  install flutter/agent-plugins...`);
   try {
-    execSync("npx skills add flutter/agent-plugins", {
+    execSync("npx skills add flutter/agent-plugins --yes", {
       stdio: "inherit",
-      shell: true
+      shell: true,
+      cwd: projectDir
     });
     console.log(`  ✓ flutter/agent-plugins installed successfully`);
     return true;
   } catch (e) {
     console.error(`  ✗ Failed to auto-install flutter/agent-plugins`);
-    console.error(`  Manual installation: npx skills add flutter/agent-plugins`);
+    console.error(`  Manual installation: npx skills add flutter/agent-plugins --yes`);
     return false;
   }
 }
 
-function autoInstallDartLangSkills(globalConfigPath) {
-  if (isDartLangSkillsInstalled(globalConfigPath)) {
+function autoInstallDartLangSkills(projectDir) {
+  if (isDartLangSkillsInstalled(projectDir)) {
     console.log(`  skip    dart-lang/skills (already installed)`);
     return true;
   }
   
   console.log(`  install dart-lang/skills...`);
   try {
-    execSync("npx skills add dart-lang/skills", {
+    execSync("npx skills add dart-lang/skills --yes", {
       stdio: "inherit",
-      shell: true
+      shell: true,
+      cwd: projectDir
     });
     console.log(`  ✓ dart-lang/skills installed successfully`);
     return true;
   } catch (e) {
     console.error(`  ✗ Failed to auto-install dart-lang/skills`);
-    console.error(`  Manual installation: npx skills add dart-lang/skills`);
+    console.error(`  Manual installation: npx skills add dart-lang/skills --yes`);
     return false;
   }
 }
 
-function autoInstallUpstreamDependencies(globalConfigPath, upstreamStatus) {
+function autoInstallUpstreamDependencies(projectDir, upstreamStatus) {
   console.log(`\n--- Auto-Installing Upstream Dependencies ---`);
   
   if (!upstreamStatus.flutterAgentPlugins) {
-    autoInstallFlutterAgentPlugins(globalConfigPath);
+    autoInstallFlutterAgentPlugins(projectDir);
   }
   
   if (!upstreamStatus.dartLangSkills) {
-    autoInstallDartLangSkills(globalConfigPath);
+    autoInstallDartLangSkills(projectDir);
   }
 }
 
@@ -431,12 +440,11 @@ module.exports = {
    */
   preInstall(context) {
     const { projectDir, agent, utils } = context;
-    const globalConfigPath = utils.getGlobalConfigPath(agent);
 
-    const upstreamStatus = verifyUpstreamDependencies(projectDir, globalConfigPath);
+    const upstreamStatus = verifyUpstreamDependencies(projectDir);
     
     if (!upstreamStatus.allOk) {
-      autoInstallUpstreamDependencies(globalConfigPath, upstreamStatus);
+      autoInstallUpstreamDependencies(projectDir, upstreamStatus);
     }
     
     verifyFlutterMcpConfiguration(projectDir);

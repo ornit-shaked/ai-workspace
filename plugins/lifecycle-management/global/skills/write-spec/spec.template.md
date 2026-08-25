@@ -46,7 +46,33 @@ Each requirement is atomic, testable, and traceable to `feature.md`.
 
 ---
 
-## 4. Approval Protocol
+## 4. User Interface
+
+### 4.1 Screens
+
+List all screens this feature introduces or modifies:
+
+| Screen | Purpose | Key Elements |
+|--------|---------|--------------|
+| (Screen name) | (What user does here) | (Main UI components) |
+
+### 4.2 User Flows
+
+Describe the primary user journeys through these screens:
+
+1. (Flow 1: e.g., "User creates new item")
+   - Step 1 → Step 2 → Step 3
+
+### 4.3 UI Components
+
+List reusable components this feature needs:
+
+- (Component 1)
+- (Component 2)
+
+---
+
+## 5. Approval Protocol
 
 (If this feature requires specific approval strings or gates, document them here)
 

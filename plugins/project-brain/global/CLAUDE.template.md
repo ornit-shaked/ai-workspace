@@ -2,6 +2,10 @@
 
 Read and follow all rules in BRAIN-PLUGIN-INSTRUCTIONS.md
 
+## Project-Specific Preferences
+
+Read `.project-brain/memory/instructions.md` at the start of every session. This file contains learned preferences, corrections, and behavioral patterns specific to this project.
+
 ---
 
 ## Universal Rules

@@ -16,9 +16,10 @@ This is the step **before** `/promote-feature` — it identifies WHAT features s
 ## Steps
 
 1. **Gather context:**
-   - Read `CLAUDE.md` or `AGENTS.md` at project root (understand the project domain)
+   - Read `CLAUDE.md` or `AGENTS.md` at project root (understand the project domain, tech stack, architectural boundaries)
    - Read `work-state.md` (existing features to avoid duplication)
    - Read `product-roadmap.md` if it exists (prior roadmap to update)
+   - Look for architectural constraints (service separation, forbidden patterns, technology boundaries)
    - If user provided raw ideas inline, use those as primary input
    - If no input provided, ask: "Describe your product in 2-3 sentences. What problem does it solve and for whom?"
 

@@ -1,7 +1,6 @@
 # Flutter Plugin — [project-name]
 
-**Note:** This file is a reference pointer for the Flutter Delta plugin. Reference it from your
-agent's main instruction file (CLAUDE.md or AGENTS.md) if needed.
+**Purpose:** Central reference for Flutter-specific architectural decisions, coding conventions, and upstream sources for this project.
 
 ---
 

@@ -17,7 +17,7 @@ Perform the following end-of-session tasks:
 
 2. **Capture lessons**: If any corrections, preferences, or lessons were discovered during this session, append them to `.project-brain/inbox/lessons.md` in the format shown in that file. Newest entries go at the bottom (above the closing comment).
 
-3. **Update todo.md**: Mark completed tasks as done (`[x]`) in `.project-brain/tasks/todo.md`. Add any new tasks that emerged.
+3. **Update work-state.md**: Mark completed tasks as done (`[x]`) in `work-state.md`. Update feature status if any features advanced. Add any new tasks that emerged.
 
 4. **Print summary**:
    - What was accomplished this session
