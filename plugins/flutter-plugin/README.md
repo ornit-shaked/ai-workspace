@@ -306,11 +306,17 @@ MIT License — See [LICENSE](./LICENSE) for details.
 
 ---
 
+## Plugin Development
+
+**Design Decisions:** See [docs/adr/](./docs/adr/) for architectural decisions about how the plugin is built  
+**Documentation:** See `docs/plugins/flutter-plugin/` in the workspace root for detailed documentation  
+**Contributing:** Follow the contribution guidelines in the workspace README
+
+---
+
 ## Support
 
-**Issues:** File issues in the ai-workspace repository  
-**Documentation:** See `docs/plugins/flutter-plugin/` for detailed documentation  
-**Contributing:** Follow the contribution guidelines in the workspace README
+**Issues:** File issues in the ai-workspace repository
 
 ---
 
