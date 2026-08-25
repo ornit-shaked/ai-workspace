@@ -40,7 +40,7 @@ All of these are **referenced, not copied**. Flutter Delta installs and configur
 
 ## What Flutter Delta Adds
 
-Flutter Delta provides **9 project-specific components** that are not covered by upstream Flutter:
+Flutter Delta provides **8 project-specific components** that are not covered by upstream Flutter:
 
 ### 1. **Bloc/Cubit Override**
 - **What:** Use Bloc/Cubit for state management instead of Flutter's default ChangeNotifier
@@ -72,16 +72,11 @@ Flutter Delta provides **9 project-specific components** that are not covered by
 - **Why:** Auditability and traceability
 - **Source:** [ADR-0006](./project/template/docs/adr/ADR-0006-adr-process.md)
 
-### 7. **Project Rules**
-- **What:** Path-scoped rules in the agent rules directory
-- **Why:** Enforce project overrides at agent level without re-prompting
-- **Source:** [ADR-0007](./project/template/docs/adr/ADR-0007-project-rules.md)
-
-### 8. **Governance File (FLUTTER-PLUGIN.md)**
+### 7. **Governance File (FLUTTER-PLUGIN.md)**
 - **What:** Plugin-specific instruction file with Flutter architecture and conventions
 - **Why:** Eliminates duplication, integrates with any agent's main instruction file
 
-### 9. **Dependency Scaffold**
+### 8. **Dependency Scaffold**
 - **What:** Required project defaults in `pubspec.yaml`
 - **Packages:** `flutter_bloc`, `bloc_test`, `freezed`, `freezed_annotation`, `json_annotation`, `json_serializable`, `build_runner`, `go_router`, `provider`, `very_good_analysis`
 
@@ -138,7 +133,6 @@ Flutter Delta creates the following in your target project:
 - `docs/adr/ADR-0004-flavors.md`
 - `docs/adr/ADR-0005-folder-structure.md`
 - `docs/adr/ADR-0006-adr-process.md`
-- `docs/adr/ADR-0007-project-rules.md`
 
 **Quality Configuration:**
 - `analysis_options.yaml` — Includes `package:very_good_analysis/analysis_options.yaml`

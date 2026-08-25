@@ -44,4 +44,3 @@ See `docs/adr/ADR-0006-adr-process.md` for the full rationale behind this proces
 | [ADR-0004](ADR-0004-flavors.md) | Flavors — Development / Staging / Production |
 | [ADR-0005](ADR-0005-folder-structure.md) | Folder Structure — Compass-Inspired Layered |
 | [ADR-0006](ADR-0006-adr-process.md) | ADR Process |
-| [ADR-0007](ADR-0007-project-rules.md) | Project Rules |

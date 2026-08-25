@@ -19,7 +19,6 @@
     "docs/adr/ADR-0004-flavors.md": "project/template/docs/adr/ADR-0004-flavors.md",
     "docs/adr/ADR-0005-folder-structure.md": "project/template/docs/adr/ADR-0005-folder-structure.md",
     "docs/adr/ADR-0006-adr-process.md": "project/template/docs/adr/ADR-0006-adr-process.md",
-    "docs/adr/ADR-0007-project-rules.md": "project/template/docs/adr/ADR-0007-project-rules.md",
 
     "analysis_options.yaml": "project/template/analysis_options.yaml",
 
