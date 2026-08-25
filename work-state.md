@@ -19,6 +19,7 @@ Lifecycle Management plugin complete — all 16 tasks done (Groups A-D)
 | **project-brain-plugin** - Workspace Knowledge Management | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **flutter-plugin** - Flutter Delta Bootstrap | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **lifecycle-management** - Feature Lifecycle Management | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **documentation-architecture** - Documentation Architecture Pattern | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
@@ -36,10 +37,6 @@ Lifecycle Management plugin complete — all 16 tasks done (Groups A-D)
 *Ideas and candidates not yet promoted to features*
 
 <!-- lifecycle:backlog-begin -->
-- [ ] **feature** Documentation Architecture Pattern — Define where to put what (README vs CLAUDE.md vs ADRs), standard locations (docs/adr/), and asymmetric referencing rules. Add to project-brain plugin so all projects get this guidance.
-  - Scope: project-brain plugin
-  - Origin: 2026-08-25 | flutter-plugin feedback
-
 - [ ] **command** /peek - teach shell one-liners for file operations — save tokens by using grep/ls/cat directly instead of agent reads
   - Scope: global
   - Origin: 2026-07-29 | dream-impl
