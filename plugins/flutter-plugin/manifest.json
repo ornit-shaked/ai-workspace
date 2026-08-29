@@ -13,7 +13,6 @@
     "{{AGENT_RULES}}/flavors.md": "project/rules/flavors.md",
     "{{AGENT_RULES}}/assets-and-l10n.md": "project/rules/assets-and-l10n.md",
     "{{AGENT_RULES}}/dart-error-handling.md": "project/rules/dart-error-handling.md",
-    "{{AGENT_RULES}}/error-handling.md": "project/rules/error-handling.md",
 
     "docs/adr/README.md": "project/template/docs/adr/README.md",
     "docs/adr/ADR-0001-state-management-bloc.md": "project/template/docs/adr/ADR-0001-state-management-bloc.md",
