@@ -1,0 +1,173 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:{{package-name}}/utils/command.dart';
+import 'package:{{package-name}}/utils/result.dart';
+
+void main() {
+  group('Command0', () {
+    test('execute sets running to true during execution', () async {
+      final command = Command0<int>(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        return 42;
+      });
+
+      expect(command.running, isFalse);
+
+      final future = command.execute();
+      expect(command.running, isTrue);
+
+      await future;
+      expect(command.running, isFalse);
+    });
+
+    test('execute prevents concurrent execution', () async {
+      final command = Command0<int>(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        return 42;
+      });
+
+      final future1 = command.execute();
+
+      expect(() => command.execute(), throwsStateError);
+
+      await future1;
+    });
+
+    test('execute sets completed on success', () async {
+      final command = Command0<int>(() async => 42);
+
+      expect(command.completed, isFalse);
+
+      await command.execute();
+
+      expect(command.completed, isTrue);
+      expect(command.error, isNull);
+      expect(command.result, isA<ResultOk<int>>());
+      expect(command.result!.asOk, equals(42));
+    });
+
+    test('execute sets error on failure', () async {
+      final exception = Exception('test error');
+      final command = Command0<int>(() async => throw exception);
+
+      expect(command.error, isNull);
+
+      await command.execute();
+
+      expect(command.completed, isTrue);
+      expect(command.error, equals(exception));
+      expect(command.result, isA<ResultError<int>>());
+      expect(command.result!.asError, equals(exception));
+    });
+
+    test('clearResult resets state', () async {
+      final command = Command0<int>(() async => 42);
+
+      await command.execute();
+
+      expect(command.completed, isTrue);
+      expect(command.result, isNotNull);
+
+      command.clearResult();
+
+      expect(command.completed, isFalse);
+      expect(command.result, isNull);
+      expect(command.error, isNull);
+    });
+
+    test('notifies listeners on state changes', () async {
+      final command = Command0<int>(() async => 42);
+      var notificationCount = 0;
+
+      command.addListener(() => notificationCount++);
+
+      await command.execute();
+
+      // Should notify at least twice: start and end
+      expect(notificationCount, greaterThanOrEqualTo(2));
+    });
+  });
+
+  group('Command1', () {
+    test('execute sets running to true during execution', () async {
+      final command = Command1<int, String>((arg) async {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        return arg.length;
+      });
+
+      expect(command.running, isFalse);
+
+      final future = command.execute('test');
+      expect(command.running, isTrue);
+
+      await future;
+      expect(command.running, isFalse);
+    });
+
+    test('execute prevents concurrent execution', () async {
+      final command = Command1<int, String>((arg) async {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        return arg.length;
+      });
+
+      final future1 = command.execute('test');
+
+      expect(() => command.execute('test'), throwsStateError);
+
+      await future1;
+    });
+
+    test('execute sets completed on success', () async {
+      final command = Command1<int, String>((arg) async => arg.length);
+
+      expect(command.completed, isFalse);
+
+      await command.execute('hello');
+
+      expect(command.completed, isTrue);
+      expect(command.error, isNull);
+      expect(command.result, isA<ResultOk<int>>());
+      expect(command.result!.asOk, equals(5));
+    });
+
+    test('execute sets error on failure', () async {
+      final exception = Exception('test error');
+      final command = Command1<int, String>((arg) async => throw exception);
+
+      expect(command.error, isNull);
+
+      await command.execute('test');
+
+      expect(command.completed, isTrue);
+      expect(command.error, equals(exception));
+      expect(command.result, isA<ResultError<int>>());
+      expect(command.result!.asError, equals(exception));
+    });
+
+    test('clearResult resets state', () async {
+      final command = Command1<int, String>((arg) async => arg.length);
+
+      await command.execute('test');
+
+      expect(command.completed, isTrue);
+      expect(command.result, isNotNull);
+
+      command.clearResult();
+
+      expect(command.completed, isFalse);
+      expect(command.result, isNull);
+      expect(command.error, isNull);
+    });
+
+    test('notifies listeners on state changes', () async {
+      final command = Command1<int, String>((arg) async => arg.length);
+      var notificationCount = 0;
+
+      command.addListener(() => notificationCount++);
+
+      await command.execute('test');
+
+      // Should notify at least twice: start and end
+      expect(notificationCount, greaterThanOrEqualTo(2));
+    });
+  });
+}

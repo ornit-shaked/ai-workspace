@@ -1,6 +1,6 @@
 # Flutter Delta Plugin
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Production Ready  
 **License:** MIT
 
@@ -37,6 +37,92 @@ Bootstrap a Flutter project with architectural decisions, governance, and struct
 - flutter/agent-plugins (official Flutter skills)
 - dart-lang/skills (official Dart skills)
 - Flutter MCP (tooling integration)
+
+---
+
+## Emitted Structure
+
+After installation, your project will have the following structure:
+
+```
+project/
+├── .github/
+│   └── workflows/
+│       └── flutter-ci.yml           [plugin] CI workflow (format, analyze, test)
+├── docs/
+│   └── adr/
+│       ├── README.md                [plugin] ADR process documentation
+│       ├── ADR-0001-state-management-bloc.md    [plugin]
+│       ├── ADR-0002-freezed-everywhere.md       [plugin]
+│       ├── ADR-0003-linting-very-good.md        [plugin]
+│       ├── ADR-0004-flavors.md                  [plugin]
+│       ├── ADR-0005-folder-structure.md         [plugin]
+│       ├── ADR-0006-adr-process.md              [plugin]
+│       └── ADR-0007-font-strategy.md            [plugin]
+├── assets/                          [plugin] Asset directories
+│   ├── images/
+│   ├── fonts/
+│   └── data/
+├── integration_test/                [plugin] Integration test scaffold
+├── lib/
+│   ├── config/
+│   │   └── app_config.dart          [plugin] Flavor configuration
+│   ├── data/
+│   │   ├── models/                  [plugin] DTOs, API models
+│   │   ├── repositories/            [plugin] Repository implementations
+│   │   └── services/                [plugin] API clients, data sources
+│   ├── domain/
+│   │   ├── models/                  [plugin] Domain entities
+│   │   └── use_cases/               [plugin] Business logic
+│   ├── l10n/                        [plugin] ARB files (managed by flutter-setup-localization skill)
+│   ├── routing/
+│   │   └── router.dart              [plugin] go_router configuration
+│   ├── ui/
+│   │   ├── core/
+│   │   │   ├── localization/        [plugin] Hand-written localization helpers
+│   │   │   ├── themes/              [plugin] Theme configuration
+│   │   │   └── ui/                  [plugin] Shared widgets
+│   │   └── features/                [plugin] Feature-specific UI
+│   ├── utils/
+│   │   ├── result.dart              [plugin] Result<T> sealed class
+│   │   └── command.dart             [plugin] Command0/Command1 wrappers
+│   ├── main.dart                    [plugin] Production entry point
+│   ├── main_development.dart        [plugin] Development entry point
+│   ├── main_staging.dart            [plugin] Staging entry point
+│   └── main_production.dart         [plugin] Production entry point
+├── test/
+│   ├── data/
+│   │   ├── repositories/            [plugin] Repository tests
+│   │   └── services/                [plugin] Service tests
+│   ├── domain/                      [plugin] Domain tests
+│   ├── ui/                          [plugin] Widget tests
+│   ├── testing/                     [plugin] Shared test fakes
+│   ├── utils/
+│   │   ├── result_test.dart         [plugin] Result tests
+│   │   └── command_test.dart        [plugin] Command tests
+│   └── widget_test.dart             [plugin] Sample widget test
+├── testing/                         [plugin] Shared test fakes
+├── .gitignore                       [plugin] Generated code exclusions
+├── analysis_options.yaml            [plugin] very_good_analysis configuration
+├── pubspec.yaml                     [flutter create or plugin] Project metadata
+├── FLUTTER-PLUGIN.md                [plugin] Flutter architecture guide
+└── {.claude,.devin,.windsurf}/rules/  [plugin] Agent rules (path varies by agent)
+    ├── state-management.md
+    ├── models.md
+    ├── linting.md
+    ├── flavors.md
+    └── assets-and-l10n.md
+```
+
+**Legend:**
+- `[plugin]` — Created by flutter-plugin
+- `[flutter create]` — Created by `flutter create` command
+- `[official skill]` — Managed by official flutter/agent-plugins skills
+
+**Notes:**
+- `lib/l10n/` is scaffolded by the plugin but populated by the `flutter-setup-localization` skill
+- `integration_test/` is scaffolded by the plugin but test bodies are created by the `flutter-add-integration-test` skill
+- `pubspec.yaml` is created by `flutter create` or by the plugin if missing (minimal structure)
 
 ---
 
@@ -143,7 +229,7 @@ Flutter Delta follows **Semantic Versioning** (semver):
 - **MINOR** (e.g., 1.0 → 1.1): New features, backward compatible
 - **PATCH** (e.g., 1.0.0 → 1.0.1): Bug fixes, backward compatible
 
-**Current Version:** 1.0.0
+**Current Version:** 1.1.0
 
 ---
 
@@ -317,4 +403,4 @@ flutter pub upgrade
 
 ---
 
-**Flutter Delta v1.0.0** — Built with ❤️ on top of the official Flutter ecosystem.
+**Flutter Delta v1.1.0** — Built with ❤️ on top of the official Flutter ecosystem.

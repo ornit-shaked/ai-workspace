@@ -1,6 +1,6 @@
 {
   "name": "flutter-plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Flutter development standards, architecture patterns, and project scaffolding",
   "global_files": {},
   "global_dirs": [],
@@ -11,6 +11,9 @@
     "{{AGENT_RULES}}/models.md": "project/rules/models.md",
     "{{AGENT_RULES}}/linting.md": "project/rules/linting.md",
     "{{AGENT_RULES}}/flavors.md": "project/rules/flavors.md",
+    "{{AGENT_RULES}}/assets-and-l10n.md": "project/rules/assets-and-l10n.md",
+    "{{AGENT_RULES}}/dart-error-handling.md": "project/rules/dart-error-handling.md",
+    "{{AGENT_RULES}}/error-handling.md": "project/rules/error-handling.md",
 
     "docs/adr/README.md": "project/template/docs/adr/README.md",
     "docs/adr/ADR-0001-state-management-bloc.md": "project/template/docs/adr/ADR-0001-state-management-bloc.md",
@@ -19,6 +22,8 @@
     "docs/adr/ADR-0004-flavors.md": "project/template/docs/adr/ADR-0004-flavors.md",
     "docs/adr/ADR-0005-folder-structure.md": "project/template/docs/adr/ADR-0005-folder-structure.md",
     "docs/adr/ADR-0006-adr-process.md": "project/template/docs/adr/ADR-0006-adr-process.md",
+    "docs/adr/ADR-0007-font-strategy.md": "project/template/docs/adr/ADR-0007-font-strategy.md",
+    "docs/adr/ADR-0008-error-handling-result-type.md": "project/template/docs/adr/ADR-0008-error-handling-result-type.md",
 
     "analysis_options.yaml": "project/template/analysis_options.yaml",
 
@@ -37,10 +42,31 @@
     "lib/domain/use_cases/.gitkeep": "project/template/lib/domain/use_cases/.gitkeep",
     "lib/ui/core/themes/.gitkeep": "project/template/lib/ui/core/themes/.gitkeep",
     "lib/ui/core/ui/.gitkeep": "project/template/lib/ui/core/ui/.gitkeep",
+    "lib/ui/core/localization/.gitkeep": "project/template/lib/ui/core/localization/.gitkeep",
     "lib/ui/features/.gitkeep": "project/template/lib/ui/features/.gitkeep",
+    "lib/l10n/.gitkeep": "project/template/lib/l10n/.gitkeep",
+    "lib/utils/result.dart": "project/template/lib/utils/result.dart.template",
+    "lib/utils/command.dart": "project/template/lib/utils/command.dart.template",
     "testing/.gitkeep": "project/template/testing/.gitkeep",
 
-    "test/widget_test.dart": "project/template/test/widget_test.dart.template"
+    "assets/.gitkeep": "project/template/assets/.gitkeep",
+    "assets/images/.gitkeep": "project/template/assets/images/.gitkeep",
+    "assets/fonts/.gitkeep": "project/template/assets/fonts/.gitkeep",
+    "assets/data/.gitkeep": "project/template/assets/data/.gitkeep",
+
+    "test/widget_test.dart": "project/template/test/widget_test.dart.template",
+    "test/data/repositories/.gitkeep": "project/template/test/data/repositories/.gitkeep",
+    "test/data/services/.gitkeep": "project/template/test/data/services/.gitkeep",
+    "test/domain/.gitkeep": "project/template/test/domain/.gitkeep",
+    "test/ui/.gitkeep": "project/template/test/ui/.gitkeep",
+    "test/testing/.gitkeep": "project/template/test/testing/.gitkeep",
+    "test/utils/result_test.dart": "project/template/test/utils/result_test.dart.template",
+    "test/utils/command_test.dart": "project/template/test/utils/command_test.dart.template",
+
+    "integration_test/.gitkeep": "project/template/integration_test/.gitkeep",
+
+    ".gitignore": "project/template/.gitignore.template",
+    ".github/workflows/flutter-ci.yml": "project/template/.github/workflows/flutter-ci.yml.template"
   },
   "brain_files": {},
   "brain_dirs": [],
@@ -59,7 +85,18 @@
       "json_serializable": "^6.7.1",
       "build_runner": "^2.4.7",
       "very_good_analysis": "^10.3.0",
-      "mocktail": "^1.0.2"
+      "mocktail": "^1.0.2",
+      "integration_test": {
+        "sdk": "flutter"
+      }
     }
+  },
+  "pubspec_flutter_config": {
+    "uses-material-design": true,
+    "generate": false,
+    "assets": [
+      "assets/images/",
+      "assets/data/"
+    ]
   }
 }

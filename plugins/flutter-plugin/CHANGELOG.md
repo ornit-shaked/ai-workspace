@@ -108,14 +108,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-08-29
+
+### Added
+
+#### Assets, L10n, Testing, and CI (Delta v1.1)
+
+- **Assets Structure:**
+  - `assets/images/` — Image assets directory
+  - `assets/fonts/` — Font files directory
+  - `assets/data/` — Data assets directory
+  - pubspec.yaml `flutter.assets` configuration (non-destructive injection)
+
+- **Localization Placement:**
+  - `lib/l10n/` — ARB files scaffold (managed by flutter-setup-localization skill)
+  - `lib/ui/core/localization/` — Hand-written localization helpers
+
+- **Utility Classes:**
+  - `lib/utils/result.dart` — Sealed `Result<T>` with `ok`/`error` subtypes
+  - `lib/utils/command.dart` — `Command0`/`Command1` ChangeNotifier wrappers
+
+- **Test Infrastructure:**
+  - `test/data/repositories/` — Repository test scaffold
+  - `test/data/services/` — Service test scaffold
+  - `test/domain/` — Domain test scaffold
+  - `test/ui/` — Widget test scaffold
+  - `test/testing/` — Shared test fakes scaffold
+  - `test/utils/result_test.dart` — Real tests for Result class
+  - `test/utils/command_test.dart` — Real tests for Command classes
+
+- **Integration Test Scaffold:**
+  - `integration_test/` — Integration test directory
+  - `integration_test` dev dependency (sdk: flutter)
+
+- **Configuration Files:**
+  - `.gitignore` — Generated code exclusions (*.g.dart, *.freezed.dart, *.mocks.dart)
+  - `.github/workflows/flutter-ci.yml` — CI workflow (pub get, format, build_runner, analyze, test)
+
+- **Rules & Decisions:**
+  - `.claude/rules/assets-and-l10n.md` — Path-scoped rule for assets and localization
+  - `.claude/rules/dart-error-handling.md` — Dart-specific rule for Result<T> error handling (reusable across Dart projects)
+  - `docs/adr/ADR-0007-font-strategy.md` — Bundled fonts vs google_fonts trade-offs
+  - `docs/adr/ADR-0008-error-handling-result-type.md` — Sealed Result<T> type for async error handling
+
+- **Pubspec Configuration:**
+  - `createMinimalPubspec()` function — Creates minimal pubspec.yaml if missing
+  - `injectPubspecFlutterConfig()` function — Non-destructive flutter: section injection
+  - `pubspec_flutter_config` manifest section — uses-material-design, generate, assets
+
+### Changed
+- Updated `manifest.json` to include all new file paths
+- Extended `hooks.js` with pubspec flutter: config injection logic
+- Updated README.md with "Emitted Structure" section showing complete post-install tree
+
+### Fixed
+- Plugin now creates minimal pubspec.yaml if `flutter create` wasn't run first (robustness improvement)
+
+### Validated
+- All payload files created successfully
+- manifest.json updated with correct paths
+- hooks.js extended with new injection functions
+- Documentation updated (README, CHANGELOG)
+
+---
+
 ## [Unreleased]
 
-### Planned for v1.1
+### Planned for v1.2
 - Three-way merge for user-modified files on upgrade
 - `--force` flag for overwriting existing files on first install
 - Multi-plugin composition mechanism (CLAUDE.md as router)
 - Additional validation hooks (pre-install checks, conflict resolution)
-- CI/CD integration for automated testing
 
 ---
 

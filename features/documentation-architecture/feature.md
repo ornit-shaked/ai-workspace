@@ -4,14 +4,14 @@ slug: documentation-architecture
 title: Documentation Architecture Pattern
 owner: Ornit Shaked
 created: 2026-08-25
-status: idea
-spec_gen: ⬜
-spec_ok: ⬜
-plan_gen: ⬜
-plan_ok: ⬜
-todo_gen: ⬜
-todo_ok: ⬜
-done: ⬜
+status: done
+spec_gen: ✅
+spec_ok: ✅
+plan_gen: ✅
+plan_ok: ✅
+todo_gen: ✅
+todo_ok: ✅
+done: ✅
 ---
 
 # Feature — Documentation Architecture Pattern
@@ -25,7 +25,7 @@ Define and enforce a standard pattern for where to put documentation across all 
 When building flutter-plugin, we discovered documentation was duplicated across README and ADRs, with unclear boundaries about what goes where. We learned:
 
 - **README** should be for humans (what the project does, how to use it)
-- **CLAUDE.md/AGENTS.md** should be for agents (how to work on this project)
+- **CLAUDE.md** should be for agents (how to work on this project)
 - **ADRs** should document why decisions were made (for both humans and agents)
 
 There's also an **asymmetry** in referencing:
@@ -36,7 +36,6 @@ Without this pattern documented and enforced, every project reinvents these boun
 
 ## 3. Sources & References
 
-- Origin: Flutter plugin feedback and cleanup (2026-08-25)
 - Pattern discovered while removing 66 lines of "why" explanations from flutter-plugin README
 - ADR-0001 in flutter-plugin documents the delta strategy (what vs why separation)
 
@@ -94,6 +93,8 @@ Standard location pattern:
 - [ ] Existing projects (ai-workspace, flutter-plugin) follow the pattern
 - [ ] Agents can easily find where to put new documentation
 - [ ] No duplication between README and ADRs
+- [ ] Dream skill can detect when lessons belong to ai-workspace plugins (not target project) and tag them for plugin feedback
+- [ ] Installed plugins are tracked in `.ai-workspace/plugins/<plugin-name>.md` (one file per plugin) so dream skill can discover via filesystem
 
 ## 8. Provenance
 
@@ -115,3 +116,5 @@ Standard location pattern:
 - This pattern emerged from real pain: we spent significant time cleaning up flutter-plugin documentation
 - The asymmetric referencing rule is critical but non-obvious
 - Standard location (docs/adr/) makes it easy for agents to find decisions without being told
+- **Plugin awareness:** Dream skill needs to know which ai-workspace plugins are installed to route lessons correctly (e.g., "Flutter plugin should include fonts" → tag for plugin feedback, not route to project files)
+- **Installed plugins tracking:** Create `.ai-workspace/plugins/<plugin-name>.md` (one file per plugin) listing name, version, description, skills, and link to official README. Filesystem = source of truth for discovery.

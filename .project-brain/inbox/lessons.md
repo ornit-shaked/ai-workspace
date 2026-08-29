@@ -62,4 +62,20 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] correction | Pattern matching for plugin files should match naming convention — Initially checked for `-PLUGIN.md`, `-PLUGIN-GLOBAL.md`, and `-PLUGIN-INSTRUCTIONS.md` in global files. After standardizing on `-PLUGIN-INSTRUCTIONS.md` for global and removing `-PLUGIN-GLOBAL.md`, simplified to only match `-PLUGIN-INSTRUCTIONS.md`. Keep pattern matching aligned with actual naming conventions.
 
+## 2026-08-25 — documentation-architecture — devin
+
+- [ ] standard | Skills should be law-like, not stories — Skills contain repeated information across multiple sections (Quick Reference table, Classifier logic, Documentation routing). This confuses agents. Better: Consolidate into single concise section with clear rules. Example: Reduced dream skill from 32 duplicate lines to 18 law-like rules. Apply to all skills: be clear, short, cover everything once.
+
+## 2026-08-29 — flutter-plugin-v1.1 — devin
+
+- [ ] preference | IDE-agnostic principle — Don't assume VS Code. Plugin should provide Flutter-specific scaffolding, not IDE-specific configuration. Removed .vscode/launch.json template. Users choose their own IDE and create appropriate configs.
+
+- [ ] standard | Framework-specific rules, not generic ones — Error handling rule is Dart-specific, not Flutter-specific. Renamed error-handling.md → dart-error-handling.md. Future frameworks (FastAPI, Node.js) will have their own error handling rules. Keep rules scoped to their framework/language.
+
+- [ ] preference | Avoid redundant README files — Removed docs/adr/README.md (just listed ADR filenames). ADRs are self-documenting. Main README.md already references them. No need for an index file.
+
+- [ ] preference | No implementation summary files — Spec.md, plan.md, todo.md already document everything. Summary files duplicate information and add maintenance burden. Keep only the source of truth documents.
+
+- [ ] standard | ADR + Rule pairing for new patterns — When introducing a new pattern (Result<T>), create both: (1) ADR explaining the decision/rationale, (2) Rule with DO/DON'T examples for agents. This ensures agents understand both the "why" and the "how".
+
 <!-- Lessons will be appended here by /wrap -->

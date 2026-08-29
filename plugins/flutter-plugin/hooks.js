@@ -334,8 +334,110 @@ function autoInstallFlutterMcp(agent, utils, projectDir) {
 }
 
 // ---------------------------------------------------------------------------
-// Pubspec Dependency Injection
+// Pubspec Configuration
 // ---------------------------------------------------------------------------
+
+/**
+ * Creates a minimal pubspec.yaml if it doesn't exist
+ * @param {string} projectDir - Target project directory
+ * @returns {boolean} true if created, false if already exists
+ */
+function createMinimalPubspec(projectDir) {
+  const pubspecPath = path.join(projectDir, "pubspec.yaml");
+  
+  if (fs.existsSync(pubspecPath)) {
+    return false;
+  }
+  
+  const projectName = path.basename(projectDir).toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  
+  const minimalPubspec = {
+    name: projectName,
+    description: "A new Flutter project.",
+    publish_to: "none",
+    version: "1.0.0+1",
+    environment: {
+      sdk: ">=3.0.0 <4.0.0"
+    },
+    dependencies: {
+      flutter: {
+        sdk: "flutter"
+      }
+    },
+    dev_dependencies: {
+      flutter_test: {
+        sdk: "flutter"
+      }
+    },
+    flutter: {}
+  };
+  
+  const content = yaml.dump(minimalPubspec, { lineWidth: -1, noRefs: true });
+  fs.writeFileSync(pubspecPath, content, "utf-8");
+  console.log(`  create  pubspec.yaml (minimal Flutter project structure)`);
+  
+  return true;
+}
+
+/**
+ * Injects flutter: section configuration into pubspec.yaml
+ * @param {string} projectDir - Target project directory
+ * @param {Object} flutterConfig - Flutter configuration {uses-material-design, generate, assets}
+ * @returns {Object} {added: number, skipped: number}
+ * 
+ * Behavior:
+ * - Skips if pubspec.yaml doesn't exist
+ * - Avoids overwriting existing keys (idempotent)
+ * - Preserves YAML structure and formatting
+ * - Logs each action (add/skip)
+ */
+function injectPubspecFlutterConfig(projectDir, flutterConfig) {
+  const pubspecPath = path.join(projectDir, "pubspec.yaml");
+  
+  if (!fs.existsSync(pubspecPath)) {
+    console.log("  skip    pubspec flutter: config (file not found)");
+    return { added: 0, skipped: 0 };
+  }
+
+  let content = fs.readFileSync(pubspecPath, "utf-8");
+  let doc;
+  
+  try {
+    doc = yaml.load(content);
+  } catch (e) {
+    console.log(`  error   Failed to parse pubspec.yaml: ${e.message}`);
+    return { added: 0, skipped: 0 };
+  }
+
+  if (!doc.flutter) {
+    doc.flutter = {};
+  }
+
+  let added = 0;
+  let skipped = 0;
+
+  // Inject flutter: section keys
+  if (flutterConfig) {
+    for (const [key, value] of Object.entries(flutterConfig)) {
+      if (doc.flutter[key] !== undefined) {
+        console.log(`  skip    flutter.${key} (already exists)`);
+        skipped++;
+      } else {
+        doc.flutter[key] = value;
+        console.log(`  add     flutter.${key}`);
+        added++;
+      }
+    }
+  }
+
+  if (added > 0) {
+    // Write back to file, preserving formatting as much as possible
+    const newContent = yaml.dump(doc, { lineWidth: -1, noRefs: true });
+    fs.writeFileSync(pubspecPath, newContent, "utf-8");
+  }
+
+  return { added, skipped };
+}
 
 /**
  * Injects dependencies into a Flutter project's pubspec.yaml
@@ -452,20 +554,35 @@ module.exports = {
 
   /**
    * Runs after the core installer deploys files.
-   * Injects pubspec.yaml dependencies and configures MCP.
+   * Creates minimal pubspec if needed, injects flutter: config, dependencies, and configures MCP.
    */
   postInstall(context) {
     const { projectDir, manifest, agent, utils } = context;
 
+    // Create minimal pubspec.yaml if it doesn't exist
+    console.log(`\n--- Pubspec Configuration ---`);
+    createMinimalPubspec(projectDir);
+
+    // Inject flutter: section configuration
+    if (manifest.pubspec_flutter_config) {
+      const flutterResult = injectPubspecFlutterConfig(
+        projectDir,
+        manifest.pubspec_flutter_config
+      );
+      if (flutterResult.added > 0 || flutterResult.skipped > 0) {
+        console.log(`  flutter: ${flutterResult.added} added, ${flutterResult.skipped} skipped`);
+      }
+    }
+
+    // Inject dependencies
     if (manifest.pubspec_deps) {
-      console.log(`\n--- Flutter Dependencies (pubspec.yaml) ---`);
       const result = injectPubspecDependencies(
         projectDir,
         manifest.pubspec_deps.dependencies,
         manifest.pubspec_deps.dev_dependencies
       );
       if (result.added > 0 || result.skipped > 0) {
-        console.log(`  ${result.added} added, ${result.skipped} skipped`);
+        console.log(`  dependencies: ${result.added} added, ${result.skipped} skipped`);
       }
     }
 

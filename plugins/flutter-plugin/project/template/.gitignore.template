@@ -1,0 +1,13 @@
+# Dart/Flutter build artifacts
+.dart_tool/
+build/
+
+# Generated code
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Environment files
+.env
+.env.*
+!.env.example

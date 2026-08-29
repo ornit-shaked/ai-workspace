@@ -32,15 +32,18 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 | Missing knowledge, project-specific rule | `CLAUDE.md` | Diff |
 | Idea, not actionable | `work-state.md` (Backlog section) | Route |
 | Candidate artifact (command, skill, hook, rule, standard) | `work-state.md` (Backlog section) | Recommend |
+| Documentation: WHAT/HOW to use (for humans) | `README.md` (root or scoped) | Route |
+| Documentation: HOW to work (for agents) | `CLAUDE.md` (root or scoped) | Route |
+| Documentation: WHY decision made | `docs/adr/ADR-NNNN.md` (root or scoped) | Route |
+| Plugin feedback (mentions plugin name or "plugin should/missing/needs") | Tag as `plugin-feedback:<plugin-name>` | Tag |
 | Session-only note, one-off | Archive only | Discard |
 
-**Classifier logic:** Tag is a hint, not final decision. Analyze lesson content semantically:
-- **Agent behavior** (how to work, preferences, corrections) → `instructions.md`
-- **Project knowledge** (architecture, tech stack, domain facts) → `CLAUDE.md`
-- **Future work** (ideas, candidates) → `work-state.md` (Backlog section)
-- **One-off notes** → Archive only
-
-When uncertain between `instructions.md` vs `CLAUDE.md`, default to `instructions.md` (safer).
+**Routing rules:**
+- Tag is a hint, not final decision — analyze content semantically
+- **Scope:** If impacts one folder/module → scoped (e.g., `plugins/flutter-plugin/CLAUDE.md`). Else → root
+- **ADR:** If routing to ADR and `docs/adr/` missing → suggest creating it first
+- **Plugin names:** Discover from `.ai-workspace/plugins/` directory (see Files to Read)
+- **Uncertain:** Default to `instructions.md` (safer)
 
 ## Files to Read
 
@@ -50,6 +53,7 @@ When uncertain between `instructions.md` vs `CLAUDE.md`, default to `instruction
 | `.project-brain/memory/instructions.md` | Where to add preferences/corrections + check for duplicates |
 | `CLAUDE.md` (project root) | Where to add hard rules/knowledge + check for duplicates |
 | `work-state.md` | Check Backlog section for duplicate ideas/artifacts |
+| `.ai-workspace/plugins/` (directory) | List directory to discover installed plugins (for plugin feedback detection) |
 
 ## Approval Flow
 
@@ -112,17 +116,19 @@ Summarize, don't copy verbatim. Archive is write-only.
 ## Processing Steps
 
 1. Read input files (Files to Read section)
-2. Parse `inbox/lessons.md` — find unchecked lessons
-3. For each lesson:
+2. **Discover installed plugins:** List `.ai-workspace/plugins/` directory (if exists) to know which plugins are available
+3. Parse `inbox/lessons.md` — find unchecked lessons
+4. For each lesson:
    - **Analyze content** semantically (not just tag)
-   - **Determine destination** with reasoning
+   - **Check for plugin feedback:** Does lesson mention an installed plugin name or contain plugin-related patterns?
+   - **Determine destination** with reasoning (documentation type, scope, or plugin feedback)
    - **Check duplicates** in all relevant files
    - **Present proposal** with analysis and reasoning
    - **Wait for approval**
-   - **Apply changes** if approved
-4. **Remove processed lessons** from `inbox/lessons.md` (keep only session header if all processed)
-5. **Archive** processed block to `inbox/archive/YYYY-MM-DD.md`
-6. Print summary: lessons processed, diffs applied, items added to backlog, discarded/duplicates
+   - **Apply changes** if approved (or tag as `plugin-feedback:<plugin-name>`)
+5. **Remove processed lessons** from `inbox/lessons.md` (keep only session header if all processed)
+6. **Archive** processed block to `inbox/archive/YYYY-MM-DD.md`
+7. Print summary: lessons processed, diffs applied, items added to backlog, plugin feedback tagged, discarded/duplicates
 
 ## Constraints
 
