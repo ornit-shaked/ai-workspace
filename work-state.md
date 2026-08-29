@@ -38,6 +38,10 @@ Flutter Plugin v1.1.0 complete — Assets, L10n, Testing, CI workflow implemente
 *Ideas and candidates not yet promoted to features*
 
 <!-- lifecycle:backlog-begin -->
+- [ ] **enhancement** Skills lock/version management — When updating plugins (e.g., lifecycle-management), installed skills get overwritten. Need mechanism to: (1) Lock skills to prevent overwrites, (2) Version skills and allow selective updates, (3) Detect local modifications and warn before overwrite. Similar to package.json lock files. Flutter plugin has this issue too. Need design for skill versioning/locking system.
+  - Scope: installer infrastructure + all plugins
+  - Origin: 2026-08-29 | lifecycle-refactor session
+
 - [ ] **enhancement** Review ping-pong state tracking — How to track write→review→revise iterations? Current work-state.md has binary gates (spec_gen/spec_ok) but no "in-review" state. Options: (A) Add status column, (B) Use review file existence as signal, (C) Manual user tracking. Recommend Option B.
   - Scope: lifecycle-management plugin
   - Origin: 2026-08-29 | lifecycle-refactor session
