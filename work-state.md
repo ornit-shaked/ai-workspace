@@ -18,7 +18,7 @@ Flutter Plugin v1.1.0 complete — Assets, L10n, Testing, CI workflow implemente
 | **infrastructure** - Core Installer Infrastructure | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **project-brain-plugin** - Workspace Knowledge Management | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **flutter-plugin** - Flutter Delta Bootstrap | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
-| **flutter-plugin-v1.1** - Assets, L10n, Testing | ✅ | ⬜ | ✅ | ⬜ | ✅ | ⬜ |
+| **flutter-plugin-v1.1** - Assets, L10n, Testing | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **lifecycle-management** - Feature Lifecycle Management | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **documentation-architecture** - Documentation Architecture Pattern | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 <!-- lifecycle:features-end -->
@@ -38,6 +38,10 @@ Flutter Plugin v1.1.0 complete — Assets, L10n, Testing, CI workflow implemente
 *Ideas and candidates not yet promoted to features*
 
 <!-- lifecycle:backlog-begin -->
+- [ ] **enhancement** Review ping-pong state tracking — How to track write→review→revise iterations? Current work-state.md has binary gates (spec_gen/spec_ok) but no "in-review" state. Options: (A) Add status column, (B) Use review file existence as signal, (C) Manual user tracking. Recommend Option B.
+  - Scope: lifecycle-management plugin
+  - Origin: 2026-08-29 | lifecycle-refactor session
+
 - [ ] **command** /peek - teach shell one-liners for file operations — save tokens by using grep/ls/cat directly instead of agent reads
   - Scope: global
   - Origin: 2026-07-29 | dream-impl

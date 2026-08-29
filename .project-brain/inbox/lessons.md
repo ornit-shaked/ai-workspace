@@ -70,7 +70,7 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] preference | IDE-agnostic principle — Don't assume VS Code. Plugin should provide Flutter-specific scaffolding, not IDE-specific configuration. Removed .vscode/launch.json template. Users choose their own IDE and create appropriate configs.
 
-- [ ] standard | Framework-specific rules, not generic ones — Error handling rule is Dart-specific, not Flutter-specific. Renamed error-handling.md → dart-error-handling.md. Future frameworks (FastAPI, Node.js) will have their own error handling rules. Keep rules scoped to their framework/language.
+- [ ] standard | Framework-specific rules, not generic ones — Error handling rule is Dart-specific, not Flutter-specific. for example renamed error-handling.md → dart-error-handling.md. Future frameworks (FastAPI, Node.js) will have their own error handling rules. Keep rules scoped to their framework/language.
 
 - [ ] preference | Avoid redundant README files — Removed docs/adr/README.md (just listed ADR filenames). ADRs are self-documenting. Main README.md already references them. No need for an index file.
 

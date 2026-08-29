@@ -1,13 +1,32 @@
 # Lifecycle Management — Agent Instructions
 
+## Feature Lifecycle Stages
+
+1. **plan-product** → 2. **write-feature** → 3. **review-feature** → 4. **write-spec** → 5. **review-spec** → 6. **write-plan** → 7. **review-plan** → 8. **write-tasks** → 9. **review-tasks** → 10. **review-code** → 11. **archive-feature**
+
 ## Skills Available
-- `/plan-product [description]` — Generate phased roadmap
-- `/promote-feature <slug> <title>` — Create feature from idea
-- `/write-spec <slug>` — Draft spec (needs approval)
-- `/write-plan <slug>` — Draft plan (needs `spec_ok = ✅`)
-- `/decompose-tasks <slug>` — Break into tasks (needs `plan_ok = ✅`)
+
+**Product & Feature:**
+- `/plan-product [description]` — Turn raw idea into product roadmap
+- `/write-feature <id>` — Write feature brief from roadmap row
+- `/review-feature <id>` — Audit feature.md and produce review file
+
+**Design:**
+- `/write-spec <id>` — Write design spec (architecture, contracts, data model)
+- `/review-spec <id>` — Audit spec.md against feature.md coverage
+
+**Planning:**
+- `/write-plan <id>` — Write strategic plan (waves, phasing, dependencies, risks)
+- `/review-plan <id>` — Audit plan.md for wave coverage and cycles
+
+**Implementation:**
+- `/write-tasks <id>` — Write ordered, executable task list from plan
+- `/review-tasks <id>` — Audit tasks.md for coverage, size, DoD quality
+- `/review-code <id> <task-id>` — Review code diff against spec and DoD
+
+**Management:**
+- `/archive-feature <id>` — Move completed feature to Completed Features
 - `/full-prime` — Show all features + next actions
-- `/archive-feature <slug>` — Archive (needs `todo_ok = ✅`)
 
 ## Approval Protocol
 Advance stages only with: `yes`, `approved`, `looks good`, `lgtm`, `ok`, `👍`

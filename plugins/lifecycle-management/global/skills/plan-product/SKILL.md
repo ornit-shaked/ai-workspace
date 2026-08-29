@@ -1,103 +1,44 @@
 ---
 name: plan-product
-description: Generate a phased feature roadmap from raw product ideas
-triggers:
-  - user
-disable-model-invocation: true
+description: When the user provides a raw idea, brief, or product vision and asks to turn it into a product roadmap (a list of feature candidates each with a one-line WHY), invoke this skill. Do NOT invoke for feature briefs, specs, plans, tasks, or code.
 ---
 
-# /plan-product — Product Feature Roadmap
+# Plan Product
 
-Usage: `/plan-product [product description or raw ideas]`
+Turn a raw idea into the product-level artifact — `product-roadmap.md`. This is the ONLY skill that writes the roadmap.
 
-Transform raw product ideas into a phased feature catalog in `product-roadmap.md`.
-This is the step **before** `/promote-feature` — it identifies WHAT features should exist and in what order.
+## Inputs
+- Raw idea, problem statement, or product vision from the user.
+- (Optional) Existing `product-roadmap.md` to extend.
 
-## Steps
+## Output
+- `product-roadmap.md`
 
-1. **Gather context:**
-   - Read `CLAUDE.md` or `AGENTS.md` at project root (understand the project domain, tech stack, architectural boundaries)
-   - Read `work-state.md` (existing features to avoid duplication)
-   - Read `product-roadmap.md` if it exists (prior roadmap to update)
-   - Look for architectural constraints (service separation, forbidden patterns, technology boundaries)
-   - If user provided raw ideas inline, use those as primary input
-   - If no input provided, ask: "Describe your product in 2-3 sentences. What problem does it solve and for whom?"
+## MUST contain
+- Product title + 1-paragraph vision (WHY the product exists).
+- Ordered feature table with columns: `id | title | why | priority | status`.
+- One-line WHY per feature (business value, not implementation).
 
-2. **Ask up to 3 clarifying questions** (only if critical gaps remain):
-   - Target users / audience
-   - Key constraints (platform, compliance, integrations)
-   - What's already built vs greenfield
+## MUST NOT contain
+- Acceptance criteria (belongs in `write-feature`).
+- Architecture, stack choices, libraries, mockups (belongs in `write-spec`).
+- Waves, phasing, dependencies, risks (belongs in `write-plan`).
+- Tasks, code, ETAs, calendar dates.
+- Any restatement of content from a downstream artifact.
 
-3. **Identify features** using your training knowledge of the product's domain:
-   - Start with user's explicit ideas
-   - Add missing mandatory features typical for this product category (auth, error handling, analytics, etc.)
-   - Add cross-cutting concerns: security, observability, CI/CD, compliance (only when relevant)
-   - Each feature gets: slug, title, 1-line description, category, dependencies
+## Success criteria
+- Every row has: unique `id` (kebab-case), title, one-line WHY, priority (`p0`/`p1`/`p2`), status `idea`.
+- File ≤ 200 lines.
+- Whole roadmap can be read in ≤ 60 seconds.
+- No HOW anywhere.
 
-4. **Organize into phases** with dependency order:
-   - **Foundation** — Infrastructure, project setup, core architecture (must exist before anything else)
-   - **MVP** — Minimum features to deliver core value to users
-   - **Phase 1** — Essential improvements after MVP (polish, missing UX, key integrations)
-   - **Phase 2** — Scale, optimize, advanced features
-   - **Future** — Nice-to-have, experimental, long-term vision
+## Procedure
+1. Confirm product name and 1–2 sentence vision.
+2. List every candidate feature the vision implies.
+3. Fill the table row-by-row.
+4. Print the table. Save `product-roadmap.md`.
+5. Ask the user for approval string. Do NOT invoke any downstream skill.
 
-5. **Write `product-roadmap.md`** at project root with the catalog (see Output Format below)
-
-6. **Present summary** and ask for approval:
-   - Total feature count per phase
-   - Highlight features the agent added (not from user's original input)
-   - Ask: "Does this roadmap look right? I can add, remove, or reorganize features."
-
-7. **On approval** (`yes`/`approved`/`looks good`/`lgtm`/`ok`): finalize the file
-   - Suggest: "Use `/promote-feature <slug> <title>` to start the lifecycle for any feature."
-
-8. **On feedback:** iterate — adjust phases, add/remove features, rewrite
-
-## Output Format (`product-roadmap.md`)
-
-```markdown
-# Product Roadmap — {{PROJECT_NAME}}
-
-> {{1-line product description}}
-
-Generated: {{DATE}}
-
-## Foundation
-
-| # | Slug | Title | Description | Category | Depends On |
-|---|------|-------|-------------|----------|------------|
-| 1 | slug | Title | What it does | core/security/ops/infra | — |
-
-## MVP
-
-| # | Slug | Title | Description | Category | Depends On |
-|---|------|-------|-------------|----------|------------|
-| 1 | slug | Title | What it does | core/ux/data | foundation-slug |
-
-## Phase 1
-
-(same table format)
-
-## Phase 2
-
-(same table format)
-
-## Future
-
-(same table format)
-
----
-
-**Categories:** core, ux, data, security, ops, infra, compliance, integration, analytics
-**Next step:** Run `/promote-feature <slug> <title>` to start the lifecycle for a feature.
-```
-
-## Rules
-
-- **No web searches** — use training knowledge for domain best practices
-- **No feature files created** — catalog only; user promotes features manually
-- **No specs/plans/todos** — downstream lifecycle handles those
-- **Idempotent** — if `product-roadmap.md` exists, read it first and ask whether to update or replace
-- **Concise questions** — max 3 clarifying questions, skip if context is sufficient
-- **Mark agent-added features** — distinguish user's original ideas from agent suggestions so user can easily remove unwanted ones
-- **Dependency order** — features within each phase should be ordered by dependencies (independent first)
+## Handoff
+- Recommended next skill: `write-feature` (per feature, when user says "write <id>").
+- FEATURES.md flag: none at this stage (roadmap is not per-feature-gated).

@@ -1,17 +1,7 @@
 ---
 feature: {{SLUG}}
-slug: {{SLUG}}
 title: {{TITLE}}
-owner: {{OWNER}}
 created: {{DATE}}
-status: idea
-spec_gen: ⬜
-spec_ok: ⬜
-plan_gen: ⬜
-plan_ok: ⬜
-todo_gen: ⬜
-todo_ok: ⬜
-done: ⬜
 ---
 
 # Feature — {{TITLE}}

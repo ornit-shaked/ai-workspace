@@ -24,7 +24,7 @@ Then print a summary:
 - What's ready to work on
 - Suggest next action based on feature stages:
   - Features with `todo_ok = ✅` → start implementing
-  - Features with `plan_ok = ✅` → run `/decompose-tasks`
+  - Features with `plan_ok = ✅` → run `/write-tasks`
   - Features with `spec_ok = ✅` → run `/write-plan`
   - Features with `spec_gen = ✅` but `spec_ok = ⬜` → review and approve spec
   - Features at `idea` stage → run `/write-spec`

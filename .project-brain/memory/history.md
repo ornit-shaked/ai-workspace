@@ -9,6 +9,8 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-08-29 | lifecycle-management | Refactored lifecycle plugin — renamed skills (promote-feature→write-feature, decompose-tasks→write-tasks), documented 11-stage lifecycle, removed status duplication from feature.md frontmatter, reverted CONTEXT.md complexity, established work-state.md as single source of truth, moved skill template to workspace-wide docs/, added review ping-pong state tracking to backlog | 15+ files in plugins/lifecycle-management/, docs/skills/SKILL.template.md, work-state.md
+
 2026-08-29 | flutter-plugin-v1.1 | Completed v1.1.0 delta — added assets tree, Result<T>/Command utilities, test infrastructure, CI workflow, dart-error-handling rule, ADR-0008 (error handling decision); extended hooks.js with pubspec flutter: config injection; removed IDE-specific .vscode/launch.json (IDE-agnostic principle); version bumped to 1.1.0 | manifest.json, hooks.js, README.md, CHANGELOG.md, lib/utils/{result,command}.dart, test/utils/{result,command}_test.dart, .github/workflows/flutter-ci.yml, dart-error-handling.md, ADR-0008
 
 2026-08-25 | documentation-architecture | Documentation Architecture Pattern complete — agents now know where to put docs (README for humans, CLAUDE.md for agents, ADRs for why); dream skill routes documentation lessons and detects plugin feedback; installer tracks installed plugins in .ai-workspace/plugins/ | BRAIN-PLUGIN-INSTRUCTIONS.template.md, dream/SKILL.md, lib/installer.js, features/documentation-architecture/

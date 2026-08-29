@@ -5,84 +5,72 @@ Feature lifecycle management for AI-assisted development — structured progress
 ## What It Does
 
 Provides a structured pipeline for moving features through stages:
-- **product planning** → **idea** → **spec** → **plan** → **todo** → **implementation** → **done**
 
-Each stage produces artifacts under `features/<slug>/` and tracks state in `work-state.md` at project root.
+1. **plan-product** — Turn raw idea into product roadmap
+2. **write-feature** — Create feature brief (WHAT + WHY + acceptance criteria)
+3. **review-feature** — Audit feature brief
+4. **write-spec** — Design specification (architecture, contracts, data model)
+5. **review-spec** — Audit spec against feature coverage
+6. **write-plan** — Strategic plan (waves, phasing, dependencies, risks)
+7. **review-plan** — Audit plan for coverage and cycles
+8. **write-tasks** — Ordered, executable task list
+9. **review-tasks** — Audit tasks for coverage and dependencies
+10. **review-code** — Review code diffs against spec and DoD
+11. **archive-feature** — Move completed feature to archive
+
+Each stage produces artifacts under `features/<id>/` and tracks state in `work-state.md` at project root.
 
 ## What It Installs
 
-### Skills (Global)
-- `/plan-product [description]` — Generate a phased feature roadmap from raw product ideas
-- `/promote-feature <slug> <title>` — Create a new feature from an idea
-- `/write-spec <slug>` — Draft the specification
-- `/write-plan <slug>` — Draft the implementation plan
-- `/decompose-tasks <slug>` — Break plan into executable tasks
-- `/full-prime` — Show all features, stages, and comprehensive suggestions
-- `/archive-feature <slug>` — Archive a completed feature
+### Commands (Global)
 
-### Global Files
-- `LIFECYCLE-PLUGIN-INSTRUCTIONS.md` — Agent instructions (installed to `~/.claude/` or `~/.config/devin/`)
+**Product & Feature:**
+- `/plan-product [description]` — Turn raw idea into product roadmap
+- `/write-feature <id>` — Write feature brief from roadmap row
+- `/review-feature <id>` — Audit feature.md and produce review file
+
+**Design:**
+- `/write-spec <id>` — Write design spec (architecture, contracts, data model)
+- `/review-spec <id>` — Audit spec.md against feature.md coverage
+
+**Planning:**
+- `/write-plan <id>` — Write strategic plan (waves, phasing, dependencies, risks)
+- `/review-plan <id>` — Audit plan.md for wave coverage and dependency cycles
+
+**Implementation:**
+- `/write-tasks <id>` — Write ordered, executable task list from plan
+- `/review-tasks <id>` — Audit tasks.md for coverage, size, DoD quality
+- `/review-code <id> <task-id>` — Review code diff against spec and task DoD
+
+**Management:**
+- `/archive-feature <id>` — Move completed feature to Completed Features section
+- `/full-prime` — Show all features, stages, and comprehensive suggestions
 
 ### Project Files
 - `work-state.md` — Canonical work-state file at project root (shared with Project Brain)
-- `product-roadmap.md` — Phased feature catalog (created by `/plan-product`)
+- `LIFECYCLE-PLUGIN.md` — Documentation and rules reference
 
 ### Per-Feature Artifacts
-Each feature creates a directory at `features/<slug>/`:
-- `feature.md` — Goal, problem, sources, provenance
-- `spec.md` — WHAT must exist (created by `/write-spec`)
-- `plan.md` — HOW to build it (created by `/write-plan`)
-- `todo.md` — Executable checklist (created by `/decompose-tasks`)
+Each feature creates a directory at `features/<id>/`:
+- `feature.md` — Goal, problem, acceptance criteria (created by `/write-feature`)
+- `spec.md` — Design specification (created by `/write-spec`)
+- `plan.md` — Strategic plan (created by `/write-plan`)
+- `tasks.md` — Ordered task list with DoD (created by `/write-tasks`)
+- `*.review.md` — Review findings (created by review skills)
 
 ## Installation
 
 ```bash
-# Install Project Brain first (recommended)
-npx github:ornit-shaked/ai-workspace install project-brain ~/your-project
+# Install Project Brain first (required dependency)
+node index.js install project-brain ~/code/your-project
 
 # Then install Lifecycle Management
-npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project
-
-# For Devin, add --agent devin to either command
-npx github:ornit-shaked/ai-workspace install project-brain ~/your-project --agent devin
-npx github:ornit-shaked/ai-workspace install lifecycle-management ~/your-project --agent devin
+node index.js install lifecycle-management ~/code/your-project
 ```
-
----
-
-## Integration with Your Agent
-
-After installation, add this to your global agent config (e.g., `~/.claude/CLAUDE.md` or `~/.config/devin/DEVIN.md`):
-
-```markdown
-Read and follow all rules in LIFECYCLE-PLUGIN-INSTRUCTIONS.md
-```
-
-This ensures your agent knows about:
-- Global skills: `/plan-product`, `/promote-feature`, `/write-spec`, `/write-plan`, `/decompose-tasks`, `/full-prime`, `/archive-feature`
-- Project structure: `features/`, `work-state.md`, `product-roadmap.md`
-- Feature lifecycle workflow and approval gates
-
----
 
 ## Dependencies
 
-- **Project Brain** (recommended, not required) — Lifecycle reads `.project-brain/memory/history.md` for session resumption if available
-
-## Integration with Project Brain
-
-When both plugins are installed, they share `work-state.md` with clear ownership:
-
-| Section | Owner | Purpose |
-|---------|-------|---------|
-| **Current Focus** | project-brain | What you're working on right now |
-| **Features** | lifecycle-management | Feature lifecycle tracking |
-| **Ready to Work On** | lifecycle-management | Tasks ready to implement |
-| **Backlog** | lifecycle-management | Ideas not yet promoted to features (dream skill writes here) |
-| **Pull Requests** | lifecycle-management | PRs tied to features |
-| **Free-form Tasks** | project-brain | Manual tasks not tied to features |
-
-**Multi-writer safety:** HTML comment fences prevent conflicts (e.g., `<!-- lifecycle:features-begin -->` ... `<!-- lifecycle:features-end -->`)
+- **Project Brain** (required) — Lifecycle reads `.project-brain/memory/history.md` for session resumption
 
 ## State Model
 
@@ -92,7 +80,7 @@ Features track progress with six boolean columns plus a done flag:
 - `todo_gen` / `todo_ok` — Tasks generated / approved
 - `done` — Feature completed (manually set to ✅ when all tasks done)
 
-Commands enforce order: `/write-plan` requires `spec_ok = ✅`, `/decompose-tasks` requires `plan_ok = ✅`.
+Commands enforce order: `/write-plan` requires `spec_ok = ✅`, `/write-tasks` requires `plan_ok = ✅`.
 
 **Completion:** When all tasks in `todo.md` are checked off:
 1. Set `done: ✅` in `feature.md` front-matter
