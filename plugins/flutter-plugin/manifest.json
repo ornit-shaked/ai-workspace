@@ -2,11 +2,52 @@
   "name": "flutter-plugin",
   "version": "1.1.0",
   "description": "Flutter development standards, architecture patterns, and project scaffolding",
+  "documentation": {
+    "adr_directory": "docs/adr/",
+    "rules_directory": "{{AGENT_RULES}}/",
+    "upstream_sources": [
+      {
+        "name": "Flutter Architecture Guide",
+        "url": "https://docs.flutter.dev/app-architecture"
+      },
+      {
+        "name": "Flutter AI Rules",
+        "url": "https://docs.flutter.dev/ai/ai-rules"
+      },
+      {
+        "name": "flutter/agent-plugins",
+        "url": "https://github.com/flutter/agent-plugins"
+      },
+      {
+        "name": "dart-lang/skills",
+        "url": "https://github.com/dart-lang/skills"
+      }
+    ],
+    "quick_commands": {
+      "Install dependencies": "flutter pub get",
+      "Generate code": "dart run build_runner build --delete-conflicting-outputs",
+      "Run development": "flutter run -t lib/main_development.dart",
+      "Run tests": "flutter test",
+      "Run analysis": "flutter analyze"
+    },
+    "plugin_owned_files": {
+      "do_not_modify": [
+        "docs/adr/*.md — Architectural decisions (append new ADRs, never rewrite)",
+        "{{AGENT_RULES}}/*.md — Agent rules (update via plugin or new ADR)",
+        "analysis_options.yaml — Lint configuration"
+      ],
+      "scaffold_extend_freely": [
+        "lib/main*.dart — Entry points (add initialization logic)",
+        "lib/config/app_config.dart — Environment-dependent values",
+        "lib/routing/router.dart — Feature routes",
+        "lib/data/, lib/domain/, lib/ui/ — Application code",
+        "test/ — Replace scaffold with real tests"
+      ]
+    }
+  },
   "global_files": {},
   "global_dirs": [],
   "project_files": {
-    "FLUTTER-PLUGIN.md": "project/FLUTTER-PLUGIN.template.md",
-
     "{{AGENT_RULES}}/state-management.md": "project/rules/state-management.md",
     "{{AGENT_RULES}}/models.md": "project/rules/models.md",
     "{{AGENT_RULES}}/linting.md": "project/rules/linting.md",

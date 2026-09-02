@@ -78,6 +78,26 @@ files to `global_dirs` (deploying them to `~/.claude/rules/`, machine-wide) inst
 project-scoped `.claude/rules/`, contradicting the plugin's own spec. Don't re-litigate this split
 per-plugin — check which bucket new content belongs to using the two rules above.
 
+### Design Principle: Plugin-Managed Directories (locked)
+
+**Plugin-managed content lives in hidden directories (starting with `.`) to clearly separate it from user code.**
+
+When plugins install into target projects, they use these conventions:
+- `.ai-workspace/` — Plugin tracking (which plugins are installed, their versions, documentation)
+- `.project-brain/` — Memory system (history, instructions, inbox) from project-brain plugin
+- `.features/` — Feature lifecycle artifacts (feature.md, spec.md, plan.md, todo.md) from lifecycle-management plugin
+- `.claude/`, `.devin/`, `.windsurf/` — Agent-specific configuration (rules, skills, commands)
+
+**Why hidden directories?**
+- ✅ Clear separation between plugin-managed and user-managed content
+- ✅ Reduces visual clutter in project root
+- ✅ Agents can easily discover plugin structure
+- ✅ Consistent across all plugins
+
+**Exception:** `work-state.md` and `product-roadmap.md` stay in project root because they're frequently accessed by users and agents.
+
+This was decided 2026-08-31 when consolidating plugin documentation to eliminate confusion about what files belong to the project vs. the plugin system.
+
 ## How to Work on This Project
 
 ### ⚠️ CRITICAL: Two Separate Areas

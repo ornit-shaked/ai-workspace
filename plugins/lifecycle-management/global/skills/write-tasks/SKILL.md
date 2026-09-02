@@ -1,6 +1,6 @@
 ---
 name: write-tasks
-description: When `features/<id>/plan.md` is approved and the user asks to write an ordered, executable task list, invoke this skill. Do NOT restate the plan or spec, and do NOT write code.
+description: When `.features/<id>/plan.md` is approved and the user asks to write an ordered, executable task list, invoke this skill. Do NOT restate the plan or spec, and do NOT write code.
 ---
 
 # Write Tasks
@@ -8,11 +8,11 @@ description: When `features/<id>/plan.md` is approved and the user asks to write
 Turn an approved plan into an ordered, DoD-annotated task list — one row per executable unit of work.
 
 ## Inputs
-- Approved `features/<id>/plan.md`
-- Approved `features/<id>/spec.md`
+- Approved `.features/<id>/plan.md`
+- Approved `.features/<id>/spec.md`
 
 ## Output
-- `features/<id>/tasks.md`
+- `.features/<id>/tasks.md` (content only, NO frontmatter tracking)
 
 ## MUST contain
 - Task table with columns: `id | wave | title | inputs | outputs | dod | depends_on | est`.

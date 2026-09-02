@@ -18,7 +18,7 @@ Provides a structured pipeline for moving features through stages:
 10. **review-code** — Review code diffs against spec and DoD
 11. **archive-feature** — Move completed feature to archive
 
-Each stage produces artifacts under `features/<id>/` and tracks state in `work-state.md` at project root.
+Each stage produces artifacts under `.features/<id>/` and tracks state in `work-state.md` at project root.
 
 ## What It Installs
 
@@ -51,7 +51,7 @@ Each stage produces artifacts under `features/<id>/` and tracks state in `work-s
 - `LIFECYCLE-PLUGIN.md` — Documentation and rules reference
 
 ### Per-Feature Artifacts
-Each feature creates a directory at `features/<id>/`:
+Each feature creates a directory at `.features/<id>/`:
 - `feature.md` — Goal, problem, acceptance criteria (created by `/write-feature`)
 - `spec.md` — Design specification (created by `/write-spec`)
 - `plan.md` — Strategic plan (created by `/write-plan`)
@@ -87,7 +87,7 @@ Commands enforce order: `/write-plan` requires `spec_ok = ✅`, `/write-tasks` r
 2. Move the feature row from **Features** table to **Completed Features** table (with completion date)
 3. `/full-prime` only reads the active Features table, so completed work won't clutter suggestions
 
-All features live at `features/<slug>/` by convention, so no need to track location.
+All features live at `.features/<slug>/` by convention, so no need to track location.
 
 ## Approval Protocol
 

@@ -1,6 +1,6 @@
 ---
 name: review-tasks
-description: When `features/<id>/tasks.md` exists and the user asks to review it before approval, invoke this skill. Output `tasks.review.md`. Never rewrite tasks.
+description: When `.features/<id>/tasks.md` exists and the user asks to review it before approval, invoke this skill. Output `tasks.review.md`. Never rewrite tasks.
 ---
 
 # Review Tasks
@@ -8,13 +8,13 @@ description: When `features/<id>/tasks.md` exists and the user asks to review it
 Audit `tasks.md` against `decompose-tasks` contract lists + plan / spec coverage.
 
 ## Inputs
-- `features/<id>/tasks.md`
-- `features/<id>/plan.md`
-- `features/<id>/spec.md`
+- `.features/<id>/tasks.md`
+- `.features/<id>/plan.md`
+- `.features/<id>/spec.md`
 - `write-tasks/SKILL.md` (for its contract lists)
 
 ## Output
-- `features/<id>/tasks.review.md`
+- `.features/<id>/tasks.review.md`
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work`.

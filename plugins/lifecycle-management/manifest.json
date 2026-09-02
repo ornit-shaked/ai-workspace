@@ -2,6 +2,30 @@
   "name": "lifecycle-management",
   "version": "1.0.0",
   "description": "Feature lifecycle management — structured progression from idea to implementation",
+  "documentation": {
+    "upstream_sources": [
+      {
+        "name": "ai-workspace lifecycle-management docs",
+        "url": "https://github.com/oshaked/ai-workspace/tree/main/plugins/lifecycle-management"
+      }
+    ],
+    "quick_commands": {
+      "Plan product roadmap": "/plan-product",
+      "Promote feature from roadmap": "/promote-feature",
+      "Write feature spec": "/write-spec",
+      "Write implementation plan": "/write-plan",
+      "Decompose into tasks": "/decompose-tasks",
+      "Check current state": "/full-prime"
+    },
+    "plugin_owned_files": {
+      "do_not_modify": [
+        "work-state.md — Single source of truth for project state (managed by lifecycle commands)"
+      ],
+      "scaffold_extend_freely": [
+        ".features/<id>/ — Feature directories (feature.md, spec.md, plan.md, todo.md)"
+      ]
+    }
+  },
   "global_files": {
     "LIFECYCLE-PLUGIN-INSTRUCTIONS.md": "global/LIFECYCLE-PLUGIN-INSTRUCTIONS.template.md"
   },

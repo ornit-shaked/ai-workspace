@@ -32,8 +32,10 @@
 Advance stages only with: `yes`, `approved`, `looks good`, `lgtm`, `ok`, `👍`
 
 ## Files
-- `work-state.md` — State tracking (project root)
-- `features/<slug>/` — feature.md, spec.md, plan.md, todo.md
+- `work-state.md` — **Single source of truth** for all feature state tracking (project root)
+- `.features/<slug>/` — feature.md, spec.md, plan.md, todo.md (content only, NO frontmatter tracking)
+
+**Important:** Feature files contain ONLY content. All state tracking (spec_gen, spec_ok, plan_gen, plan_ok, todo_gen, todo_ok) lives exclusively in `work-state.md` Features table. Never duplicate state in feature file frontmatter.
 
 ## Multi-Writer Safety
 **Only write to Lifecycle-owned sections in `work-state.md`:**

@@ -2,6 +2,24 @@
   "name": "project-brain",
   "version": "1.0.0",
   "description": "Project memory, tasks, plans, and history with global AI config",
+  "documentation": {
+    "upstream_sources": [
+      {
+        "name": "ai-workspace project-brain docs",
+        "url": "https://github.com/oshaked/ai-workspace/tree/main/docs/plugins/project-brain"
+      }
+    ],
+    "plugin_owned_files": {
+      "do_not_modify": [
+        ".project-brain/memory/history.md — Session index (updated by /wrap command)",
+        ".project-brain/memory/instructions.md — Project-specific agent instructions"
+      ],
+      "scaffold_extend_freely": [
+        ".project-brain/inbox/lessons.md — Capture lessons here, processed by /dream",
+        "work-state.md — Current focus, features, backlog"
+      ]
+    }
+  },
   "global_files": {
     "CLAUDE.md": "global/CLAUDE.template.md",
     "BRAIN-PLUGIN-INSTRUCTIONS.md": "global/BRAIN-PLUGIN-INSTRUCTIONS.template.md",

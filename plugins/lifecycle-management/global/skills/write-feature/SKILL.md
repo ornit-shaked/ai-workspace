@@ -12,8 +12,8 @@ Turn one roadmap row into a **feature brief**: what problem it solves, who it's 
 - (Optional) User elaboration on the problem.
 
 ## Output
-- `features/<id>/feature.md`
-- `features/<id>/CONTEXT.md` (created on first run)
+- `.features/<id>/feature.md` (content only, NO frontmatter tracking)
+- `.features/<id>/CONTEXT.md` (created on first run)
 
 ## MUST contain
 - Problem statement (1 paragraph).
@@ -41,7 +41,7 @@ Turn one roadmap row into a **feature brief**: what problem it solves, who it's 
 1. Read the selected roadmap row.
 2. Ask any missing WHY questions (max 3).
 3. Fill: Problem → User → Value → Acceptance → Out-of-scope → Open questions.
-4. Save to `features/<id>/feature.md`.
+4. Save to `.features/<id>/feature.md`.
 5. Update `work-state.md`: add feature row to Features table (all approval gates ⬜, status=idea).
 6. Ask user for approval string. Do NOT invoke `write-spec` automatically.
 

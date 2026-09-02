@@ -1,6 +1,6 @@
 ---
 name: write-spec
-description: When `features/<id>/feature.md` is approved and the user asks to write the design spec (HOW), invoke this skill. Do NOT restate WHY, list tasks, or write executable code.
+description: When `.features/<id>/feature.md` is approved and the user asks to write the design spec (HOW), invoke this skill. Do NOT restate WHY, list tasks, or write executable code.
 ---
 
 # Write Spec
@@ -8,12 +8,12 @@ description: When `features/<id>/feature.md` is approved and the user asks to wr
 Turn an approved feature into a **design spec**: architecture, contracts, data model, edge cases, non-functional requirements — WITHOUT tasks or code.
 
 ## Inputs
-- Approved `features/<id>/feature.md`
+- Approved `.features/<id>/feature.md`
 - (Optional) Project conventions from CLAUDE.md / AGENTS.md
 - (Optional) Existing related specs to align with
 
 ## Output
-- `features/<id>/spec.md`
+- `.features/<id>/spec.md` (content only, NO frontmatter tracking)
 
 ## MUST contain
 - Architecture: components + responsibilities + data flow (ASCII diagram acceptable).

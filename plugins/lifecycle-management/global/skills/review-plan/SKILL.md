@@ -1,6 +1,6 @@
 ---
 name: review-plan
-description: When `features/<id>/plan.md` exists and the user asks to review it before approval, invoke this skill. Output `plan.review.md`. Never rewrite the plan.
+description: When `.features/<id>/plan.md` exists and the user asks to review it before approval, invoke this skill. Output `plan.review.md`. Never rewrite the plan.
 ---
 
 # Review Plan
@@ -8,12 +8,12 @@ description: When `features/<id>/plan.md` exists and the user asks to review it 
 Audit `plan.md` against `write-plan` contract lists + `spec.md` coverage.
 
 ## Inputs
-- `features/<id>/plan.md`
-- `features/<id>/spec.md`
+- `.features/<id>/plan.md`
+- `.features/<id>/spec.md`
 - `write-plan/SKILL.md` (for its contract lists)
 
 ## Output
-- `features/<id>/plan.review.md`
+- `.features/<id>/plan.review.md`
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work`.

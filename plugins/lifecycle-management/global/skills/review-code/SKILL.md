@@ -1,6 +1,6 @@
 ---
 name: review-code
-description: When a code diff exists (working copy, staged, or PR) for a task from `features/<id>/tasks.md` and the user asks for a review against the spec + task DoD, invoke this skill. Output a review file. Never auto-fix.
+description: When a code diff exists (working copy, staged, or PR) for a task from `.features/<id>/tasks.md` and the user asks for a review against the spec + task DoD, invoke this skill. Output a review file. Never auto-fix.
 ---
 
 # Review Code
@@ -9,12 +9,12 @@ Audit a code diff against `spec.md` + task DoD + project conventions.
 
 ## Inputs
 - Code diff (working copy / staged / PR).
-- Task row(s) from `features/<id>/tasks.md`.
-- `features/<id>/spec.md`
+- Task row(s) from `.features/<id>/tasks.md`.
+- `.features/<id>/spec.md`
 - Project conventions from CLAUDE.md / AGENTS.md / rules (if present).
 
 ## Output
-- `features/<id>/reviews/<task-id>.code.review.md`
+- `.features/<id>/reviews/<task-id>.code.review.md`
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work | blocked`.

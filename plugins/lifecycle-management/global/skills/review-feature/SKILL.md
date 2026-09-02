@@ -1,6 +1,6 @@
 ---
 name: review-feature
-description: When `features/<id>/feature.md` exists and the user asks to review it before approval, invoke this skill. It produces `feature.review.md` with an explicit verdict + fix list. It NEVER rewrites the feature.
+description: When `.features/<id>/feature.md` exists and the user asks to review it before approval, invoke this skill. It produces `feature.review.md` with an explicit verdict + fix list. It NEVER rewrites the feature.
 ---
 
 # Review Feature
@@ -8,12 +8,12 @@ description: When `features/<id>/feature.md` exists and the user asks to review 
 Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain / success-criteria. Produce a review file. Do NOT modify the feature.
 
 ## Inputs
-- `features/<id>/feature.md`
+- `.features/<id>/feature.md`
 - `product-roadmap.md` (row for `<id>`)
 - `write-feature/SKILL.md` (for its contract lists)
 
 ## Output
-- `features/<id>/feature.review.md`
+- `.features/<id>/feature.review.md`
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work`.
