@@ -31,7 +31,8 @@
   },
   "global_dirs": ["skills"],
   "project_files": {
-    "work-state.md": "project/work-state.template.md"
+    "work-state.md": "project/work-state.template.md",
+    ".features/.gitkeep": "project/.gitkeep"
   },
   "brain_dir": "",
   "brain_files": {},
