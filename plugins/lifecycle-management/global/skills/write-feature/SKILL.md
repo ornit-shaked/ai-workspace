@@ -13,7 +13,6 @@ Turn one roadmap row into a **feature brief**: what problem it solves, who it's 
 
 ## Output
 - `.features/<id>/feature.md` (content only, NO frontmatter tracking)
-- `.features/<id>/CONTEXT.md` (created on first run)
 
 ## MUST contain
 - Problem statement (1 paragraph).
