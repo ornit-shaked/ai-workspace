@@ -1,5 +1,5 @@
 ---
-name: brain-setup
+name: setup
 description: Initialize brain plugin (global config + project structure)
 ---
 
@@ -9,7 +9,7 @@ Run the installation script to set up brain plugin.
 
 ## Implementation
 
-Execute: `node ${DEVIN_PLUGIN_ROOT}/skills/brain-setup/script.js`
+Execute: `node ${DEVIN_PLUGIN_ROOT}/skills/setup/script.js`
 
 The script:
 - Reads `manifest.json` for file mappings
@@ -20,6 +20,6 @@ The script:
 ## When to Use
 
 - **Automatic:** SessionStart hook runs this on first session
-- **Manual:** Run `/brain:brain-setup` if needed (e.g., Devin Cloud)
+- **Manual:** Run `/brain:setup` if needed (e.g., Devin Cloud)
 
-After setup, run `/brain:brain-prime` to start.
+After setup, run `/brain:prime` to start.

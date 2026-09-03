@@ -211,9 +211,7 @@ function installProjectFiles(manifest, replacements) {
 - \`/brain:prime\` — Session start - read project context and history
 - \`/brain:wrap\` — Session end - update history and capture learnings
 - \`/brain:dream\` — Process captured lessons from project inbox
-- \`/brain:quick-commit\` — Quick commit with AI-generated message
 - \`/brain:commit-push-pr\` — Commit, push, and create PR
-- \`/brain:grill-branch\` — Review branch changes critically
 
 ## Plugin-Owned Files
 

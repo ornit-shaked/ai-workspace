@@ -1,5 +1,5 @@
 ---
-name: brain-dream
+name: dream
 description: Use when processing captured lessons from project inbox to route them to permanent destinations (preferences, rules, or backlog)
 ---
 

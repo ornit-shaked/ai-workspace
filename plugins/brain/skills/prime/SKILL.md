@@ -1,5 +1,5 @@
 ---
-name: brain-prime
+name: prime
 description: Session start - read project context and history
 model: haiku
 triggers:
@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 First, verify the project-brain structure exists:
 - Check if `.project-brain/memory/history.md` exists
-- If missing → Report: "Brain not initialized. Run /brain:brain-setup first." and exit
+- If missing → Report: "Brain not initialized. Run /brain:setup first." and exit
 
 ## Read Project Context
 
