@@ -1,0 +1,15 @@
+{
+  "name": "brain",
+  "version": "1.0.0",
+  "description": "Second brain - project memory, tasks, plans, and history",
+  "author": {
+    "name": "Oshaked Shaked",
+    "email": "oshaked@example.com"
+  },
+  "homepage": "https://github.com/oshaked/ai-workspace",
+  "repository": "https://github.com/oshaked/ai-workspace",
+  "license": "MIT",
+  "keywords": ["memory", "tasks", "planning", "history", "project-management", "second-brain"],
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json"
+}

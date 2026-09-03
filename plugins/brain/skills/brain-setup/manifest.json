@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "description": "Installation manifest for brain plugin",
+  "global_files": [
+    {
+      "source": "templates/global/BRAIN-PLUGIN-INSTRUCTIONS.md",
+      "target": "BRAIN-PLUGIN-INSTRUCTIONS.md"
+    },
+    {
+      "source": "templates/global/about-me.md",
+      "target": "about-me.md"
+    },
+    {
+      "source": "templates/global/CLAUDE.md",
+      "target": "CLAUDE.md"
+    }
+  ],
+  "project_files": [
+    {
+      "source": "templates/project/.project-brain/memory/history.md",
+      "target": ".project-brain/memory/history.md"
+    },
+    {
+      "source": "templates/project/.project-brain/memory/instructions.md",
+      "target": ".project-brain/memory/instructions.md"
+    },
+    {
+      "source": "templates/project/.project-brain/inbox/lessons.md",
+      "target": ".project-brain/inbox/lessons.md"
+    },
+    {
+      "source": "templates/project/work-state.md",
+      "target": "work-state.md"
+    }
+  ],
+  "project_dirs": [
+    ".project-brain/inbox/archive",
+    ".ai-workspace/plugins"
+  ]
+}

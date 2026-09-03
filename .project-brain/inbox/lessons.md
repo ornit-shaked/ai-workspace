@@ -78,4 +78,18 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] standard | ADR + Rule pairing for new patterns — When introducing a new pattern (Result<T>), create both: (1) ADR explaining the decision/rationale, (2) Rule with DO/DON'T examples for agents. This ensures agents understand both the "why" and the "how".
 
+## 2026-09-03 — official-plugin-migration — devin
+
+- [ ] standard | Create new plugin instead of refactoring in-place — When migrating to new architecture, create separate plugin (e.g., `brain` vs `project-brain`) rather than modifying existing one. Allows testing new approach without breaking existing users, easy rollback, clear comparison. Delete old plugin only after new one is validated.
+
+- [ ] standard | Skill naming must avoid conflicts across plugins — Generic skill names (`setup`, `prime`) cause confusion when multiple plugins installed. Use explicit prefixes (`brain-setup`, `flutter-setup`, `lifecycle-setup`). Plugin namespace (`/brain:setup`) helps but skill lists still show bare names.
+
+- [ ] standard | SKILL.md should be minimal instructions for agent — Skills were too verbose (76 lines documenting implementation details). Agent only needs WHAT to do, not HOW script works. Reduced to 25 lines (67% reduction). Pattern: SKILL.md = agent instructions, script.js = implementation, manifest.json = configuration, templates/ = content.
+
+- [ ] standard | Unified installation via manifest-driven script — Instead of separate scripts for global/project files, use single script + manifest.json declaring file mappings. Script reads manifest, copies files to appropriate locations (global config, project root). Eliminates duplication, easier to maintain.
+
+- [ ] preference | Hooks over skills when possible — Explored SessionStart hook for auto-installation before falling back to skill. Hooks are more token-efficient (run automatically, no skill invocation needed). Use skills only as fallback for environments without hook support (e.g., Devin Cloud).
+
+- [ ] missing-knowledge | No PluginInstall hook exists — Assumed there would be a hook that fires on plugin installation. Only SessionStart/SessionEnd exist. SessionStart runs every session (not just first install), so need lockfile check for idempotency.
+
 <!-- Lessons will be appended here by /wrap -->

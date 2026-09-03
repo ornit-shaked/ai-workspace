@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Flutter Plugin v1.1.0 complete — Assets, L10n, Testing, CI workflow implemented
+Official Plugin Migration — Migrate all 3 plugins to official Devin/Claude Code plugin format with SessionStart hooks and setup skills
 <!-- brain:current-focus-end -->
 
 ---
@@ -21,6 +21,7 @@ Flutter Plugin v1.1.0 complete — Assets, L10n, Testing, CI workflow implemente
 | **flutter-plugin-v1.1** - Assets, L10n, Testing | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ |
 | **lifecycle-management** - Feature Lifecycle Management | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **documentation-architecture** - Documentation Architecture Pattern | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ⬜ | ✅ | ⬜ | ✅ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
