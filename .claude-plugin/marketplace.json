@@ -1,0 +1,11 @@
+{
+  "name": "ornit-workspace",
+  "owner": { "name": "Ornit Shaked" },
+  "plugins": [
+    {
+      "name": "brain",
+      "source": "./plugins/brain",
+      "description": "Second brain - project memory, tasks, plans, and history"
+    }
+  ]
+}

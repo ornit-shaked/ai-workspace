@@ -28,6 +28,36 @@ npx github:ornit-shaked/ai-workspace install project-brain . --agent devin
 
 ---
 
+## Official Plugin Installation (Devin & Claude Code)
+
+**Install via official plugin managers:**
+
+### Devin CLI
+```bash
+# Install individual plugin
+devin plugins install "https://github.com/ornit-shaked/ai-workspace.git#plugins/brain"
+
+# Or install all plugins at once
+devin plugins install oshaked/ai-workspace
+```
+
+### Claude Code
+```bash
+# Add the marketplace
+/plugin marketplace add https://github.com/ornit-shaked/ai-workspace
+
+# Install the brain plugin
+/plugin install brain@ornit-workspace
+```
+
+**Supported environments:**
+- ✅ Devin CLI (auto-scaffolds on first session)
+- ✅ Devin Desktop (auto-scaffolds on first session)
+- ✅ Claude Code (auto-scaffolds on first session)
+- ⚠️ Devin Cloud (requires manual `/brain:setup` skill)
+
+---
+
 ## Available Plugins
 
 | Plugin | Purpose | Key Features | README |
