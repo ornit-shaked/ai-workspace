@@ -207,10 +207,13 @@ function installProjectFiles(manifest, replacements) {
 **Installed:** ${new Date().toISOString()}
 
 ## Skills Provided
-- \`/brain:brain-setup\` — Initialize brain structure (global + project)
-- \`/brain:brain-prime\` — Session start - read project context and history
-- \`/brain:brain-wrap\` — Session end - update history and capture learnings
-- \`/brain:brain-dream\` — Process captured lessons from project inbox
+- \`/brain:setup\` — Initialize brain structure (global + project)
+- \`/brain:prime\` — Session start - read project context and history
+- \`/brain:wrap\` — Session end - update history and capture learnings
+- \`/brain:dream\` — Process captured lessons from project inbox
+- \`/brain:quick-commit\` — Quick commit with AI-generated message
+- \`/brain:commit-push-pr\` — Commit, push, and create PR
+- \`/brain:grill-branch\` — Review branch changes critically
 
 ## Plugin-Owned Files
 
@@ -220,9 +223,9 @@ function installProjectFiles(manifest, replacements) {
 - \`CLAUDE.md\` — Agent configuration
 
 ### Project Files
-- \`.project-brain/memory/history.md\` — Session index (updated by /brain:brain-wrap)
+- \`.project-brain/memory/history.md\` — Session index (updated by /brain:wrap)
 - \`.project-brain/memory/instructions.md\` — Project-specific instructions
-- \`.project-brain/inbox/lessons.md\` — Lesson capture (processed by /brain:brain-dream)
+- \`.project-brain/inbox/lessons.md\` — Lesson capture (processed by /brain:dream)
 - \`work-state.md\` — Current focus, features, backlog
 
 ## Documentation

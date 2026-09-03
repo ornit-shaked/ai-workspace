@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Second brain - project memory, tasks, plans, and history",
   "author": {
-    "name": "Oshaked Shaked",
-    "email": "oshaked@example.com"
+    "name": "Ornit Shaked",
+    "url": "https://github.com/ornit-shaked"
   },
-  "homepage": "https://github.com/oshaked/ai-workspace",
-  "repository": "https://github.com/oshaked/ai-workspace",
+  "homepage": "https://github.com/ornit-shaked/ai-workspace",
+  "repository": "https://github.com/ornit-shaked/ai-workspace",
   "license": "MIT",
   "keywords": ["memory", "tasks", "planning", "history", "project-management", "second-brain"],
   "skills": "./skills",

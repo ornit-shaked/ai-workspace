@@ -32,13 +32,13 @@
 
 Every project has three documentation zones, each with a specific audience:
 
-### 1. README.md (for humans, agents can read)
+### 1. README.md (data for humans)
 - **What** the project does
 - **How** to install and use it
 - Concrete deliverables
 - Can reference CLAUDE.md or ADRs for deeper detail
 
-### 2. CLAUDE.md / AGENTS.md (for agents only)
+### 2. CLAUDE.md (data for agents, human can read)
 - **How** to work on this project
 - Project-specific rules and conventions
 - References to ADRs and upstream sources
