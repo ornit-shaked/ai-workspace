@@ -1,5 +1,5 @@
 ---
-name: brain-commit-push-pr
+name: commit-push-pr
 description: Commit, push, and open a PR
 model: haiku
 triggers:

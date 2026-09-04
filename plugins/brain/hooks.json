@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "node ${DEVIN_PLUGIN_ROOT}/skills/brain-setup/script.js",
+          "command": "node ./skills/setup/script.js",
           "timeout": 10
         }
       ]

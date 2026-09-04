@@ -1,5 +1,5 @@
 ---
-name: brain-wrap
+name: wrap
 description: Session end - update history and capture learnings
 model: haiku
 triggers:
