@@ -15,17 +15,17 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-// Configuration
-const PLUGIN_NAME = 'brain';
-const PLUGIN_VERSION = '1.0.0';
-const LOCKFILE_NAME = 'skills-lock.json';
-
 // Get paths
 const projectRoot = process.cwd();
-const skillRoot = __dirname; // plugins/brain/skills/brain-setup/
+const skillRoot = __dirname; // plugins/brain/skills/setup/
 const pluginRoot = path.join(skillRoot, '../..'); // plugins/brain/
 const manifestPath = path.join(skillRoot, 'manifest.json');
-const lockfilePath = path.join(projectRoot, LOCKFILE_NAME);
+const trackingPath = path.join(projectRoot, '.ai-workspace/plugins/brain.md');
+
+// Plugin identity comes from the plugin's own manifest — not duplicated here.
+const PLUGIN_VERSION = JSON.parse(
+  fs.readFileSync(path.join(pluginRoot, '.claude-plugin/plugin.json'), 'utf-8')
+).version;
 
 /**
  * Detect global config directory based on environment
@@ -70,45 +70,18 @@ function readManifest() {
 }
 
 /**
- * Read lockfile (returns empty structure if doesn't exist)
+ * Check if plugin is already installed.
+ *
+ * No separate lockfile: the tracking file this script writes at the end of
+ * a successful install (.ai-workspace/plugins/brain.md) doubles as the
+ * "already installed" marker, stamped with the version that installed it.
+ * A version bump in plugin.json invalidates the marker and triggers a
+ * re-run of the (per-file, skip-if-exists) install steps.
  */
-function readLockfile() {
-  if (!fs.existsSync(lockfilePath)) {
-    return {
-      lockfileVersion: 1,
-      plugins: {}
-    };
-  }
-  
-  try {
-    const content = fs.readFileSync(lockfilePath, 'utf-8');
-    return JSON.parse(content);
-  } catch (err) {
-    console.error(`Warning: Failed to read lockfile: ${err.message}`);
-    return {
-      lockfileVersion: 1,
-      plugins: {}
-    };
-  }
-}
-
-/**
- * Write lockfile
- */
-function writeLockfile(lockfile) {
-  try {
-    fs.writeFileSync(lockfilePath, JSON.stringify(lockfile, null, 2), 'utf-8');
-  } catch (err) {
-    throw new Error(`Failed to write lockfile: ${err.message}`);
-  }
-}
-
-/**
- * Check if plugin is already installed
- */
-function isInstalled(lockfile) {
-  const plugin = lockfile.plugins[PLUGIN_NAME];
-  return plugin && plugin.installed && plugin.version === PLUGIN_VERSION;
+function isInstalled() {
+  if (!fs.existsSync(trackingPath)) return false;
+  const content = fs.readFileSync(trackingPath, 'utf-8');
+  return content.includes(`**Version:** ${PLUGIN_VERSION}`);
 }
 
 /**
@@ -230,7 +203,7 @@ function installProjectFiles(manifest, replacements) {
 - [Plugin README](https://github.com/oshaked/ai-workspace/tree/main/plugins/brain)
 `;
   
-  const trackingPath = path.join(projectRoot, '.ai-workspace/plugins/brain.md');
+  fs.mkdirSync(path.dirname(trackingPath), { recursive: true });
   fs.writeFileSync(trackingPath, trackingContent, 'utf-8');
   files['.ai-workspace/plugins/brain.md'] = {
     status: 'created',
@@ -250,44 +223,31 @@ async function main() {
   try {
     // Read manifest
     const manifest = readManifest();
-    
-    // Read lockfile
-    const lockfile = readLockfile();
-    
+
     // Check if already installed (fast path)
-    if (isInstalled(lockfile)) {
+    if (isInstalled()) {
       const elapsed = Date.now() - startTime;
       console.error(`[brain-setup] Already installed (${elapsed}ms)`);
       process.exit(0);
     }
-    
+
     // Prepare replacements
     const projectName = path.basename(projectRoot);
     const replacements = {
       '\\[project-name\\]': projectName
     };
-    
-    // Install files
+
+    // Install files (each step skips files that already exist, so this is
+    // safe to re-run any time the tracking file is missing or stale)
     console.error(`[brain-setup] Installing brain plugin...`);
-    const globalFiles = installGlobalFiles(manifest, replacements);
-    const projectFiles = installProjectFiles(manifest, replacements);
-    
-    // Update lockfile
-    lockfile.plugins[PLUGIN_NAME] = {
-      version: PLUGIN_VERSION,
-      resolved: 'https://github.com/oshaked/ai-workspace#plugins/brain',
-      installedAt: new Date().toISOString(),
-      installed: true,
-      files: { ...globalFiles, ...projectFiles }
-    };
-    
-    writeLockfile(lockfile);
-    
+    installGlobalFiles(manifest, replacements);
+    installProjectFiles(manifest, replacements);
+
     // Output context for agent (SessionStart hook)
     const output = {
       hookSpecificOutput: {
         hookEventName: 'SessionStart',
-        additionalContext: `Brain plugin initialized (v${PLUGIN_VERSION}). Use /brain:brain-prime to start.`
+        additionalContext: `Brain plugin initialized (v${PLUGIN_VERSION}). Use /brain:prime to start.`
       }
     };
     
