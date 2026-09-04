@@ -29,7 +29,10 @@
   "global_files": {
     "LIFECYCLE-PLUGIN-INSTRUCTIONS.md": "global/LIFECYCLE-PLUGIN-INSTRUCTIONS.template.md"
   },
-  "global_dirs": ["skills"],
+  "global_dirs": [
+    "skills",
+    "agents"
+  ],
   "project_files": {
     "work-state.md": "project/work-state.template.md",
     ".features/.gitkeep": "project/.gitkeep"

@@ -1,6 +1,9 @@
 ---
 name: setup
 description: Initialize brain plugin (global config + project structure)
+triggers:
+  - user
+  - command: /setup
 ---
 
 # Brain Setup
