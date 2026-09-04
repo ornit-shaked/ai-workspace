@@ -4,6 +4,7 @@ description: Session start - read project context and history
 model: haiku
 triggers:
   - user
+  - command: /prime
 disable-model-invocation: true
 ---
 

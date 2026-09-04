@@ -4,6 +4,7 @@ description: Session end - update history and capture learnings
 model: haiku
 triggers:
   - user
+  - command: /wrap
 disable-model-invocation: true
 ---
 
