@@ -13,9 +13,9 @@ Execute: `node ${DEVIN_PLUGIN_ROOT}/skills/setup/script.js`
 
 The script:
 - Reads `manifest.json` for file mappings
-- Checks `skills-lock.json` (exits if already installed)
-- Copies files from `templates/` to global config and project directories
-- Updates lockfile
+- Checks `.ai-workspace/plugins/brain.md` for a matching version marker (exits if already installed at the current version)
+- Copies files from `templates/` to global config and project directories, skipping any that already exist
+- Rewrites `.ai-workspace/plugins/brain.md` as the installed-version marker
 
 ## When to Use
 
