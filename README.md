@@ -44,10 +44,13 @@ devin plugins install oshaked/ai-workspace
 ### Claude Code
 ```bash
 # Add the marketplace
-calude plugin marketplace add https://github.com/ornit-shaked/ai-workspace
+claude plugin marketplace add https://github.com/ornit-shaked/ai-workspace
 
 # Install the brain plugin
 claude plugin install brain@ornit-workspace
+
+# Update to the latest version later
+claude plugin update brain
 ```
 
 **Supported environments:**
