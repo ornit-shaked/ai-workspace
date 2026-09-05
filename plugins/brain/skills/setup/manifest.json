@@ -3,10 +3,6 @@
   "description": "Installation manifest for brain plugin",
   "global_files": [
     {
-      "source": "templates/global/BRAIN-PLUGIN-INSTRUCTIONS.md",
-      "target": "BRAIN-PLUGIN-INSTRUCTIONS.md"
-    },
-    {
       "source": "templates/global/about-me.md",
       "target": "about-me.md"
     },
@@ -16,6 +12,10 @@
     }
   ],
   "project_files": [
+    {
+      "source": "templates/project/.ai-workspace/plugins/brain.md.template",
+      "target": ".ai-workspace/plugins/brain.md"
+    },
     {
       "source": "templates/project/.project-brain/memory/history.md",
       "target": ".project-brain/memory/history.md"

@@ -1,0 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:[package-name]/routing/router.dart';
+
+void main() {
+  testWidgets('renders the placeholder page', (tester) async {
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+
+    expect(find.text('Ready for the first feature.'), findsOneWidget);
+  });
+}

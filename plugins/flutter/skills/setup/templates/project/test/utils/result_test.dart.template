@@ -1,0 +1,85 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:{{package-name}}/utils/result.dart';
+
+void main() {
+  group('Result', () {
+    test('ok creates ResultOk with value', () {
+      const result = Result<int>.ok(42);
+
+      expect(result, isA<ResultOk<int>>());
+      expect(result.asOk, equals(42));
+    });
+
+    test('error creates ResultError with exception', () {
+      final exception = Exception('test error');
+      final result = Result<int>.error(exception);
+
+      expect(result, isA<ResultError<int>>());
+      expect(result.asError, equals(exception));
+    });
+
+    test('asOk throws on ResultError', () {
+      final result = Result<int>.error(Exception('test'));
+
+      expect(() => result.asOk, throwsStateError);
+    });
+
+    test('asError throws on ResultOk', () {
+      const result = Result<int>.ok(42);
+
+      expect(() => result.asError, throwsStateError);
+    });
+
+    test('exhaustive switch on sealed class', () {
+      const okResult = Result<int>.ok(42);
+      final errorResult = Result<int>.error(Exception('test'));
+
+      final okValue = switch (okResult) {
+        ResultOk(value: final v) => v,
+        ResultError() => -1,
+      };
+
+      final errorValue = switch (errorResult) {
+        ResultOk() => -1,
+        ResultError(error: final e) => e.toString(),
+      };
+
+      expect(okValue, equals(42));
+      expect(errorValue, contains('test'));
+    });
+
+    test('ResultOk equality', () {
+      const result1 = Result<int>.ok(42);
+      const result2 = Result<int>.ok(42);
+      const result3 = Result<int>.ok(99);
+
+      expect(result1, equals(result2));
+      expect(result1, isNot(equals(result3)));
+    });
+
+    test('ResultError equality', () {
+      final exception1 = Exception('test');
+      final exception2 = Exception('test');
+      final result1 = Result<int>.error(exception1);
+      final result2 = Result<int>.error(exception1);
+      final result3 = Result<int>.error(exception2);
+
+      expect(result1, equals(result2));
+      expect(result1, isNot(equals(result3)));
+    });
+
+    test('ResultOk toString', () {
+      const result = Result<int>.ok(42);
+
+      expect(result.toString(), equals('ResultOk(42)'));
+    });
+
+    test('ResultError toString', () {
+      final exception = Exception('test error');
+      final result = Result<int>.error(exception);
+
+      expect(result.toString(), contains('ResultError'));
+      expect(result.toString(), contains('test error'));
+    });
+  });
+}

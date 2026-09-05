@@ -1,0 +1,21 @@
+import 'package:[package-name]/config/app_config.dart';
+import 'package:[package-name]/routing/router.dart';
+import 'package:flutter/material.dart';
+
+/// Runs the app in the [Flavor.development] configuration.
+void main() {
+  AppConfig.flavor = Flavor.development;
+  runApp(const _App());
+}
+
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: '${AppConfig.label} App',
+      routerConfig: router,
+    );
+  }
+}

@@ -1,0 +1,126 @@
+import 'package:flutter/foundation.dart';
+
+import 'result.dart';
+
+/// A [ChangeNotifier] wrapper for asynchronous operations with no parameters.
+///
+/// Exposes [running], [error], [completed], [result] states and prevents
+/// concurrent execution while [running] is true.
+class Command0<T> extends ChangeNotifier {
+  Command0(this._action);
+
+  final Future<T> Function() _action;
+
+  bool _running = false;
+  Exception? _error;
+  bool _completed = false;
+  Result<T>? _result;
+
+  /// Whether the command is currently executing.
+  bool get running => _running;
+
+  /// The error from the last execution, if any.
+  Exception? get error => _error;
+
+  /// Whether the command has completed at least once.
+  bool get completed => _completed;
+
+  /// The result from the last execution, if any.
+  Result<T>? get result => _result;
+
+  /// Executes the command. Throws [StateError] if already running.
+  Future<void> execute() async {
+    if (_running) {
+      throw StateError('Command is already running');
+    }
+
+    _running = true;
+    _error = null;
+    _completed = false;
+    _result = null;
+    notifyListeners();
+
+    try {
+      final value = await _action();
+      _result = Result.ok(value);
+      _completed = true;
+    } on Exception catch (e) {
+      _error = e;
+      _result = Result.error(e);
+      _completed = true;
+    } finally {
+      _running = false;
+      notifyListeners();
+    }
+  }
+
+  /// Clears the result and error state.
+  void clearResult() {
+    _error = null;
+    _completed = false;
+    _result = null;
+    notifyListeners();
+  }
+}
+
+/// A [ChangeNotifier] wrapper for asynchronous operations with one parameter.
+///
+/// Exposes [running], [error], [completed], [result] states and prevents
+/// concurrent execution while [running] is true.
+class Command1<T, A> extends ChangeNotifier {
+  Command1(this._action);
+
+  final Future<T> Function(A) _action;
+
+  bool _running = false;
+  Exception? _error;
+  bool _completed = false;
+  Result<T>? _result;
+
+  /// Whether the command is currently executing.
+  bool get running => _running;
+
+  /// The error from the last execution, if any.
+  Exception? get error => _error;
+
+  /// Whether the command has completed at least once.
+  bool get completed => _completed;
+
+  /// The result from the last execution, if any.
+  Result<T>? get result => _result;
+
+  /// Executes the command with the given argument.
+  /// Throws [StateError] if already running.
+  Future<void> execute(A arg) async {
+    if (_running) {
+      throw StateError('Command is already running');
+    }
+
+    _running = true;
+    _error = null;
+    _completed = false;
+    _result = null;
+    notifyListeners();
+
+    try {
+      final value = await _action(arg);
+      _result = Result.ok(value);
+      _completed = true;
+    } on Exception catch (e) {
+      _error = e;
+      _result = Result.error(e);
+      _completed = true;
+    } finally {
+      _running = false;
+      notifyListeners();
+    }
+  }
+
+  /// Clears the result and error state.
+  void clearResult() {
+    _error = null;
+    _completed = false;
+    _result = null;
+    notifyListeners();
+  }
+}

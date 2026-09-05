@@ -1,0 +1,68 @@
+import 'package:flutter/foundation.dart';
+
+/// A sealed class representing the result of an operation that can either succeed or fail.
+///
+/// Use [Result.ok] for successful operations and [Result.error] for failures.
+/// The sealed nature ensures exhaustive pattern matching.
+@immutable
+sealed class Result<T> {
+  const Result();
+
+  /// Creates a successful result containing a value.
+  const factory Result.ok(T value) = ResultOk<T>;
+
+  /// Creates an error result containing an exception.
+  const factory Result.error(Exception error) = ResultError<T>;
+
+  /// Returns the value if this is a [ResultOk], otherwise throws.
+  T get asOk => switch (this) {
+        ResultOk(value: final v) => v,
+        ResultError() => throw StateError('Cannot get value from error result'),
+      };
+
+  /// Returns the error if this is a [ResultError], otherwise throws.
+  Exception get asError => switch (this) {
+        ResultOk() => throw StateError('Cannot get error from ok result'),
+        ResultError(error: final e) => e,
+      };
+}
+
+/// Represents a successful result.
+final class ResultOk<T> extends Result<T> {
+  const ResultOk(this.value);
+
+  final T value;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResultOk<T> &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  String toString() => 'ResultOk($value)';
+}
+
+/// Represents an error result.
+final class ResultError<T> extends Result<T> {
+  const ResultError(this.error);
+
+  final Exception error;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ResultError<T> &&
+          runtimeType == other.runtimeType &&
+          error == other.error;
+
+  @override
+  int get hashCode => error.hashCode;
+
+  @override
+  String toString() => 'ResultError($error)';
+}

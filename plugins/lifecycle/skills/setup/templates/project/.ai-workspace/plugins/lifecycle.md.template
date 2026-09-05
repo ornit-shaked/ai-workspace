@@ -1,0 +1,27 @@
+# lifecycle Plugin
+
+v[plugin-version] • Installed [install-date]
+
+## What This Adds
+
+**11-Stage Feature Lifecycle:**
+1. idea → 2. feature (WHAT+WHY) → 3. spec (HOW) → 4. plan (order) → 5. tasks (executable) → 6-10. reviews → 11. done
+
+**Files:**
+- `work-state.md` — Features table (shared with brain plugin)
+- `.features/<id>/` — feature.md, spec.md, plan.md, tasks.md, *.review.md (created by skills)
+
+**Skills:**
+- `/lifecycle:write-feature|spec|plan|tasks` — Write each artifact
+- `/lifecycle:review-feature|spec|plan|tasks|code` — Review before approval
+- `/lifecycle:full-prime` — Session start (show all features + suggestions)
+- `/lifecycle:plan-product` — Turn idea into product roadmap
+- `/lifecycle:archive-feature` — Move completed to archive
+
+**Agents (Claude Code):**
+- `write-feature`, `write-spec`, `write-plan`, `write-tasks` — Stage-specific writers
+- `reviewer` — Dispatches reviews by artifact type
+
+## Docs
+
+[Plugin README](https://github.com/ornit-shaked/ai-workspace/tree/main/plugins/lifecycle)

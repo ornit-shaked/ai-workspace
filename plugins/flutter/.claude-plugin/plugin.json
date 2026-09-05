@@ -1,0 +1,23 @@
+{
+  "name": "flutter",
+  "version": "1.1.0",
+  "description": "Flutter development standards, architecture patterns, and project scaffolding",
+  "author": {
+    "name": "Ornit Shaked",
+    "url": "https://github.com/ornit-shaked"
+  },
+  "homepage": "https://github.com/ornit-shaked/ai-workspace",
+  "repository": "https://github.com/ornit-shaked/ai-workspace",
+  "license": "MIT",
+  "keywords": [
+    "flutter",
+    "dart",
+    "bloc",
+    "freezed",
+    "architecture",
+    "scaffolding"
+  ],
+  "dependencies": [
+    "dart-flutter@dart-flutter"
+  ]
+}

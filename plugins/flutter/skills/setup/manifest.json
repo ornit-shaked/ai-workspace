@@ -1,0 +1,85 @@
+{
+  "version": "1.1.0",
+  "description": "Installation manifest for flutter plugin",
+  "global_files": [],
+  "project_files": [
+    { "source": "templates/project/.ai-workspace/plugins/flutter.md.template", "target": ".ai-workspace/plugins/flutter.md" },
+    { "source": "templates/project/docs/adr/README.md", "target": "docs/adr/README.md" },
+    { "source": "templates/project/docs/adr/ADR-0001-state-management-bloc.md", "target": "docs/adr/ADR-0001-state-management-bloc.md" },
+    { "source": "templates/project/docs/adr/ADR-0002-freezed-everywhere.md", "target": "docs/adr/ADR-0002-freezed-everywhere.md" },
+    { "source": "templates/project/docs/adr/ADR-0003-linting-very-good.md", "target": "docs/adr/ADR-0003-linting-very-good.md" },
+    { "source": "templates/project/docs/adr/ADR-0004-flavors.md", "target": "docs/adr/ADR-0004-flavors.md" },
+    { "source": "templates/project/docs/adr/ADR-0005-folder-structure.md", "target": "docs/adr/ADR-0005-folder-structure.md" },
+    { "source": "templates/project/docs/adr/ADR-0006-adr-process.md", "target": "docs/adr/ADR-0006-adr-process.md" },
+    { "source": "templates/project/docs/adr/ADR-0007-font-strategy.md", "target": "docs/adr/ADR-0007-font-strategy.md" },
+    { "source": "templates/project/docs/adr/ADR-0008-error-handling-result-type.md", "target": "docs/adr/ADR-0008-error-handling-result-type.md" },
+
+    { "source": "templates/project/analysis_options.yaml", "target": "analysis_options.yaml" },
+
+    { "source": "templates/project/lib/main.dart.template", "target": "lib/main.dart" },
+    { "source": "templates/project/lib/main_development.dart.template", "target": "lib/main_development.dart" },
+    { "source": "templates/project/lib/main_staging.dart.template", "target": "lib/main_staging.dart" },
+    { "source": "templates/project/lib/main_production.dart.template", "target": "lib/main_production.dart" },
+
+    { "source": "templates/project/lib/config/app_config.dart.template", "target": "lib/config/app_config.dart" },
+    { "source": "templates/project/lib/routing/router.dart.template", "target": "lib/routing/router.dart" },
+
+    { "source": "templates/project/lib/utils/result.dart.template", "target": "lib/utils/result.dart" },
+    { "source": "templates/project/lib/utils/command.dart.template", "target": "lib/utils/command.dart" },
+
+    { "source": "templates/project/test/widget_test.dart.template", "target": "test/widget_test.dart" },
+    { "source": "templates/project/test/utils/result_test.dart.template", "target": "test/utils/result_test.dart" },
+    { "source": "templates/project/test/utils/command_test.dart.template", "target": "test/utils/command_test.dart" },
+
+    { "source": "templates/project/.gitignore.template", "target": ".gitignore" },
+    { "source": "templates/project/.github/workflows/flutter-ci.yml.template", "target": ".github/workflows/flutter-ci.yml" }
+  ],
+  "project_dirs": [
+    "lib/data/repositories",
+    "lib/data/services",
+    "lib/data/models",
+    "lib/domain/models",
+    "lib/domain/use_cases",
+    "lib/ui/core/themes",
+    "lib/ui/core/ui",
+    "lib/ui/core/localization",
+    "lib/ui/features",
+    "lib/l10n",
+    "testing",
+    "assets/images",
+    "assets/fonts",
+    "assets/data",
+    "test/data/repositories",
+    "test/data/services",
+    "test/domain",
+    "test/ui",
+    "test/testing",
+    "integration_test",
+    ".ai-workspace/plugins"
+  ],
+  "pubspec_deps": {
+    "dependencies": {
+      "flutter_bloc": "^9.1.1",
+      "freezed_annotation": "^3.1.0",
+      "json_annotation": "^4.8.1",
+      "go_router": "^17.3.0",
+      "provider": "^6.1.1"
+    },
+    "dev_dependencies": {
+      "bloc_test": "^10.0.0",
+      "freezed": "^3.2.5",
+      "json_serializable": "^6.7.1",
+      "build_runner": "^2.4.7",
+      "very_good_analysis": "^10.3.0",
+      "mocktail": "^1.0.2"
+    }
+  },
+  "pubspec_flutter_config": {
+    "uses-material-design": true,
+    "generate": false,
+    "assets": [
+      "assets/images/",
+      "assets/data/"
+    ]
+  }
+}

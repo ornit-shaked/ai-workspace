@@ -92,4 +92,18 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] missing-knowledge | No PluginInstall hook exists — Assumed there would be a hook that fires on plugin installation. Only SessionStart/SessionEnd exist. SessionStart runs every session (not just first install), so need lockfile check for idempotency.
 
+## 2026-09-05 — official-plugin-migration-refinement — devin
+
+- [ ] preference | Keep history entries short — User prefers concise history entries (titles only) unless explicitly asked for detail. Don't write verbose explanations in history.md.
+
+- [ ] standard | Use requiredPlugins to enforce dependencies — Instead of manually installing dependencies (npx skills add), declare them in plugin manifest as requiredPlugins. Plugin system handles installation automatically. Eliminates manual setup code.
+
+- [ ] standard | Rules need prefixes and globs frontmatter — Generic rule names (models.md, linting.md) don't indicate which plugin owns them. Use prefixes (flutter-models.md) + globs frontmatter (description + globs) so agents only load rules when working with matching files.
+
+- [ ] standard | Tracking files as templates, not inline code — Don't generate tracking files inline in scripts. Create template files with placeholders, let installer copy them. Easier to edit, cleaner separation of content vs logic.
+
+- [ ] standard | Shared installer eliminates duplication — All plugins do same thing (read manifest, copy files, apply replacements). Extract to shared installer, plugins become thin wrappers (~15 lines) + optional hooks.js for plugin-specific logic.
+
+- [ ] standard | README links to source of truth — Don't duplicate content between README and tracking files. README = high-level overview, tracking file = detailed reference. README links to tracking template.
+
 <!-- Lessons will be appended here by /wrap -->

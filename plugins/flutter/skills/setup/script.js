@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
 /**
- * brain-setup script.js
+ * flutter-setup script.js
  *
  * Thin wrapper around shared installer.
- * No plugin-specific hooks needed.
+ * Plugin-specific logic is in hooks.js.
  */
 
 const installer = require('../../../_shared/installer.js');
+const hooks = require('./hooks.js');
 
 installer.run({
-  pluginName: 'brain',
+  pluginName: 'flutter',
   skillRoot: __dirname,
-  projectRoot: process.cwd()
+  projectRoot: process.cwd(),
+  hooks: hooks
 });

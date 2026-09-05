@@ -1,0 +1,7 @@
+import 'package:[package-name]/main_production.dart' as production;
+
+/// Delegates to the production entry point.
+///
+/// Run a specific flavor directly instead of changing this file, e.g.
+/// `flutter run -t lib/main_development.dart`.
+void main() => production.main();

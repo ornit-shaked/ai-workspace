@@ -1,0 +1,44 @@
+# flutter Plugin
+
+v[plugin-version] • Installed [install-date]
+
+## What This Adds
+
+**4 Architectural Overrides:**
+- Bloc/Cubit (not ChangeNotifier)
+- Freezed everywhere (domain, DTOs, Bloc states/events)
+- very_good_analysis (stricter than flutter_lints)
+- Flavors (dev/staging/prod from day one)
+
+**Project Structure:**
+- `docs/adr/` — 8 ADRs documenting each decision
+- `lib/` — Layered scaffold (config, data, domain, routing, ui, utils)
+- `analysis_options.yaml` — Lint config
+- `.github/workflows/flutter-ci.yml` — CI pipeline
+
+**Dependencies:** flutter_bloc, freezed, go_router, very_good_analysis, mocktail
+
+## Skills
+
+[skills-list]
+
+## Rules
+
+[rules-list]
+
+## Upstream Dependencies
+
+[upstream-deps]
+
+## Quick Commands
+
+```bash
+flutter run -t lib/main_development.dart  # Run dev flavor
+flutter test                               # Run tests
+dart run build_runner build               # Generate code
+flutter analyze                            # Lint (must pass)
+```
+
+## Docs
+
+[Plugin README](https://github.com/ornit-shaked/ai-workspace/tree/main/plugins/flutter)

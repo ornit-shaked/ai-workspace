@@ -1,0 +1,26 @@
+# brain Plugin
+
+v[plugin-version] • Installed [install-date]
+
+## What This Adds
+
+**Memory System:**
+- `.project-brain/memory/history.md` — Session index
+- `.project-brain/memory/instructions.md` — Project-specific learned preferences
+- `.project-brain/inbox/lessons.md` — Lesson capture
+- `work-state.md` — Current focus, features, backlog
+
+**Global Config ([global-config-dir]):**
+- `about-me.md` — Your personal context (edit this!)
+- `CLAUDE.md` — Agent configuration
+
+## Skills
+
+- `/brain:prime` — Session start (read context + history)
+- `/brain:wrap` — Session end (update history + capture learnings)
+- `/brain:dream` — Process lessons from inbox
+- `/brain:commit-push-pr` — Commit, push, create PR
+
+## Docs
+
+[Plugin README](https://github.com/ornit-shaked/ai-workspace/tree/main/plugins/brain)

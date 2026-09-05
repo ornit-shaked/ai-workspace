@@ -1,13 +1,12 @@
 {
   "version": "1.0.0",
   "description": "Installation manifest for lifecycle plugin",
-  "global_files": [
-    {
-      "source": "templates/global/LIFECYCLE-PLUGIN-INSTRUCTIONS.md",
-      "target": "LIFECYCLE-PLUGIN-INSTRUCTIONS.md"
-    }
-  ],
+  "global_files": [],
   "project_files": [
+    {
+      "source": "templates/project/.ai-workspace/plugins/lifecycle.md.template",
+      "target": ".ai-workspace/plugins/lifecycle.md"
+    },
     {
       "source": "templates/project/work-state.md",
       "target": "work-state.md"

@@ -9,6 +9,12 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-09-05 | official-plugin-migration-refinement | Flutter plugin cleanup: requiredPlugins enforcement, rule prefixes + globs frontmatter, deleted global instruction files, tracking files as templates, shared installer (DRY), simplified README | plugins/_shared/installer.js, plugins/*/skills/setup/{script.js,hooks.js}
+
+2026-09-05 | official-plugin-migration | Migrated `flutter` plugin to official plugin format — ported hooks.js logic (upstream deps, pubspec injection, Dart import sorting, MCP auto-install) into setup/script.js, rules stay inside plugin (not copied globally), FLUTTER-PLUGIN-INSTRUCTIONS.md global template, manifest-driven project scaffolding, SessionStart hook auto-install; kept flutter-plugin unchanged for custom installer backward compatibility. Also recorded lifecycle migration from previous session | plugins/flutter/ (complete structure)
+
+2026-09-05 | official-plugin-migration | Migrated `lifecycle` plugin to official plugin format — unified installation (global+project), token-efficient SKILL.md files, manifest-driven templates, SessionStart hook auto-install; kept lifecycle-management unchanged for backward compatibility | plugins/lifecycle/ (complete structure), cleaned up lifecycle-management experimental files, added agents to new official plugin
+
 2026-09-03 | official-plugin-migration | Created new `brain` plugin with clean official plugin format — unified installation (global+project), explicit skill naming (brain-setup, brain-prime, etc.), token-efficient SKILL.md files, manifest-driven templates, SessionStart hook auto-install; kept project-brain unchanged for custom installer backward compatibility | plugins/brain/ (complete structure), cleaned up project-brain experimental files
 
 2026-08-29 | lifecycle-management | Refactored lifecycle plugin — renamed skills (promote-feature→write-feature, decompose-tasks→write-tasks), documented 11-stage lifecycle, removed status duplication from feature.md frontmatter, reverted CONTEXT.md complexity, established work-state.md as single source of truth, moved skill template to workspace-wide docs/, added review ping-pong state tracking to backlog | 15+ files in plugins/lifecycle-management/, docs/skills/SKILL.template.md, work-state.md
