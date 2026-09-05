@@ -1,0 +1,14 @@
+{
+  "SessionStart": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node ./skills/setup/script.js",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "lifecycle",
+  "version": "1.0.0",
+  "description": "Feature lifecycle management — structured progression from idea to implementation",
+  "author": {
+    "name": "Ornit Shaked",
+    "url": "https://github.com/ornit-shaked"
+  },
+  "homepage": "https://github.com/ornit-shaked/ai-workspace",
+  "repository": "https://github.com/ornit-shaked/ai-workspace",
+  "license": "MIT",
+  "keywords": [
+    "feature-lifecycle",
+    "spec",
+    "plan",
+    "tasks",
+    "review",
+    "product-management"
+  ],
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks.json"
+}

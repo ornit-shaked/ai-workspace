@@ -1,4 +1,4 @@
-# Tasks: Official Plugin Migration - W1 (Project Brain)
+# Tasks: Official Plugin Migration - W1 (Project Brain) + W2 (Lifecycle Management)
 
 **Feature:** [feature.md](./feature.md)  
 **Spec:** [spec.md](./spec.md)  
@@ -314,23 +314,98 @@ T024 (main README)
 
 ---
 
-## Notes
+## Notes (W1)
 
-- **Wave Scope:** This tasks.md covers **W1 (project-brain) only**
-- **W2 and W3:** Will have separate tasks.md files after W1 validation
+- **Wave Scope:** W1 covers project-brain only.
 - **Testing Strategy:** Manual testing in all environments (CLI, Desktop, Cloud, Claude Code)
-- **Automation:** Unit tests for scaffold-project.js, integration tests for plugin installation
+- **Kept together on purpose:** W2 is appended below in this same file (not a separate `tasks.wave-N.md`) so the whole migration stays in one place.
 
 ---
 
-## Next Steps After W1 Completion
+## ⚠️ Read Before Starting W2: Plan Deviations From `plan.md` / `spec.md`
 
-1. Validate all tasks complete (24/24 ✅)
-2. Run full test suite (OPM-T015–T022)
-3. Document lessons learned
-4. Create tasks.md for W2 (lifecycle-management)
-5. Repeat pattern for W2, then W3
+W1 was NOT built exactly as `spec.md` originally described. Whoever picks up W2 must follow the **as-built W1 pattern** (`plugins/brain/`), not the original spec:
+
+1. **No `skills-lock.json`.** `plan.md`'s W2 scope line "Update `skills-lock.json` schema to handle multiple plugins" is **stale — ignore it**. W1 replaced the lockfile with a much simpler mechanism: a single tracking file per plugin (`.ai-workspace/plugins/<name>.md`) that embeds `**Version:** X.Y.Z`; the setup script checks that string to decide whether to (re-)run. Follow this pattern for lifecycle, not the lockfile in `spec.md`.
+2. **No standalone `scripts/scaffold-project.js` at plugin root.** The scaffolding logic instead lives inside the setup skill itself: `skills/setup/script.js` + `skills/setup/manifest.json` (a simple `{global_files, project_files, project_dirs}` list) + `skills/setup/templates/`. Mirror this exact layout.
+3. **The OLD custom-installer plugin folder is untouched and kept.** W1 did not modify `plugins/project-brain/` — it created a brand-new sibling folder `plugins/brain/` for the official-plugin version. **W2 must do the same: create `plugins/lifecycle/` new, and leave `plugins/lifecycle-management/` (including the 5 agents just added under `global/agents/`) completely untouched**, except as a read-only source to copy from.
+4. **Claude's `.claude-plugin/plugin.json` stays minimal** (name/version/description/author/homepage/repository/license/keywords only) — no explicit `skills`/`hooks`/`agents` keys; Claude Code appears to auto-discover `skills/`, `hooks/hooks.json` by folder convention. **This is unverified for `agents/`** (brain has no agents yet to prove it) — task OPM-T036 below exists specifically to confirm this against current Claude Code plugin docs before assuming it just works.
+5. Devin's `.devin-plugin/plugin.json` DOES need explicit paths (`"skills"`, `"agents"`, `"hooks"`) for the concepts it supports.
+6. **Devin does not have a subagent concept today** — per O (2026-09-05): Devin's plugin system has no equivalent of Claude Code's `agents/`. Declaring `"agents": "./agents"` in `.devin-plugin/plugin.json` is forward-looking / best-effort, not a confirmed-working feature — Devin will most likely just ignore the key. Until Devin adds this, Devin users of the `lifecycle` plugin get the 11 skills only; the 5 agents (`write-feature`, `write-spec`, `write-plan`, `write-tasks`, `reviewer`) are effectively Claude-Code-only for now. Don't build anything that assumes Devin exposes them.
 
 ---
 
-**Tasks Ready for Implementation**
+## W2: Lifecycle Management Migration
+
+**Goal (from plan.md):** Create a new official plugin, `plugins/lifecycle/`, following the as-built `plugins/brain/` pattern exactly (see deviations above), shipping all 11 existing lifecycle skills plus the 5 new agents (`write-feature`, `write-spec`, `write-plan`, `write-tasks`, `reviewer`), with a `/lifecycle:setup` fallback skill and SessionStart auto-scaffolding of `.features/` + `work-state.md`.
+
+### W2 Task Table
+
+| ID | Title | Inputs | Outputs | DoD | Depends On | Est |
+|----|-------|--------|---------|-----|------------|-----|
+| **OPM-T025** | Copy the 11 lifecycle skills verbatim | `plugins/lifecycle-management/global/skills/{write-feature,write-spec,write-plan,write-tasks,review-feature,review-spec,review-plan,review-tasks,review-code,plan-product,archive-feature,full-prime}/SKILL.md` | `plugins/lifecycle/skills/<same-name>/SKILL.md` (11 dirs) | All 11 `SKILL.md` files present under `plugins/lifecycle/skills/`; each is byte-identical to its source (`diff` shows no output); `_template/` is NOT copied | - | 30m |
+| **OPM-T026** | Copy the 5 agents verbatim | `plugins/lifecycle-management/global/agents/{write-feature,write-spec,write-plan,write-tasks,reviewer}.md` | `plugins/lifecycle/agents/<same-name>.md` (5 files) | 5 files present under `plugins/lifecycle/agents/`; each byte-identical to source via `diff` | - | 15m |
+| **OPM-T027** | Create Claude Code plugin manifest | `plugins/brain/.claude-plugin/plugin.json` (template to copy the shape of) | `plugins/lifecycle/.claude-plugin/plugin.json` | Valid JSON; same field set as brain's (name, version, description, author, homepage, repository, license, keywords) — no more, no fewer keys; `name: "lifecycle"`; `version: "1.0.0"`; description = "Feature lifecycle management — structured progression from idea to implementation" | - | 30m |
+| **OPM-T028** | Create Devin plugin manifest | OPM-T025, T026, T027 | `plugins/lifecycle/.devin-plugin/plugin.json` | Valid JSON; same base fields as T027 PLUS `"skills": "./skills"`, `"agents": "./agents"` (best-effort — Devin has no confirmed agent support yet, see deviation note #6; include the key anyway so it activates for free the day Devin adds support, but do NOT block this task on Devin actually loading agents), `"hooks": "./hooks.json"`; all three paths resolve to real files/dirs created in T025/T026/T029 | T025, T026, T027 | 30m |
+| **OPM-T029** | Create Devin root hook | `plugins/brain/hooks.json` (copy the shape) | `plugins/lifecycle/hooks.json` | Valid JSON; identical structure to brain's, command = `"node ./skills/setup/script.js"`, `timeout: 10` | - | 15m |
+| **OPM-T030** | Create Claude hook | `plugins/brain/hooks/hooks.json` (copy the shape) | `plugins/lifecycle/hooks/hooks.json` | Valid JSON; identical structure to brain's, command = `"${CLAUDE_PLUGIN_ROOT}/skills/setup/script.js"`, `timeout: 10` | - | 15m |
+| **OPM-T031** | Copy + adapt setup templates | `plugins/lifecycle-management/global/LIFECYCLE-PLUGIN-INSTRUCTIONS.template.md`, `plugins/lifecycle-management/project/work-state.template.md`, `plugins/brain/skills/setup/templates/project/work-state.md` | `plugins/lifecycle/skills/setup/templates/global/LIFECYCLE-PLUGIN-INSTRUCTIONS.md`, `plugins/lifecycle/skills/setup/templates/project/work-state.md` | Filenames drop the `.template` infix (matches brain's convention: `templates/global/BRAIN-PLUGIN-INSTRUCTIONS.md`, no `.template.md`); **`templates/project/work-state.md` MUST be byte-identical to `plugins/brain/skills/setup/templates/project/work-state.md`** (`diff` shows no output) — both plugins scaffold the exact same file, so whichever installs first must produce a result the other is happy to skip | - | 45m |
+| **OPM-T032** | Write setup manifest.json | OPM-T031 | `plugins/lifecycle/skills/setup/manifest.json` | Valid JSON, same shape as `plugins/brain/skills/setup/manifest.json`: `global_files: [{source: "templates/global/LIFECYCLE-PLUGIN-INSTRUCTIONS.md", target: "LIFECYCLE-PLUGIN-INSTRUCTIONS.md"}]`; `project_files: [{source: "templates/project/work-state.md", target: "work-state.md"}]`; `project_dirs: [".features", ".ai-workspace/plugins"]` | T031 | 20m |
+| **OPM-T033** | Write setup script.js | `plugins/brain/skills/setup/script.js` (copy and adapt) | `plugins/lifecycle/skills/setup/script.js` | Same logic as brain's script, adapted: `trackingPath` → `.ai-workspace/plugins/lifecycle.md`; log prefix `[lifecycle-setup]`; tracking file content lists the 11 skills + 5 agents + plugin-owned files (`.features/<id>/*`, `work-state.md` — note shared ownership with brain via fenced sections); `additionalContext` message → "Lifecycle plugin initialized (vX.Y.Z). Use /lifecycle:full-prime to start."; running it twice in a fresh test project: 1st run creates `.features/` dir, creates `work-state.md` only if absent (skips if brain already created it, WITHOUT error or overwrite), creates `LIFECYCLE-PLUGIN-INSTRUCTIONS.md` in global config dir (skip if exists), creates `.ai-workspace/plugins/lifecycle.md`; 2nd run exits fast citing "Already installed" | T032 | 2h |
+| **OPM-T034** | Write /lifecycle:setup SKILL.md | `plugins/brain/skills/setup/SKILL.md` (copy the shape) | `plugins/lifecycle/skills/setup/SKILL.md` | Frontmatter: `name: setup`, `description: Initialize lifecycle plugin (project structure: .features/, work-state.md)`; Implementation section names `script.js`; "When to Use" section (SessionStart automatic / Devin Cloud manual); ends with "After setup, run /lifecycle:full-prime to start." | T033 | 30m |
+| **OPM-T035** | Add init-guard to the copied `full-prime` skill | `plugins/lifecycle/skills/full-prime/SKILL.md` (from T025) | same file, updated | Add a first step: "If `.features/` doesn't exist, report 'Lifecycle plugin not initialized. Run /lifecycle:setup first.' and stop" — mirrors brain's `/prime` guard; **edit ONLY the copy under `plugins/lifecycle/`** — `plugins/lifecycle-management/global/skills/full-prime/SKILL.md` (the original) must show zero diff against its current committed version | T025 | 20m |
+| **OPM-T036** | Confirm Claude Code agent-discovery convention | Current Claude Code plugin docs (https://code.claude.com/docs/en/plugins-reference) | Written confirmation (comment in this file or a short note in `plugins/lifecycle/README.md`) | Explicitly confirms whether `plugins/lifecycle/agents/*.md` load automatically for a plugin whose `.claude-plugin/plugin.json` has no `"agents"` key (folder-convention discovery, same as `skills/`), or whether an explicit key is required — update T027/T028 if the assumption in the deviations note above turns out wrong | T026, T028 | 30m |
+| **OPM-T037** | Add "lifecycle" to marketplace.json | `.claude-plugin/marketplace.json` (currently lists only "brain") | same file, updated | `plugins` array gains a second entry: `{"name": "lifecycle", "source": "./plugins/lifecycle", "description": "Feature lifecycle management — structured progression from idea to implementation"}`; existing "brain" entry unchanged; file remains valid JSON | T027, T028 | 15m |
+| **OPM-T038** | Test: install + SessionStart in Devin CLI | T025–T034 complete | Test results | Plugin installs; SessionStart hook fires; `.features/` + `work-state.md` + `LIFECYCLE-PLUGIN-INSTRUCTIONS.md` + `.ai-workspace/plugins/lifecycle.md` all created; all 11 skills + 5 agents available under `/lifecycle:*` prefix; second session exits fast citing "Already installed" | T025–T034 | 1.5h |
+| **OPM-T039** | Test: install + SessionStart in Claude Code | T025–T034 complete | Test results | Same checks as OPM-T038, run in Claude Code instead of Devin CLI | T025–T034 | 1h |
+| **OPM-T040** | Test: `/lifecycle:setup` in Devin Cloud | T034 complete | Test results | SessionStart hook does NOT run (expected, Cloud limitation); running `/lifecycle:setup` manually produces the same 4 created files as T038; `/lifecycle:full-prime` works afterward (no "not initialized" message) | T034 | 45m |
+| **OPM-T041** | Test: brain + lifecycle installed together | T038 complete, `plugins/brain` already installable | Test results | Fresh project, install both plugins, start a session: whichever plugin's SessionStart hook runs first creates the full `work-state.md` (with both brain-owned and lifecycle-owned fenced sections intact); the second plugin's setup logs "skipping work-state.md (already exists)" and does NOT overwrite or corrupt it; both `/brain:*` and `/lifecycle:*` skills work in the same session | T038 | 1h |
+| **OPM-T042** | Test: init-guard behaves correctly | T035, T038 complete | Test results | In a project where `.features/` was never created, running `/lifecycle:full-prime` reports "Lifecycle plugin not initialized. Run /lifecycle:setup first." and does nothing else; after running setup, `/lifecycle:full-prime` works normally | T035, T038 | 20m |
+| **OPM-T043** | Document install instructions (interim) | T037 complete | `plugins/lifecycle-management/README.md` (updated) | README gains an "Official Plugin (Beta)" section describing `devin plugins install ".../ai-workspace.git#plugins/lifecycle"` / Claude Code plugin browser install of `plugins/lifecycle`, clearly marked Beta, alongside the existing (still-primary) custom-installer instructions — mirrors what OPM-T023 did for `plugins/project-brain/README.md` | T037 | 45m |
+| **OPM-T044** | Update main README with W2 status | T043 | `README.md` (updated) | Main README mentions official-plugin support for lifecycle (marked Beta), links to the section added in T043, custom installer still shown as primary | T043 | 20m |
+
+### W2 Task Summary
+
+**Total Tasks:** 20 (OPM-T025–T044)
+**Estimated Time:** ~11h
+**Critical Path:** T031 → T032 → T033 → T034 → T038/T039 → T041/T042 (~6h)
+
+### W2 Parallelism
+
+- **Group 1 (fully parallel, no deps):** T025, T026, T027, T029, T030
+- **Group 2 (after Group 1):** T028 (needs T025/T026/T027), T031
+- **Group 3 (sequential chain):** T031 → T032 → T033 → T034 → T035
+- **Group 4 (after T028):** T036, T037
+- **Group 5 (testing, after T025–T035):** T038, T039, T040 in parallel; T041 and T042 after T038
+- **Group 6 (docs, after T037):** T043 → T044
+
+### W2 Dependency Graph
+
+```
+T025 (copy skills) ──┐
+T026 (copy agents) ──┼─→ T028 (devin plugin.json) ──┬─→ T036 (confirm agent-discovery)
+T027 (claude plugin.json) ────────────────────────────┴─→ T037 (marketplace.json) → T043 → T044
+
+T029 (devin hooks.json)     [independent, just needs matching path convention]
+T030 (claude hooks.json)    [independent, just needs matching path convention]
+
+T031 (templates) → T032 (manifest.json) → T033 (script.js) → T034 (setup SKILL.md)
+T025 → T035 (init-guard on full-prime copy)
+
+T025..T035 done → T038 (Devin CLI test) ─┐
+                 → T039 (Claude Code test) ┼→ T041 (brain+lifecycle together)
+                 → T040 (Devin Cloud test) ┘→ T042 (init-guard test)
+```
+
+---
+
+## Next Steps After W2 Completion
+
+1. Validate all W2 tasks complete (20/20 ✅)
+2. Run the full W2 test suite (OPM-T038–T042)
+3. Confirm OPM-T036's finding and fix T027/T028 if the agents-convention assumption was wrong
+4. Create tasks for W3 (flutter-plugin) — expect it to be the hardest wave (pubspec.yaml injection can't happen at official-plugin install time; per `spec.md` Open Question 4, likely needs the same "session-start hook + fallback setup skill" pattern rather than true install-time injection)
+
+---
+
+**W1 Tasks Ready for Implementation. W2 Tasks Ready for Implementation.**
