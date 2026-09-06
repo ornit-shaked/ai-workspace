@@ -7,7 +7,7 @@
  * Plugin-specific logic is in hooks.js.
  */
 
-const installer = require('../../../_shared/installer.js');
+const installer = require('../../lib/installer.js');
 const hooks = require('./hooks.js');
 
 installer.run({

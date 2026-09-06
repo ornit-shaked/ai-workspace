@@ -6,7 +6,9 @@
     "ai-workspace": "./index.js"
   },
   "scripts": {
-    "test": "node test/plugin-install.test.js project-brain && node test/plugin-install.test.js flutter-plugin"
+    "test": "node test/plugin-install.test.js project-brain && node test/plugin-install.test.js flutter-plugin",
+    "sync-shared": "node scripts/sync-shared-installer.js",
+    "sync-shared:check": "node scripts/sync-shared-installer.js --check"
   },
   "files": [
     "index.js",

@@ -7,7 +7,7 @@
  * No plugin-specific hooks needed.
  */
 
-const installer = require('../../../_shared/installer.js');
+const installer = require('../../lib/installer.js');
 
 installer.run({
   pluginName: 'brain',
