@@ -13,6 +13,11 @@
       "name": "lifecycle",
       "source": "./plugins/lifecycle",
       "description": "Feature lifecycle management — structured progression from idea to implementation"
+    },
+    {
+      "name": "flutter",
+      "source": "./plugins/flutter",
+      "description": "Flutter development standards, architecture patterns, and project scaffolding"
     }
   ]
 }
