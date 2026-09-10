@@ -15,4 +15,4 @@ things the default baseline would not.
 - Run `flutter analyze` before considering any change complete; it must pass with zero issues.
 
 This is a project choice, not shipped by `flutter/agent-plugins` or any official Flutter
-baseline. Rationale: see `docs/adr/ADR-0003-linting-very-good.md`.
+baseline. Rationale: see `docs/adr/ui/ADR-0003-linting-very-good.md`.

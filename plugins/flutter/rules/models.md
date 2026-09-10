@@ -20,4 +20,4 @@ also use `json_annotation` + `json_serializable`. Run
 Upstream Flutter guidance ([Architecture Recommendations](https://docs.flutter.dev/app-architecture/recommendations))
 recommends immutable models and lists Freezed as one option, scoped to domain models. This
 project extends that to Bloc states/events and DTOs as well — that extension is a project
-decision, not an upstream default. Rationale: see `docs/adr/ADR-0002-freezed-everywhere.md`.
+decision, not an upstream default. Rationale: see `docs/adr/ui/ADR-0002-freezed-everywhere.md`.

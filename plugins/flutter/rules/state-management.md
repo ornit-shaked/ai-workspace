@@ -19,7 +19,7 @@ repositories into the widget tree — not as a state-management pattern in its o
 
 This overrides the Flutter default of `ChangeNotifier` + `ListenableBuilder`
 (see [Flutter AI Rules](https://docs.flutter.dev/ai/ai-rules), which otherwise governs baseline
-Flutter/Dart coding standards). Rationale and trade-offs: see `docs/adr/ADR-0001-state-management-bloc.md`.
+Flutter/Dart coding standards). Rationale and trade-offs: see `docs/adr/ui/ADR-0001-state-management-bloc.md`.
 
 **Upstream reference:** [Bloc Library](https://bloclibrary.dev) — patterns, `bloc_test`,
 `HydratedBloc` (as needed). This rule states the project's choice; it does not duplicate Bloc's

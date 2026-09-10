@@ -9,6 +9,10 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-09-10 | plugin-documentation-cleanup | Unified plugin documentation structure across brain/flutter/lifecycle: created AGENTS.md + README.md for each, centralized all plugin ADRs to workspace docs/adr/, removed duplicate content from .md.template files, eliminated plugin-internal docs/ directories | plugins/{brain,flutter,lifecycle}/{AGENTS,README}.md, docs/adr/ADR-0001-{brain,flutter,lifecycle}.md, *.md.template files
+
+2026-09-09 | flutter-plugin-cleanup | Cleaned up Flutter plugin structure: simplified flutter.md.template, created ADR area structure (docs/adr/ui/), updated all references, removed duplication | AGENTS.md, manifest.json, rules/*.md, docs/adr/AGENTS.md
+
 2026-09-05 | official-plugin-migration-refinement | Flutter plugin cleanup: requiredPlugins enforcement, rule prefixes + globs frontmatter, deleted global instruction files, tracking files as templates, shared installer (DRY), simplified README | plugins/_shared/installer.js, plugins/*/skills/setup/{script.js,hooks.js}
 
 2026-09-05 | official-plugin-migration | Migrated `flutter` plugin to official plugin format — ported hooks.js logic (upstream deps, pubspec injection, Dart import sorting, MCP auto-install) into setup/script.js, rules stay inside plugin (not copied globally), FLUTTER-PLUGIN-INSTRUCTIONS.md global template, manifest-driven project scaffolding, SessionStart hook auto-install; kept flutter-plugin unchanged for custom installer backward compatibility. Also recorded lifecycle migration from previous session | plugins/flutter/ (complete structure)

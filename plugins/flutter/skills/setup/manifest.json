@@ -4,15 +4,13 @@
   "global_files": [],
   "project_files": [
     { "source": "templates/project/.ai-workspace/plugins/flutter.md.template", "target": ".ai-workspace/plugins/flutter.md" },
-    { "source": "templates/project/docs/adr/README.md", "target": "docs/adr/README.md" },
-    { "source": "templates/project/docs/adr/ADR-0001-state-management-bloc.md", "target": "docs/adr/ADR-0001-state-management-bloc.md" },
-    { "source": "templates/project/docs/adr/ADR-0002-freezed-everywhere.md", "target": "docs/adr/ADR-0002-freezed-everywhere.md" },
-    { "source": "templates/project/docs/adr/ADR-0003-linting-very-good.md", "target": "docs/adr/ADR-0003-linting-very-good.md" },
-    { "source": "templates/project/docs/adr/ADR-0004-flavors.md", "target": "docs/adr/ADR-0004-flavors.md" },
-    { "source": "templates/project/docs/adr/ADR-0005-folder-structure.md", "target": "docs/adr/ADR-0005-folder-structure.md" },
-    { "source": "templates/project/docs/adr/ADR-0006-adr-process.md", "target": "docs/adr/ADR-0006-adr-process.md" },
-    { "source": "templates/project/docs/adr/ADR-0007-font-strategy.md", "target": "docs/adr/ADR-0007-font-strategy.md" },
-    { "source": "templates/project/docs/adr/ADR-0008-error-handling-result-type.md", "target": "docs/adr/ADR-0008-error-handling-result-type.md" },
+    { "source": "templates/project/docs/adr/ADR-0001-state-management-bloc.md", "target": "docs/adr/ui/ADR-0001-state-management-bloc.md" },
+    { "source": "templates/project/docs/adr/ADR-0002-freezed-everywhere.md", "target": "docs/adr/ui/ADR-0002-freezed-everywhere.md" },
+    { "source": "templates/project/docs/adr/ADR-0003-linting-very-good.md", "target": "docs/adr/ui/ADR-0003-linting-very-good.md" },
+    { "source": "templates/project/docs/adr/ADR-0004-flavors.md", "target": "docs/adr/ui/ADR-0004-flavors.md" },
+    { "source": "templates/project/docs/adr/ADR-0005-folder-structure.md", "target": "docs/adr/ui/ADR-0005-folder-structure.md" },
+    { "source": "templates/project/docs/adr/ADR-0007-font-strategy.md", "target": "docs/adr/ui/ADR-0007-font-strategy.md" },
+    { "source": "templates/project/docs/adr/ADR-0008-error-handling-result-type.md", "target": "docs/adr/ui/ADR-0008-error-handling-result-type.md" },
 
     { "source": "templates/project/analysis_options.yaml", "target": "analysis_options.yaml" },
 
