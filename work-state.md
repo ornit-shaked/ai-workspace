@@ -22,6 +22,7 @@ Post-migration stabilization — official plugin migration is done; this cycle w
 | **lifecycle-management** - Feature Lifecycle Management | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **documentation-architecture** - Documentation Architecture Pattern | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
@@ -51,10 +52,6 @@ Post-migration stabilization — official plugin migration is done; this cycle w
   - Scope: global
   - Origin: 2026-07-29 | dream-impl
 
-- [ ] **standard** Token-efficient markdown formats — audit and compress all template formats (history, instructions, backlog, archive)
-  - Scope: project
-  - Origin: 2026-07-29 | dream-impl
-
 - [ ] **rule** Prefer shell commands over agent file reads — when user needs file info, suggest direct commands first
   - Scope: global
   - Origin: 2026-07-29 | dream-impl
@@ -67,9 +64,13 @@ Post-migration stabilization — official plugin migration is done; this cycle w
   - Scope: global
   - Origin: 2026-07-29 | workflow-violations
 
-- [ ] **idea** need to create skill that will run automaticly and learn the nes from the respurces and will suggest improvmrnts to this a-workspacw, for each plugin, to prevent manual maintanance.
-  - Scope: ai-workspace project itself
-  - Origin: 2026-07-29 | unknown
+- [ ] **idea** Per-agent permission/config format — `.claude/settings.json`-style config works for Claude Code, but Devin, Windsurf, Cursor etc. may need different formats. No plugin generates per-agent permission/allowlist config today. Research what each agent actually expects, then decide whether `brain`'s setup should generate it per detected agent.
+  - Scope: brain plugin
+  - Origin: 2026-08-01 | skill-creation-strategy
+
+- [ ] **enhancement** Pinned dependency versions go stale silently — `flutter`'s `pubspec_deps` pins (in `skills/setup/manifest.json`) are healthy today, but the 2026-08 incident (2024-era pins failing `flutter pub get` outright by 2026-08) will recur for any plugin that pins third-party versions, and it's only ever caught by actually running the package manager, not by file checks. No periodic-revalidation mechanism exists.
+  - Scope: flutter plugin (pattern applies to any future plugin with pinned deps)
+  - Origin: 2026-08-01 | flutter-plugin-epic2
 
 - [ ] **idea** Decide the fate of `docs/plugins/{flutter-plugin,project-brain}/` — ~51MB of historical research/design docs (PDFs included) from before the official-plugin-migration. Currently kept as archival, not referenced by any current doc. Consider moving out of the repo (e.g. a wiki) or deleting if genuinely stale.
   - Scope: ai-workspace project itself

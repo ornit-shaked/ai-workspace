@@ -1,6 +1,6 @@
 # Lessons Inbox
 
-One line per lesson. Newest at the bottom.
+One line per lesson. Newest at the top (below the `---`), same as history.md.
 This file is updated automatically by the /wrap command at the end of every session.
 
 Processed by the lesson-analyzer skill (future) and cleared when routed.

@@ -15,7 +15,7 @@ Perform the following end-of-session tasks:
    `YYYY-MM-DD | Key outcome or decision | Files changed`
    Newest entries go at the top of the file (below the header).
 
-2. **Capture lessons**: If any corrections, preferences, or lessons were discovered during this session, append them to `.project-brain/inbox/lessons.md` in the format shown in that file. Newest entries go at the bottom (above the closing comment).
+2. **Capture lessons**: If any corrections, preferences, or lessons were discovered during this session, add them to `.project-brain/inbox/lessons.md` in the format shown in that file. Newest entries go at the top (right after the `---` separator, before older entries) — same convention as history.md.
 
 3. **Update work-state.md**: Mark completed tasks as done (`[x]`) in `work-state.md`. Update feature status if any features advanced. Add any new tasks that emerged.
 
