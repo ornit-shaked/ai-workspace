@@ -69,13 +69,19 @@ function getPluginVersion(pluginRoot) {
 }
 
 /**
- * Check if plugin is already installed
+ * Check if plugin is already installed. Existence of the tracking file is
+ * the whole check, deliberately — not "does it also mention the current
+ * version". A previous version compared the file's content against
+ * `v${version}`, but none of the plugins' tracking-file templates ever
+ * emitted a version string, so that check was always false and setup
+ * (including a since-fixed pubspec.yaml corruption bug, flutter plugin)
+ * ran on every single session instead of once. If a plugin's own setup
+ * ever needs to re-run for existing installs after a version bump, that's
+ * this project's own tracking file to delete, not a check to resurrect.
  */
-function isInstalled(projectRoot, pluginName, version) {
+function isInstalled(projectRoot, pluginName) {
   const trackingPath = path.join(projectRoot, '.ai-workspace/plugins', `${pluginName}.md`);
-  if (!fs.existsSync(trackingPath)) return false;
-  const content = fs.readFileSync(trackingPath, 'utf-8');
-  return content.includes(`v${version}`);
+  return fs.existsSync(trackingPath);
 }
 
 /**
@@ -195,7 +201,7 @@ async function run(options) {
     const manifest = readManifest(manifestPath);
 
     // Check if already installed (fast path)
-    if (isInstalled(projectRoot, pluginName, version)) {
+    if (isInstalled(projectRoot, pluginName)) {
       const elapsed = Date.now() - startTime;
       console.error(`[${pluginName}-setup] Already installed (${elapsed}ms)`);
       process.exit(0);
