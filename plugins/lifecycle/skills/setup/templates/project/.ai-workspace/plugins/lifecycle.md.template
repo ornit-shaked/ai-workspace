@@ -1,6 +1,6 @@
 # lifecycle
 
-Installed [install-date]
+Installed [install-date] (v[plugin-version])
 
 ## Files
 - `work-state.md` — Features table with lifecycle gates

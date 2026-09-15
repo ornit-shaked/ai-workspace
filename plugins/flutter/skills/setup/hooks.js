@@ -98,149 +98,193 @@ function sortDartImportBlock(content, targetPath) {
 // ---------------------------------------------------------------------------
 // Pubspec configuration
 // ---------------------------------------------------------------------------
+//
+// No YAML library: `claude plugin install` copies only this plugin's
+// declared source directory (see .claude-plugin/marketplace.json), never
+// anything outside it — including node_modules — so `require('js-yaml')`
+// can never resolve once installed, only when this file happens to run
+// from inside the monorepo. A previous version of this file `try`d it
+// anyway and fell back to a hand-written parser/dumper that flattened
+// indentation and only special-cased 3 levels of nesting, which is how it
+// nested `dependencies:` under `environment:` and wrote `[object Object]`
+// into a real project's pubspec.yaml.
+//
+// Real full-document YAML parsing/reserializing is also the wrong tool
+// here even with a working library: `yaml.dump()` reserializes from a
+// plain object and drops every comment, which this project's own
+// pubspec.yaml relies on (see the font-strategy comment on the `fonts:`
+// block). So instead of parsing pubspec.yaml into a structure and writing
+// it back out, every function below only ever reads existing lines to
+// decide what is missing, then appends new lines at the right place —
+// nothing already on disk is touched or reformatted.
+//
+// This only has to handle the shapes manifest.json actually sends it:
+// flat scalars, and (for `pubspec_flutter_config.assets`) one list of
+// strings. Neither ever needs deeper nesting than a 2-space-indented block
+// under a top-level key, so line-based insertion is sufficient — this is
+// intentionally not a general YAML writer.
+
+/** True for a column-0, non-comment, non-blank `key:` or `key: value` line. */
+function isTopLevelKeyLine(line) {
+  if (line.search(/\S/) !== 0) return false;
+  const trimmed = line.trim();
+  if (trimmed === '' || trimmed.startsWith('#')) return false;
+  return /^[A-Za-z0-9_.-]+:(\s|$)/.test(trimmed);
+}
+
+/**
+ * Returns [start, end) line indices of `key:`'s block: `start` is the
+ * header line itself, `end` is the next top-level key line or EOF. Returns
+ * null if the key doesn't exist as a top-level block header (`key:` with
+ * nothing after the colon).
+ */
+// Plain string comparisons throughout, deliberately, not dynamically-built
+// RegExp objects: a JS template literal isn't the same thing as a regex
+// literal, and a caret/dollar/`\s` written inside `` new RegExp(`...`) ``
+// is parsed as a STRING first — an unrecognized string escape like `\s`
+// silently loses its backslash there, so the RegExp built from it never
+// matches what it looks like it should. That defect is exactly this
+// file's own second bug, caught only by actually running the fixed
+// version against a real pubspec.yaml (see the plugin's test coverage);
+// plain string ops below can't have it.
+
+/** Trims a trailing `\r` only (CRLF files), never other whitespace. */
+function stripTrailingCr(line) {
+  return line.endsWith('\r') ? line.slice(0, -1) : line;
+}
+
+function findTopLevelSection(lines, key) {
+  const header = `${key}:`;
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (stripTrailingCr(lines[i]) === header) {
+      start = i;
+      break;
+    }
+  }
+  if (start === -1) return null;
+
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (isTopLevelKeyLine(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  return [start, end];
+}
+
+/** Does a direct (2-space-indented) child `childKey:` already exist in [start, end)? */
+function sectionHasChild(lines, start, end, childKey) {
+  const prefix = `  ${childKey}:`;
+  for (let i = start + 1; i < end; i++) {
+    const line = stripTrailingCr(lines[i]);
+    if (line === prefix || line.startsWith(`${prefix} `)) return true;
+  }
+  return false;
+}
+
+/**
+ * Ensures each `key: value` in `config` exists as a 2-space-indented child
+ * of `sectionKey:`, creating the section if it doesn't exist yet. Existing
+ * children are left untouched — this only ever adds lines, never edits or
+ * removes one. Returns true if any line was inserted.
+ */
+function ensureSectionChildren(lines, sectionKey, config) {
+  let section = findTopLevelSection(lines, sectionKey);
+  let changed = false;
+
+  if (!section) {
+    if (lines.length > 0 && lines[lines.length - 1].trim() !== '') lines.push('');
+    lines.push(`${sectionKey}:`);
+    section = [lines.length - 1, lines.length];
+    changed = true;
+  }
+
+  for (const [childKey, value] of Object.entries(config)) {
+    const [start, end] = section;
+    if (sectionHasChild(lines, start, end, childKey)) continue;
+
+    const insertion = Array.isArray(value)
+      ? [`  ${childKey}:`, ...value.map((item) => `    - ${item}`)]
+      : [`  ${childKey}: ${value}`];
+
+    // A file ending in a newline splits into an array whose last element
+    // is `''` (nothing after that final `\n`). When this section is the
+    // last one in the file, `end === lines.length` lands the insertion
+    // AFTER that empty placeholder, not after the real last line — which
+    // renders as an extra blank line splitting the section in two. Insert
+    // before it instead so appending stays visually seamless.
+    const insertAt =
+      end === lines.length && lines.length > 0 && lines[lines.length - 1] === ''
+        ? end - 1
+        : end;
+
+    lines.splice(insertAt, 0, ...insertion);
+    section = [start, end + insertion.length];
+    changed = true;
+  }
+
+  return changed;
+}
 
 function configurePubspec(projectRoot, manifest) {
   const pubspecPath = path.join(projectRoot, 'pubspec.yaml');
 
-  // Create minimal pubspec if missing
   if (!fs.existsSync(pubspecPath)) {
     const projectName = path.basename(projectRoot).toLowerCase().replace(/[^a-z0-9_]/g, '_');
-    const minimal = {
-      name: projectName,
-      description: 'A new Flutter project.',
-      publish_to: 'none',
-      version: '1.0.0+1',
-      environment: { sdk: '>=3.0.0 <4.0.0' },
-      dependencies: { flutter: { sdk: 'flutter' } },
-      dev_dependencies: { flutter_test: { sdk: 'flutter' } },
-      flutter: {}
-    };
-    const content = dumpPubspec(minimal);
-    if (content) {
-      fs.writeFileSync(pubspecPath, content, 'utf-8');
-      console.error('[flutter-setup]   Created minimal pubspec.yaml');
-    } else {
-      console.error('[flutter-setup]   Cannot create pubspec.yaml (no YAML writer)');
-      return;
-    }
+    const minimal =
+      `name: ${projectName}\n` +
+      `description: A new Flutter project.\n` +
+      `publish_to: none\n` +
+      `version: 1.0.0+1\n` +
+      `environment:\n` +
+      `  sdk: '>=3.0.0 <4.0.0'\n` +
+      `dependencies:\n` +
+      `  flutter:\n` +
+      `    sdk: flutter\n` +
+      `dev_dependencies:\n` +
+      `  flutter_test:\n` +
+      `    sdk: flutter\n` +
+      `flutter:\n`;
+    fs.writeFileSync(pubspecPath, minimal, 'utf-8');
+    console.error('[flutter-setup]   Created minimal pubspec.yaml');
   }
 
-  // Parse existing pubspec
-  const pubspecContent = fs.readFileSync(pubspecPath, 'utf-8');
-  const doc = parsePubspec(pubspecContent);
-  if (!doc) return;
-
+  const original = fs.readFileSync(pubspecPath, 'utf-8');
+  const lines = original.split('\n');
   let changed = false;
 
-  // Inject flutter: config
   if (manifest.pubspec_flutter_config) {
-    if (!doc.flutter) doc.flutter = {};
-    for (const [key, value] of Object.entries(manifest.pubspec_flutter_config)) {
-      if (doc.flutter[key] === undefined) {
-        doc.flutter[key] = value;
+    if (ensureSectionChildren(lines, 'flutter', manifest.pubspec_flutter_config)) {
+      changed = true;
+      for (const key of Object.keys(manifest.pubspec_flutter_config)) {
         console.error(`[flutter-setup]   + flutter.${key}`);
-        changed = true;
       }
     }
   }
 
-  // Inject dependencies
   if (manifest.pubspec_deps) {
-    if (!doc.dependencies) doc.dependencies = {};
-    if (!doc.dev_dependencies) doc.dev_dependencies = {};
-
     const deps = manifest.pubspec_deps.dependencies || {};
-    for (const [pkg, ver] of Object.entries(deps)) {
-      if (!doc.dependencies[pkg]) {
-        doc.dependencies[pkg] = ver;
+    if (ensureSectionChildren(lines, 'dependencies', deps)) {
+      changed = true;
+      for (const [pkg, ver] of Object.entries(deps)) {
         console.error(`[flutter-setup]   + ${pkg}: ${ver}`);
-        changed = true;
       }
     }
 
     const devDeps = manifest.pubspec_deps.dev_dependencies || {};
-    for (const [pkg, ver] of Object.entries(devDeps)) {
-      if (!doc.dev_dependencies[pkg]) {
-        doc.dev_dependencies[pkg] = ver;
+    if (ensureSectionChildren(lines, 'dev_dependencies', devDeps)) {
+      changed = true;
+      for (const [pkg, ver] of Object.entries(devDeps)) {
         console.error(`[flutter-setup]   + ${pkg}: ${ver} (dev)`);
-        changed = true;
       }
     }
   }
 
   if (changed) {
-    const updated = dumpPubspec(doc);
-    if (updated) {
-      fs.writeFileSync(pubspecPath, updated, 'utf-8');
-      console.error('[flutter-setup]   pubspec.yaml updated');
-    }
-  }
-}
-
-// Minimal YAML parser/dumper (avoids js-yaml dependency)
-function parsePubspec(content) {
-  try {
-    const yaml = require('js-yaml');
-    return yaml.load(content);
-  } catch (_) {
-    // Fallback: line-by-line parsing (covers pubspec.yaml structure)
-    const doc = {};
-    const lines = content.split('\n');
-    let currentKey = null;
-    let currentMap = doc;
-    const stack = [doc];
-
-    for (const line of lines) {
-      if (line.trim().startsWith('#') || line.trim() === '') continue;
-      const indent = line.search(/\S/);
-      const trimmed = line.trim();
-
-      if (trimmed.endsWith(':')) {
-        const key = trimmed.slice(0, -1);
-        currentKey = key;
-        currentMap[key] = {};
-        stack.push(currentMap[key]);
-        currentMap = currentMap[key];
-      } else if (trimmed.includes(': ')) {
-        const [key, ...valueParts] = trimmed.split(': ');
-        const value = valueParts.join(': ').trim();
-        currentMap[key] = value.startsWith('^') || value.match(/^\d/) ? value : value.replace(/['"]/g, '');
-      }
-    }
-    return doc;
-  }
-}
-
-function dumpPubspec(doc) {
-  try {
-    const yaml = require('js-yaml');
-    return yaml.dump(doc, { lineWidth: -1, noRefs: true });
-  } catch (_) {
-    // Fallback: manual YAML generation
-    const lines = [];
-    for (const [key, value] of Object.entries(doc)) {
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        lines.push(`${key}:`);
-        for (const [k, v] of Object.entries(value)) {
-          if (typeof v === 'object' && !Array.isArray(v)) {
-            lines.push(`  ${k}:`);
-            for (const [kk, vv] of Object.entries(v)) {
-              lines.push(`    ${kk}: ${vv}`);
-            }
-          } else if (Array.isArray(v)) {
-            lines.push(`  ${k}:`);
-            for (const item of v) {
-              lines.push(`    - ${item}`);
-            }
-          } else {
-            lines.push(`  ${k}: ${v}`);
-          }
-        }
-      } else {
-        lines.push(`${key}: ${value}`);
-      }
-    }
-    return lines.join('\n') + '\n';
+    fs.writeFileSync(pubspecPath, lines.join('\n'), 'utf-8');
+    console.error('[flutter-setup]   pubspec.yaml updated');
   }
 }
 
