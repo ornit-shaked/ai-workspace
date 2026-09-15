@@ -9,6 +9,8 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-09-15 | workspace-cleanup | Finished old-plugin removal + retired dead custom CLI; fixed two real bugs (isInstalled() version check was always false, flutter's fallback YAML parser corrupted pubspec.yaml); decontaminated leaked Flutter scaffold from repo root and disabled flutter@ornit-workspace for this project; merged root CLAUDE.md+AGENTS.md into one AGENTS.md, split plugin-authoring depth into plugins/AGENTS.md; deleted lifecycle's full-prime, folded its behavior into brain's prime | AGENTS.md, plugins/AGENTS.md, README.md, plugins/{brain,flutter,lifecycle}/*, scripts/sync-shared-installer.js, .claude/settings.json, .github/workflows/ci.yml
+
 2026-09-10 | plugin-documentation-cleanup | Unified plugin documentation structure across brain/flutter/lifecycle: created AGENTS.md + README.md for each, centralized all plugin ADRs to workspace docs/adr/, removed duplicate content from .md.template files, eliminated plugin-internal docs/ directories | plugins/{brain,flutter,lifecycle}/{AGENTS,README}.md, docs/adr/ADR-0001-{brain,flutter,lifecycle}.md, *.md.template files
 
 2026-09-09 | flutter-plugin-cleanup | Cleaned up Flutter plugin structure: simplified flutter.md.template, created ADR area structure (docs/adr/ui/), updated all references, removed duplication | AGENTS.md, manifest.json, rules/*.md, docs/adr/AGENTS.md

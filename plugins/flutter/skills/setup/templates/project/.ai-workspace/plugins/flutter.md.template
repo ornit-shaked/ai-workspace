@@ -1,13 +1,5 @@
 # flutter
 
-Installed [install-date]
-
-## Quick Commands
-```bash
-flutter run -t lib/main_development.dart  # Run dev flavor
-flutter test                               # Run tests
-dart run build_runner build               # Generate code
-flutter analyze                            # Lint (must pass)
-```
+Installed [install-date] (v[plugin-version])
 
 [Plugin Documentation](https://github.com/ornit-shaked/ai-workspace/tree/main/plugins/flutter)

@@ -106,4 +106,14 @@ consider to Add a hard rule in CLAUDE.md: "When creating, modifying, or proposin
 
 - [ ] standard | README links to source of truth — Don't duplicate content between README and tracking files. README = high-level overview, tracking file = detailed reference. README links to tracking template.
 
+## 2026-09-15 — workspace-cleanup — claude
+
+- [ ] correction | A tracking-file template must actually interpolate every placeholder its installer's `isInstalled()` check looks for (e.g. `[plugin-version]`) — otherwise the check is always false and setup (including destructive postInstall hooks) reruns every session. Missed across all three plugins for months; only surfaced when flutter's pubspec injection corrupted `pubspec.yaml` for real.
+- [ ] correction | A hand-rolled fallback parser (e.g. YAML fallback used when `js-yaml` isn't resolvable at runtime, which is the *common* path for a plugin distributed as plain files with no `npm install` step) must be indentation-aware and recursive, not a fixed-depth loop — the flat version silently mis-nested keys under the wrong parent.
+- [ ] correction | `disable-model-invocation: true` on a skill silently overrides an AGENTS.md rule telling the agent to proactively use that skill (e.g. "at session end, use wrap"). Check for this contradiction whenever a skill is meant to run on the model's own initiative rather than only via explicit command.
+- [ ] correction | Don't install a framework-specific plugin (e.g. `flutter`) onto a project that doesn't use that framework, even for testing — its SessionStart setup hook actually ran and leaked a full Flutter scaffold into this Node.js repo. Use `.claude/settings.json`'s `enabledPlugins` map to disable a plugin per-project while keeping it enabled globally, and test framework plugins in a throwaway project instead.
+- [ ] standard | Claude Code and Devin both read `AGENTS.md` directly now — keep exactly one agent-facing file at repo root (no separate `CLAUDE.md`), and keep human-facing overview content in `README.md`.
+- [ ] standard | Keep an always-loaded agent file (root `AGENTS.md`) short — content only needed for a specific, infrequent task (e.g. "how to add a new plugin") belongs in a scoped file next to that work (e.g. `plugins/AGENTS.md`), referenced with one line, not inlined.
+- [ ] preference | Agent-facing docs must read as flat rules, not narrative — no "this happened for real" anecdotes, no copied file-tree examples inside a table meant to state requirements tersely. Reinforced strongly this session while trimming `plugins/AGENTS.md`.
+
 <!-- Lessons will be appended here by /wrap -->

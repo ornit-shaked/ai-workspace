@@ -5,14 +5,13 @@ model: haiku
 triggers:
   - user
   - command: /wrap
-disable-model-invocation: true
 ---
 
 # /wrap — Session End
 
 Perform the following end-of-session tasks:
 
-1. **Update project history**: Append a 1-line summary to `.project-brain/history.md` in the format:
+1. **Update project history**: Append a 1-line summary to `.project-brain/memory/history.md` in the format:
    `YYYY-MM-DD | Key outcome or decision | Files changed`
    Newest entries go at the top of the file (below the header).
 

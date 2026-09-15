@@ -1,27 +1,22 @@
 {
   "name": "@oshaked/ai-workspace",
-  "version": "1.0.0",
-  "description": "AI workspace plugin installer — scaffold project structure with one command",
-  "bin": {
-    "ai-workspace": "./index.js"
-  },
+  "version": "2.0.0",
+  "description": "Claude Code / Devin plugin marketplace — memory, feature lifecycle, and Flutter scaffolding",
   "scripts": {
-    "test": "node test/plugin-install.test.js project-brain && node test/plugin-install.test.js flutter-plugin",
     "sync-shared": "node scripts/sync-shared-installer.js",
     "sync-shared:check": "node scripts/sync-shared-installer.js --check"
   },
   "files": [
-    "index.js",
-    "lib/",
-    "config/",
-    "plugins/"
+    "plugins/",
+    ".claude-plugin/"
   ],
   "keywords": [
     "ai",
     "workspace",
     "claude",
-    "windsurf",
-    "project-brain",
+    "claude-code",
+    "devin",
+    "plugin-marketplace",
     "scaffold"
   ],
   "author": "oshaked",

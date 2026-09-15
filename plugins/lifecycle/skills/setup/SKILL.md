@@ -26,4 +26,4 @@ The script:
 - **Automatic:** SessionStart hook runs this on first session
 - **Manual:** Run `/lifecycle:setup` if needed (e.g., Devin Cloud)
 
-After setup, run `/lifecycle:full-prime` to start.
+After setup, `work-state.md` is ready — `/brain:prime` (if the `brain` plugin is installed) summarizes it at session start, including suggested next steps per feature.

@@ -30,24 +30,28 @@ const TARGETS = [
   'plugins/flutter/lib/installer.js',
 ];
 
-const GENERATED_NOTICE =
-  '// GENERATED FILE — do not edit directly.\n' +
-  '// Source of truth: plugins/_shared/installer.js\n' +
-  '// Regenerate with: node scripts/sync-shared-installer.js\n\n';
-
 function withNotice(source) {
+  // Match the source file's own line-ending style, or the notice (hardcoded
+  // to one style) silently diverges from a CRLF (or LF) source and every
+  // freshly generated copy fails `--check` against itself.
+  const eol = source.includes('\r\n') ? '\r\n' : '\n';
+  const notice =
+    `// GENERATED FILE — do not edit directly.${eol}` +
+    `// Source of truth: plugins/_shared/installer.js${eol}` +
+    `// Regenerate with: node scripts/sync-shared-installer.js${eol}${eol}`;
+
   // Keep a leading shebang as the file's literal first line — Node only
   // strips it when it's line 1, so the notice has to go after it.
   if (source.startsWith('#!')) {
     const newlineIndex = source.indexOf('\n') + 1;
     return (
       source.slice(0, newlineIndex) +
-      '\n' +
-      GENERATED_NOTICE +
+      eol +
+      notice +
       source.slice(newlineIndex)
     );
   }
-  return GENERATED_NOTICE + source;
+  return notice + source;
 }
 
 function main() {

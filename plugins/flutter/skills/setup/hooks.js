@@ -6,54 +6,6 @@ const fs = require('fs');
 const path = require('path');
 
 // ---------------------------------------------------------------------------
-// Dynamic content generators
-// ---------------------------------------------------------------------------
-
-function generateSkillsList(pluginRoot) {
-  const skillsDir = path.join(pluginRoot, 'skills');
-  if (!fs.existsSync(skillsDir)) return '(none)';
-  
-  const skills = fs.readdirSync(skillsDir)
-    .filter(name => {
-      const skillPath = path.join(skillsDir, name);
-      return fs.statSync(skillPath).isDirectory() && 
-             fs.existsSync(path.join(skillPath, 'SKILL.md'));
-    })
-    .map(name => `- \`/flutter:${name}\``);
-  
-  return skills.length > 0 ? skills.join('\n') : '(none)';
-}
-
-function generateRulesList(pluginRoot) {
-  const rulesDir = path.join(pluginRoot, 'rules');
-  if (!fs.existsSync(rulesDir)) return '(none)';
-  
-  const rules = fs.readdirSync(rulesDir)
-    .filter(name => name.endsWith('.md'))
-    .map(name => {
-      const content = fs.readFileSync(path.join(rulesDir, name), 'utf-8');
-      const match = content.match(/^---\n[\s\S]*?description:\s*(.+?)\n/m);
-      const desc = match ? match[1].trim() : name.replace('.md', '');
-      return `- \`${name}\` — ${desc}`;
-    });
-  
-  return rules.length > 0 ? rules.join('\n') : '(none)';
-}
-
-function generateUpstreamDeps(pluginRoot) {
-  const manifest = JSON.parse(fs.readFileSync(path.join(pluginRoot, '.devin-plugin/plugin.json'), 'utf-8'));
-  const deps = manifest.requiredPlugins || [];
-  
-  if (deps.length === 0) return '(none)';
-  
-  return deps.map(dep => {
-    if (typeof dep === 'string') return `- ${dep}`;
-    if (dep.url) return `- [${dep.url.split('/').pop()}](${dep.url})`;
-    return `- ${JSON.stringify(dep)}`;
-  }).join('\n');
-}
-
-// ---------------------------------------------------------------------------
 // Dart import sorting (very_good_analysis compliance)
 // ---------------------------------------------------------------------------
 
@@ -177,38 +129,72 @@ function configurePubspec(projectRoot, manifest) {
   }
 }
 
-// Minimal YAML parser/dumper (avoids js-yaml dependency)
+// Minimal YAML parser/dumper for pubspec.yaml (block mappings + block sequences only).
+//
+// `js-yaml` is a devDependency of this repo, but plugins are distributed as plain
+// files (git clone / marketplace copy) with no `npm install` step, so `require('js-yaml')`
+// reliably fails at runtime in the target project. The fallback below is therefore the
+// real code path, not a rare edge case — it must be indentation-aware and recursive, or
+// nested keys silently attach to the wrong parent and get serialized as "[object Object]"
+// (this happened for real: see git history around the flutter plugin's pubspec corruption).
 function parsePubspec(content) {
   try {
     const yaml = require('js-yaml');
     return yaml.load(content);
   } catch (_) {
-    // Fallback: line-by-line parsing (covers pubspec.yaml structure)
-    const doc = {};
-    const lines = content.split('\n');
-    let currentKey = null;
-    let currentMap = doc;
-    const stack = [doc];
-
-    for (const line of lines) {
-      if (line.trim().startsWith('#') || line.trim() === '') continue;
-      const indent = line.search(/\S/);
-      const trimmed = line.trim();
-
-      if (trimmed.endsWith(':')) {
-        const key = trimmed.slice(0, -1);
-        currentKey = key;
-        currentMap[key] = {};
-        stack.push(currentMap[key]);
-        currentMap = currentMap[key];
-      } else if (trimmed.includes(': ')) {
-        const [key, ...valueParts] = trimmed.split(': ');
-        const value = valueParts.join(': ').trim();
-        currentMap[key] = value.startsWith('^') || value.match(/^\d/) ? value : value.replace(/['"]/g, '');
-      }
-    }
-    return doc;
+    return parsePubspecFallback(content);
   }
+}
+
+function parseScalar(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    return value.slice(1, -1);
+  }
+  return value;
+}
+
+function parsePubspecFallback(content) {
+  const root = {};
+  // Stack of open containers, innermost last. Each frame knows its indent level
+  // and how to reach back to its parent, so a block sequence ("- item") can convert
+  // a lazily-created {} into [] the first time a list item is seen under it.
+  const stack = [{ indent: -1, container: root, parent: null, key: null }];
+
+  for (const raw of content.split('\n')) {
+    if (raw.trim() === '' || raw.trim().startsWith('#')) continue;
+    const indent = raw.search(/\S/);
+    const trimmed = raw.trim();
+
+    while (stack.length > 1 && indent <= stack[stack.length - 1].indent) {
+      stack.pop();
+    }
+    const frame = stack[stack.length - 1];
+
+    if (trimmed.startsWith('- ')) {
+      if (!Array.isArray(frame.container)) {
+        const arr = [];
+        if (frame.parent && frame.key !== null) frame.parent[frame.key] = arr;
+        frame.container = arr;
+      }
+      frame.container.push(parseScalar(trimmed.slice(2).trim()));
+      continue;
+    }
+
+    if (trimmed.endsWith(':')) {
+      const key = trimmed.slice(0, -1).trim();
+      const child = {};
+      frame.container[key] = child;
+      stack.push({ indent, container: child, parent: frame.container, key });
+    } else if (trimmed.includes(': ')) {
+      const idx = trimmed.indexOf(': ');
+      const key = trimmed.slice(0, idx).trim();
+      frame.container[key] = parseScalar(trimmed.slice(idx + 2).trim());
+    }
+  }
+
+  return root;
 }
 
 function dumpPubspec(doc) {
@@ -216,32 +202,44 @@ function dumpPubspec(doc) {
     const yaml = require('js-yaml');
     return yaml.dump(doc, { lineWidth: -1, noRefs: true });
   } catch (_) {
-    // Fallback: manual YAML generation
-    const lines = [];
-    for (const [key, value] of Object.entries(doc)) {
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        lines.push(`${key}:`);
-        for (const [k, v] of Object.entries(value)) {
-          if (typeof v === 'object' && !Array.isArray(v)) {
-            lines.push(`  ${k}:`);
-            for (const [kk, vv] of Object.entries(v)) {
-              lines.push(`    ${kk}: ${vv}`);
-            }
-          } else if (Array.isArray(v)) {
-            lines.push(`  ${k}:`);
-            for (const item of v) {
-              lines.push(`    - ${item}`);
-            }
-          } else {
-            lines.push(`  ${k}: ${v}`);
-          }
-        }
+    return dumpPubspecFallback(doc);
+  }
+}
+
+function dumpScalar(value) {
+  return String(value);
+}
+
+function dumpPubspecFallback(node, indent = 0) {
+  const pad = '  '.repeat(indent);
+  const lines = [];
+
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      if (item !== null && typeof item === 'object') {
+        lines.push(`${pad}-`);
+        lines.push(dumpPubspecFallback(item, indent + 1));
       } else {
-        lines.push(`${key}: ${value}`);
+        lines.push(`${pad}- ${dumpScalar(item)}`);
       }
     }
-    return lines.join('\n') + '\n';
+  } else {
+    for (const [key, value] of Object.entries(node)) {
+      if (Array.isArray(value) || (value !== null && typeof value === 'object')) {
+        if (Object.keys(value).length === 0) {
+          lines.push(`${pad}${key}: {}`);
+        } else {
+          lines.push(`${pad}${key}:`);
+          lines.push(dumpPubspecFallback(value, indent + 1));
+        }
+      } else {
+        lines.push(`${pad}${key}: ${dumpScalar(value)}`);
+      }
+    }
   }
+
+  const body = lines.join('\n');
+  return indent === 0 ? body + '\n' : body;
 }
 
 // ---------------------------------------------------------------------------
@@ -249,12 +247,6 @@ function dumpPubspec(doc) {
 // ---------------------------------------------------------------------------
 
 module.exports = {
-  getReplacements: ({ pluginRoot }) => ({
-    '\\[skills-list\\]': generateSkillsList(pluginRoot),
-    '\\[rules-list\\]': generateRulesList(pluginRoot),
-    '\\[upstream-deps\\]': generateUpstreamDeps(pluginRoot)
-  }),
-
   contentTransformers: [
     sortDartImportBlock
   ],

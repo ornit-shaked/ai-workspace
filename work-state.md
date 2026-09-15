@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Official Plugin Migration — Migrate all 3 plugins to official Devin/Claude Code plugin format with SessionStart hooks and setup skills
+Post-migration stabilization — official plugin migration is done; this cycle was bug fixes (pubspec corruption, dead isInstalled version check), removing dead code (old CLI, old plugins, full-prime), and docs consolidation (AGENTS.md). Next: verify the three plugins end-to-end in a fresh scratch project.
 <!-- brain:current-focus-end -->
 
 ---
@@ -70,6 +70,14 @@ Official Plugin Migration — Migrate all 3 plugins to official Devin/Claude Cod
 - [ ] **idea** need to create skill that will run automaticly and learn the nes from the respurces and will suggest improvmrnts to this a-workspacw, for each plugin, to prevent manual maintanance.
   - Scope: ai-workspace project itself
   - Origin: 2026-07-29 | unknown
+
+- [ ] **idea** Decide the fate of `docs/plugins/{flutter-plugin,project-brain}/` — ~51MB of historical research/design docs (PDFs included) from before the official-plugin-migration. Currently kept as archival, not referenced by any current doc. Consider moving out of the repo (e.g. a wiki) or deleting if genuinely stale.
+  - Scope: ai-workspace project itself
+  - Origin: 2026-09-15 | workspace-cleanup
+
+- [ ] **enhancement** No automated tests remain — `test/plugin-install.test.js` was deleted with the old CLI (it targeted the now-deleted old-format plugin dirs and never covered the official-format plugins anyway). Consider a minimal test for `plugins/_shared/installer.js` and/or `scripts/sync-shared-installer.js`.
+  - Scope: ai-workspace project itself
+  - Origin: 2026-09-15 | workspace-cleanup
 <!-- lifecycle:backlog-end -->
 
 ---
