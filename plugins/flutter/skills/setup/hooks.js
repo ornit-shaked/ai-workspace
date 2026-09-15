@@ -149,6 +149,8 @@ function parsePubspec(content) {
 function parseScalar(value) {
   if (value === 'true') return true;
   if (value === 'false') return false;
+  if (value === '{}') return {};
+  if (value === '[]') return [];
   if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
     return value.slice(1, -1);
   }

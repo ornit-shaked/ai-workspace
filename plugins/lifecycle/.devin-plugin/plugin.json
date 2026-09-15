@@ -1,6 +1,6 @@
 {
   "name": "lifecycle",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Feature lifecycle management — structured progression from idea to implementation",
   "author": {
     "name": "Ornit Shaked",

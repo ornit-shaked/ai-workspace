@@ -2,7 +2,7 @@
 
 Official plugin for feature lifecycle management.
 
-**Version:** 1.0.0 • **License:** MIT
+**Version:** 1.0.2 • **License:** MIT
 
 ## What This Does
 

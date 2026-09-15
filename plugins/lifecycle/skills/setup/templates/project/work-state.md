@@ -1,4 +1,4 @@
-# Work State — {{PROJECT_NAME}}
+# Work State — [project-name]
 
 ## 🎯 Current Focus
 *What you're working on right now.*

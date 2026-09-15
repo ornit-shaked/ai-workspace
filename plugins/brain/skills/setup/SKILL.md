@@ -12,7 +12,7 @@ Run the installation script to set up brain plugin.
 
 ## Implementation
 
-Execute: `node ${DEVIN_PLUGIN_ROOT}/skills/setup/script.js`
+Execute: `node "${CLAUDE_PLUGIN_ROOT:-$DEVIN_PLUGIN_ROOT}/skills/setup/script.js"` (uses whichever plugin-root variable the host sets — `CLAUDE_PLUGIN_ROOT` on Claude Code, `DEVIN_PLUGIN_ROOT` on Devin)
 
 The script:
 - Reads `manifest.json` for file mappings
