@@ -9,6 +9,8 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-09-24 | usage-cost-investigation | Diagnosed kiddi-verse's `lifecycle-workflow.md` rule (auto-chained write/review loop across 4 artifacts, no per-stage checkpoint) as the likely root cause of heavy Claude Code usage; created usage-cost-optimization feature; sharpened doc-governance with kiddi-verse rule case, wrap's noisy lesson capture, narrative-ADR evidence, and a candidate "git holds why, docs hold current what" principle. No plugin/rule code changed. | .features/usage-cost-optimization/feature.md, .features/doc-governance/feature.md, work-state.md
+
 2026-09-15 | workspace-cleanup | Finished old-plugin removal + retired dead custom CLI; fixed two real bugs (isInstalled() version check was always false, flutter's fallback YAML parser corrupted pubspec.yaml); decontaminated leaked Flutter scaffold from repo root and disabled flutter@ornit-workspace for this project; merged root CLAUDE.md+AGENTS.md into one AGENTS.md, split plugin-authoring depth into plugins/AGENTS.md; deleted lifecycle's full-prime, folded its behavior into brain's prime | AGENTS.md, plugins/AGENTS.md, README.md, plugins/{brain,flutter,lifecycle}/*, scripts/sync-shared-installer.js, .claude/settings.json, .github/workflows/ci.yml
 
 2026-09-10 | plugin-documentation-cleanup | Unified plugin documentation structure across brain/flutter/lifecycle: created AGENTS.md + README.md for each, centralized all plugin ADRs to workspace docs/adr/, removed duplicate content from .md.template files, eliminated plugin-internal docs/ directories | plugins/{brain,flutter,lifecycle}/{AGENTS,README}.md, docs/adr/ADR-0001-{brain,flutter,lifecycle}.md, *.md.template files

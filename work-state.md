@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Post-migration stabilization — official plugin migration is done; this cycle was bug fixes (pubspec corruption, dead isInstalled version check), removing dead code (old CLI, old plugins, full-prime), and docs consolidation (AGENTS.md). Next: verify the three plugins end-to-end in a fresh scratch project.
+Usage-cost investigation (idea stage, no code changed): root cause is kiddi-verse's `lifecycle-workflow.md` rule, not ai-workspace's plugin. doc-governance sharpened with 3 concrete cases (kiddi-verse rule, wrap's noisy lesson capture, narrative ADRs) plus a candidate principle: git holds why, working docs hold only current what. Next: user reviews both features; decide whether to move either to write-spec.
 <!-- brain:current-focus-end -->
 
 ---
@@ -23,6 +23,7 @@ Post-migration stabilization — official plugin migration is done; this cycle w
 | **documentation-architecture** - Documentation Architecture Pattern | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
