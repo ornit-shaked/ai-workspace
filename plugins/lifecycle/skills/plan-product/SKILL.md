@@ -22,7 +22,7 @@ Turn a raw idea into the product-level artifact — `product-roadmap.md`. This i
 ## MUST NOT contain
 - Acceptance criteria (belongs in `write-feature`).
 - Architecture, stack choices, libraries, mockups (belongs in `write-spec`).
-- Waves, phasing, dependencies, risks (belongs in `write-plan`).
+- Waves, phasing, dependencies, risks (belongs in the plan, written by `superpowers:writing-plans`).
 - Tasks, code, ETAs, calendar dates.
 - Any restatement of content from a downstream artifact.
 
@@ -41,4 +41,4 @@ Turn a raw idea into the product-level artifact — `product-roadmap.md`. This i
 
 ## Handoff
 - Recommended next skill: `write-feature` (per feature, when user says "write <id>").
-- FEATURES.md flag: none at this stage (roadmap is not per-feature-gated).
+- work-state.md flag: none at this stage (roadmap is not per-feature-gated).

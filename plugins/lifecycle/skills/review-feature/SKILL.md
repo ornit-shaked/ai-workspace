@@ -41,8 +41,8 @@ Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain
 2. Score MUST-contain, MUST-NOT-contain, success-criteria.
 3. Build prioritized fix list.
 4. Set `status`. Save `feature.review.md`.
-5. Report the verdict + P0 fixes to the user. Do NOT flip any FEATURES.md gate; the user does that.
+5. Report the verdict + P0 fixes to the user. Do NOT flip any work-state.md gate; the user does that.
 
 ## Handoff
-- If `approved`: user flips the relevant FEATURES.md flag and invokes `write-spec`.
+- If `approved`: user flips the relevant work-state.md flag and invokes `write-spec`.
 - If `needs-work`: user asks `promote-feature` to apply the fixes.

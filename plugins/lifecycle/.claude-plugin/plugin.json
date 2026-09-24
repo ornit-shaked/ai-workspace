@@ -1,6 +1,6 @@
 {
   "name": "lifecycle",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Feature lifecycle management — structured progression from idea to implementation",
   "author": {
     "name": "Ornit Shaked",
@@ -13,8 +13,11 @@
     "feature-lifecycle",
     "spec",
     "plan",
-    "tasks",
     "review",
-    "product-management"
+    "product-management",
+    "superpowers"
+  ],
+  "dependencies": [
+    { "name": "superpowers", "marketplace": "obra/superpowers", "version": "~6.4.1" }
   ]
 }

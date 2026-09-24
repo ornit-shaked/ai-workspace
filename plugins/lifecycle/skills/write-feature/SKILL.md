@@ -24,8 +24,8 @@ Turn one roadmap row into a **feature brief**: what problem it solves, who it's 
 
 ## MUST NOT contain
 - Architecture, stack, libraries, data-model shape, API contract, or file layout (belongs in `write-spec`).
-- Waves, phasing, dependencies between tasks, risks (belongs in `write-plan`).
-- Task list or code (belongs in `write-tasks` / implementation).
+- Waves, phasing, dependencies between tasks, risks (belongs in the plan, written by `superpowers:writing-plans`).
+- Task list or code (belongs in the plan / implementation).
 - Separate research file (per Kiro rule — fold research inline).
 - Duplicated WHY from `product-roadmap.md` beyond one sentence.
 
@@ -46,4 +46,4 @@ Turn one roadmap row into a **feature brief**: what problem it solves, who it's 
 
 ## Handoff
 - Recommended next skill: `review-feature` (before user approval).
-- FEATURES.md flag to flip after user approval: (feature is now eligible for `write-spec`).
+- work-state.md flag to flip after user approval: (feature is now eligible for `write-spec`).

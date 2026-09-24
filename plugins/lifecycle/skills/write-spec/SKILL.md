@@ -27,8 +27,8 @@ Turn an approved feature into a **design spec**: architecture, contracts, data m
 
 ## MUST NOT contain
 - Restatement of WHY / problem / user (already in `feature.md` — link, don't copy).
-- Ordered task list (belongs in `write-tasks`).
-- Strategic waves or phasing (belongs in `write-plan`).
+- Ordered task list (belongs in the plan, written by `superpowers:writing-plans`).
+- Strategic waves or phasing (belongs in the plan).
 - Executable code beyond signatures / very short pseudo-code.
 - Separate research file — inline what's needed.
 - Duplicate acceptance criteria (link back to `feature.md`).
@@ -51,4 +51,4 @@ Turn an approved feature into a **design spec**: architecture, contracts, data m
 
 ## Handoff
 - Recommended next skill: `review-spec` (before user approval).
-- FEATURES.md flag to flip after user approval: `spec_ok`.
+- work-state.md flag to flip after user approval: `spec_ok`.

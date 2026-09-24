@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Installation manifest for lifecycle plugin",
   "global_files": [],
   "project_files": [
@@ -10,6 +10,10 @@
     {
       "source": "templates/project/work-state.md",
       "target": "work-state.md"
+    },
+    {
+      "source": "templates/project/features-agents.md",
+      "target": ".features/AGENTS.md"
     }
   ],
   "project_dirs": [

@@ -15,7 +15,7 @@ Move a completed feature from Active Features to Completed Features in `work-sta
 
 1. Read `work-state.md` at project root
 2. Verify feature exists in Active Features table (inside `<!-- lifecycle:features-begin -->` fence)
-3. Verify feature has `todo_ok = ✅` (ready to archive)
+3. Verify feature has `plan_ok = ✅` (ready to archive)
 4. Move feature row to Completed Features table (inside `<!-- lifecycle:completed-begin -->` fence)
 5. Update Completed Features row format: `| **feature-slug** - Description | YYYY-MM-DD |`
 6. Remove feature row from Active Features table
@@ -23,7 +23,7 @@ Move a completed feature from Active Features to Completed Features in `work-sta
 
 ## Rules
 
-- Only archive features with `todo_ok = ✅`
+- Only archive features with `plan_ok = ✅`
 - Preserve feature description in archived row
 - Add completion date (today's date)
 - Never modify Brain-owned fences

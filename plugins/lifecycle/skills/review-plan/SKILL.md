@@ -5,29 +5,28 @@ description: When `.features/<id>/plan.md` exists and the user asks to review it
 
 # Review Plan
 
-Audit `plan.md` against `write-plan` contract lists + `spec.md` coverage.
+Audit `plan.md` against `spec.md` coverage and internal consistency.
+
+Plans are now written by `superpowers:writing-plans` and contain bite-sized checkbox tasks inline (no separate `tasks.md`). This reviewer checks the combined plan+tasks artifact.
 
 ## Inputs
 - `.features/<id>/plan.md`
 - `.features/<id>/spec.md`
-- `write-plan/SKILL.md` (for its contract lists)
 
 ## Output
 - `.features/<id>/plan.review.md`
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work`.
-- Wave coverage: every major component in `spec.md` → assigned to a wave? (report gaps)
-- Dependency sanity: cycles? missing prerequisites? unreachable waves?
-- Risk quality: is each risk specific, testable, and mitigated?
-- Rollout fit: does the rollout strategy match the risk profile?
-- DoD verifiability: is every DoD bullet checkable without asking the author?
-- Leakage check: restated architecture, executable tasks, code, dates?
+- Spec coverage: every component in `spec.md` → referenced by ≥ 1 task in the plan? (report gaps)
+- Task granularity: are tasks bite-sized (each completable in 2–5 minutes)? Flag oversized tasks for split.
+- Dependency sanity: cycles? missing prerequisites? unreachable tasks?
+- DoD verifiability: is every task's verification step checkable without asking the author?
+- Leakage check: restated architecture, code beyond signatures, dates?
 - Prioritized fix list with WHERE + WHAT.
 
 ## MUST NOT contain
 - Any rewrite of `plan.md`.
-- Task decomposition (belongs in `write-tasks`).
 - New design proposals.
 
 ## Success criteria
@@ -36,13 +35,13 @@ Audit `plan.md` against `write-plan` contract lists + `spec.md` coverage.
 - File ≤ 120 lines.
 
 ## Procedure
-1. Load `plan.md`, `spec.md`, and `write-plan` contract lists.
-2. Check wave coverage + run dependency-cycle detection.
-3. Check risk quality, rollout fit, DoD verifiability.
+1. Load `plan.md` and `spec.md`.
+2. Check spec coverage — every spec component mapped to at least one task.
+3. Check task granularity, dependency cycles, DoD verifiability.
 4. Check leakage.
 5. Prioritize fixes.
 6. Set `status`. Save. Report verdict + P0 fixes.
 
 ## Handoff
-- If `approved`: user flips `plan_ok` in FEATURES.md and invokes `write-tasks`.
-- If `needs-work`: user asks `write-plan` to apply the fixes.
+- If `approved`: user flips `plan_ok` in work-state.md; feature enters implementation.
+- If `needs-work`: user re-invokes `superpowers:writing-plans` to apply the fixes.

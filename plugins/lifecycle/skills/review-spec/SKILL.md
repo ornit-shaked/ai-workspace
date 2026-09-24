@@ -27,8 +27,8 @@ Audit `spec.md` against `write-spec` contract lists + `feature.md` coverage. Out
 
 ## MUST NOT contain
 - Any rewrite of `spec.md`.
-- Task decomposition (that's `decompose-tasks`).
-- Strategic phasing (that's `write-plan`).
+- Task decomposition (that belongs in the plan).
+- Strategic phasing (that belongs in the plan).
 - New design proposals — only issues + open questions.
 
 ## Success criteria
@@ -45,5 +45,5 @@ Audit `spec.md` against `write-spec` contract lists + `feature.md` coverage. Out
 5. Set `status`. Save. Report verdict + P0 fixes.
 
 ## Handoff
-- If `approved`: user flips `spec_ok` in FEATURES.md and invokes `write-plan`.
+- If `approved`: user flips `spec_ok` in work-state.md and invokes `superpowers:writing-plans` to create the implementation plan.
 - If `needs-work`: user asks `write-spec` to apply the fixes.
