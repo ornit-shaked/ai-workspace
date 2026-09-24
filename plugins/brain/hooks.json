@@ -5,12 +5,12 @@
       "hooks": [
         {
           "type": "command",
-          "command": "node ./skills/setup/script.js",
+          "command": "node \"${DEVIN_PLUGIN_ROOT}/skills/setup/script.js\"",
           "timeout": 10
         },
         {
           "type": "command",
-          "command": "node ./skills/prime/run.js",
+          "command": "node \"${DEVIN_PLUGIN_ROOT}/skills/prime/run.js\"",
           "timeout": 10
         }
       ]

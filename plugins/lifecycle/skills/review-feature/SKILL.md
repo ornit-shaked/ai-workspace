@@ -5,7 +5,7 @@ description: When `.features/<id>/feature.md` exists and the user asks to review
 
 # Review Feature
 
-Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain / success-criteria. Produce a review file. Do NOT modify the feature.
+Audit `feature.md` against the `write-feature` MUST-contain / MUST-NOT-contain / success-criteria. Produce a review file. Do NOT modify the feature.
 
 ## Inputs
 - `.features/<id>/feature.md`
@@ -17,7 +17,7 @@ Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain
 
 ## MUST contain (in the review file)
 - Verdict line: `status: approved | needs-work`.
-- Pass/fail per MUST-contain rule of `promote-feature`.
+- Pass/fail per MUST-contain rule of `write-feature`.
 - Pass/fail per MUST-NOT-contain rule (flags leakage from downstream stages, name the skill that owns the leaked content).
 - Pass/fail per success criterion, each with 1-line evidence.
 - Prioritized fix list (`P0` blocker, `P1` should-fix, `P2` nice-to-have) — every fix cites WHERE (line or section) and WHAT to change.
@@ -32,12 +32,12 @@ Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain
 
 ## Success criteria
 - Verdict is unambiguous.
-- Every MUST/MUST-NOT rule of `promote-feature` is explicitly checked.
+- Every MUST/MUST-NOT rule of `write-feature` is explicitly checked.
 - Every fix is actionable (WHERE + WHAT).
 - File ≤ 100 lines.
 
 ## Procedure
-1. Load `feature.md`, roadmap row, and `promote-feature` contract lists.
+1. Load `feature.md`, roadmap row, and `write-feature` contract lists.
 2. Score MUST-contain, MUST-NOT-contain, success-criteria.
 3. Build prioritized fix list.
 4. Set `status`. Save `feature.review.md`.
@@ -45,4 +45,4 @@ Audit `feature.md` against the `promote-feature` MUST-contain / MUST-NOT-contain
 
 ## Handoff
 - If `approved`: user flips the relevant work-state.md flag and invokes `write-spec`.
-- If `needs-work`: user asks `promote-feature` to apply the fixes.
+- If `needs-work`: user asks `write-feature` to apply the fixes.

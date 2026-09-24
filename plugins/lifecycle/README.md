@@ -1,74 +1,123 @@
 # Lifecycle Plugin
 
-Official plugin for feature lifecycle management.
+Feature lifecycle management — from raw idea to shipped code.
 
-**Version:** 2.0.0 • **License:** MIT
+**Version:** 2.0.0 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) ~6.4.1 (auto-installed)
 
-**Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) (auto-installed as a dependency, pinned to ~6.4.1)
+---
 
-## What This Does
+## The Flow
 
-Provides a structured workflow for moving features from idea to implementation: product planning → feature brief → spec → plan → tasks → done.
+```
+ ┌─────────────────────────────────────────────────────────────┐
+ │  PRODUCT LEVEL                                              │
+ │                                                             │
+ │  Raw idea ──→ product-roadmap.md ──→ Backlog                │
+ │               (plan-product)         (work-state.md)        │
+ └───────────────────────┬─────────────────────────────────────┘
+                         │ write-feature promotes one idea
+ ┌───────────────────────▼─────────────────────────────────────┐
+ │  FEATURE LEVEL                                              │
+ │                                                             │
+ │  ① write-feature ──→ feature.md                             │
+ │  ② review-feature ──→ feature.review.md                     │
+ │  ③ user approves                                            │
+ │                         ┌──────────────────────────┐        │
+ │  ④ brainstorming ·····→ │ brainstorm.md (optional) │        │
+ │                         └──────────────────────────┘        │
+ │  ⑤ write-spec ──→ spec.md ──→ spec_gen ✅                   │
+ │  ⑥ review-spec ──→ spec.review.md                           │
+ │  ⑦ user approves ──→ spec_ok ✅                              │
+ │                                                             │
+ │  ⑧ writing-plans ──→ plan.md ──→ plan_gen ✅                 │
+ │  ⑨ review-plan ──→ plan.review.md                           │
+ │  ⑩ user approves ──→ plan_ok ✅                              │
+ │                                                             │
+ │  ⑪ executing-plans / subagent-driven-development            │
+ │  ⑫ review-code ──→ reviews/*.code.review.md                 │
+ │                                                             │
+ │  ⑬ archive-feature ──→ moved to Completed                   │
+ └─────────────────────────────────────────────────────────────┘
+```
 
-**See [../../docs/adr/ADR-0001-lifecycle-gates.md](../../docs/adr/ADR-0001-lifecycle-gates.md) for rationale.**
+---
+
+## Steps
+
+| # | Step | Skill | Source | What it does | Output | Gate |
+|---|------|-------|--------|-------------|--------|------|
+| 0 | Setup | `lifecycle:setup` | Custom | Install work-state.md, .features/ dir, .features/AGENTS.md | `work-state.md`, `.features/AGENTS.md` | — |
+| 1 | Product roadmap | `lifecycle:plan-product` | Custom | Turn raw idea into prioritized feature candidates with one-line WHY each | `product-roadmap.md` | — |
+| — | Backlog | — | Manual | Raw ideas not yet promoted to features. Live in work-state.md backlog section. | `work-state.md` | — |
+| 2 | Feature brief | `lifecycle:write-feature` | Custom | Problem, user, value, acceptance criteria, out-of-scope. Adds feature row to work-state.md. | `.features/<id>/feature.md` | — |
+| 3 | Review feature | `lifecycle:review-feature` | Custom | Audit feature.md against write-feature contract | `.features/<id>/feature.review.md` | — |
+| 4 | Approve feature | — | User | User reads review, approves | — | — |
+| 5 | Design exploration | `superpowers:brainstorming` | Upstream | **Optional, not a gate.** Interactive Q&A when design is open/contested. Skip when feature.md is clear enough. | `.features/<id>/brainstorm.md` | — |
+| 6 | Design spec | `lifecycle:write-spec` | Custom | Architecture, contracts (internal + external with signatures), data model, edge cases, NFRs, design decisions | `.features/<id>/spec.md` | `spec_gen` |
+| 7 | Review spec | `lifecycle:review-spec` | Custom | Audit spec.md against feature.md coverage | `.features/<id>/spec.review.md` | — |
+| 8 | Approve spec | — | User | User reads review, approves | — | `spec_ok` |
+| 9 | Implementation plan | `superpowers:writing-plans` | Upstream | Bite-sized checkbox tasks, file-structure section, interfaces block. Output redirected to `.features/<id>/plan.md` by `.features/AGENTS.md`. | `.features/<id>/plan.md` | `plan_gen` |
+| 10 | Review plan | `lifecycle:review-plan` | Custom | Audit plan: spec coverage, task granularity, dependency cycles, DoD verifiability | `.features/<id>/plan.review.md` | — |
+| 11 | Approve plan | — | User | User reads review, approves. Feature enters implementation. | — | `plan_ok` |
+| 12 | Implementation | `superpowers:executing-plans` | Upstream | Execute tasks from plan.md. **Default mode.** Use `subagent-driven-development` only for multi-module parallel work. | Code changes | — |
+| 13 | Code review | `lifecycle:review-code` | Custom | Audit code diff against spec + task DoD from plan.md | `.features/<id>/reviews/<task>.code.review.md` | — |
+| 14 | Archive | `lifecycle:archive-feature` | Custom | Move feature to Completed in work-state.md. Requires `plan_ok = ✅`. | `work-state.md` updated | — |
+
+---
+
+## Artifacts Per Feature
+
+```
+.features/<id>/
+├── feature.md          WHAT + WHY           (step 2, custom)        permanent
+├── spec.md             HOW                  (step 6, custom)        permanent
+├── plan.md             WHAT TO DO + tasks   (step 9, upstream)      permanent
+├── brainstorm.md       Design exploration   (step 5, upstream)      deleted after spec_ok
+├── feature.review.md   Review output        (step 3, custom)        deleted after approval
+├── spec.review.md      Review output        (step 7, custom)        deleted after spec_ok
+├── plan.review.md      Review output        (step 10, custom)       deleted after plan_ok
+└── reviews/            Code review outputs  (step 13, custom)       deleted after merge
+```
+
+Review files and brainstorm.md are **transient** — deleted once the corresponding `_ok` gate is set. The gate in work-state.md is the permanent record that review happened.
+
+---
+
+## Gates
+
+Tracked in `work-state.md` inside `<!-- lifecycle:features-begin/end -->` fences.
+
+| Gate | Set when | Requires user approval |
+|------|----------|----------------------|
+| `spec_gen` | spec.md created | No |
+| `spec_ok` | spec reviewed and approved | Yes |
+| `plan_gen` | plan.md created | No |
+| `plan_ok` | plan reviewed and approved | Yes |
+
+`_gen` = artifact exists. `_ok` = user approved after review. Nothing advances without user approval.
+
+---
+
+## Runtime Conventions
+
+Defined in `.features/AGENTS.md` (installed by setup, loaded automatically when agents work on feature files):
+- Output-path overrides (superpowers writes to `.features/<id>/` instead of its default locations)
+- Gate prerequisites (spec before plan, never skip)
+- work-state.md fence rules (write only inside comment fences, never advance `_ok` gates)
+- Execution mode selection (executing-plans by default, subagent-driven-development for multi-module)
+- Brainstorming trigger rules (when to use, when to skip)
+
+---
 
 ## Installation
 
-Plugin system handles installation automatically. Superpowers is declared as a dependency and auto-installed alongside this plugin.
-
-## What Gets Installed
-
-- **Work state:** `work-state.md` (current focus, features, backlog, PRs)
-- **Feature tracking:** `.features/<id>/` directories with 3 artifacts each (`feature.md`, `spec.md`, `plan.md`)
-- **Directory-scoped instructions:** `.features/AGENTS.md` (output-path overrides, gate rules, work-state.md conventions)
-- **Tracking file:** `.ai-workspace/plugins/lifecycle.md`
-
-## Skills
-
-### Writers (custom)
-- `plan-product` — Create product roadmap from vision
-- `write-feature` — Write feature brief (WHAT + WHY)
-- `write-spec` — Write design spec (HOW — architecture, contracts, data model)
-
-### Writers (upstream, via superpowers)
-- `superpowers:writing-plans` — Create implementation plan with inline tasks (output redirected to `.features/<id>/plan.md`)
-- `superpowers:brainstorming` — Optional design exploration before `write-spec`
-
-### Reviewers (custom)
-- `review-feature` — Audit feature.md vs contracts
-- `review-spec` — Audit spec.md vs feature.md coverage
-- `review-plan` — Audit plan.md vs spec coverage + task quality
-- `review-code` — Audit code diff vs spec + task DoD (thin-wraps superpowers' code reviewer)
-
-### Utilities
-- `archive-feature` — Move completed feature to archive
-
-## Lifecycle Gates
-
-Features move through 4 boolean gates tracked in `work-state.md`:
-
-| Gate | Meaning |
-|------|---------|
-| `spec_gen` | Spec file generated |
-| `spec_ok` | Spec approved |
-| `plan_gen` | Plan file generated |
-| `plan_ok` | Plan approved |
-
-## Quick Commands
+Plugin system handles installation automatically. `obra/superpowers` is declared as a hard dependency and auto-installed alongside this plugin.
 
 ```bash
-# Plan a product
-/lifecycle:plan-product
-
-# Promote roadmap item to feature
-/lifecycle:write-feature
-
-# Write design spec
-/lifecycle:write-spec
-
-# Create implementation plan (delegates to superpowers)
-# Just ask the agent: "create a plan for feature X"
-# The .features/AGENTS.md override directs output to the right location
+# In a consuming project:
+claude plugin marketplace add <path-to-this-repo>
+claude plugin install lifecycle@ornit-workspace
+/lifecycle:setup
 ```
 
 ## Sources
@@ -76,4 +125,4 @@ Features move through 4 boolean gates tracked in `work-state.md`:
 - Kiro's feature lifecycle methodology
 - Spec Kit patterns
 - Boris's backlog management
-- [obra/superpowers](https://github.com/obra/superpowers) — upstream planning + execution skills
+- [obra/superpowers](https://github.com/obra/superpowers) — upstream planning, execution, and code review

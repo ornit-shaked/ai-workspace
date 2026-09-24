@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Usage-cost investigation (idea stage, no code changed): root cause is kiddi-verse's `lifecycle-workflow.md` rule, not ai-workspace's plugin. doc-governance sharpened with 3 concrete cases (kiddi-verse rule, wrap's noisy lesson capture, narrative ADRs) plus a candidate principle: git holds why, working docs hold only current what. Next: user reviews both features; decide whether to move either to write-spec.
+Lifecycle v2.0.0 shipped (superpowers adoption). Next: push, test on other machines (superpowers auto-install, .features/AGENTS.md creation, output-path override, work-state.md fence safety). Phase 1 empirical validation still needed before declaring stable. Usage-cost and doc-governance features remain at idea stage.
 <!-- brain:current-focus-end -->
 
 ---

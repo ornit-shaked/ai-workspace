@@ -8,9 +8,11 @@
  */
 
 const installer = require('../../lib/installer.js');
+const hooks = require('./hooks.js');
 
 installer.run({
   pluginName: 'lifecycle',
   skillRoot: __dirname,
-  projectRoot: process.cwd()
+  projectRoot: process.cwd(),
+  hooks
 });

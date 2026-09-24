@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "node ./skills/setup/script.js",
+          "command": "node \"${DEVIN_PLUGIN_ROOT}/skills/setup/script.js\"",
           "timeout": 15
         }
       ]
