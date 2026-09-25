@@ -2,7 +2,7 @@
 
 Feature lifecycle management — from raw idea to shipped code.
 
-**Version:** 2.0.0 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) ~6.4.1 (auto-installed)
+**Version:** 2.1.0 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) ~6.4.1 (auto-installed)
 
 ---
 
@@ -20,21 +20,21 @@ Feature lifecycle management — from raw idea to shipped code.
  │  FEATURE LEVEL                                              │
  │                                                             │
  │  ① write-feature ──→ feature.md                             │
- │  ② review-feature ──→ feature.review.md                     │
+ │  ② review ──→ feature.review.md                             │
  │  ③ user approves                                            │
  │                         ┌──────────────────────────┐        │
  │  ④ brainstorming ·····→ │ brainstorm.md (optional) │        │
  │                         └──────────────────────────┘        │
  │  ⑤ write-spec ──→ spec.md ──→ spec_gen ✅                   │
- │  ⑥ review-spec ──→ spec.review.md                           │
+ │  ⑥ review ──→ spec.review.md                               │
  │  ⑦ user approves ──→ spec_ok ✅                              │
  │                                                             │
  │  ⑧ writing-plans ──→ plan.md ──→ plan_gen ✅                 │
- │  ⑨ review-plan ──→ plan.review.md                           │
+ │  ⑨ review ──→ plan.review.md                               │
  │  ⑩ user approves ──→ plan_ok ✅                              │
  │                                                             │
  │  ⑪ executing-plans / subagent-driven-development            │
- │  ⑫ review-code ──→ reviews/*.code.review.md                 │
+ │  ⑫ review ──→ reviews/*.code.review.md                     │
  │                                                             │
  │  ⑬ archive-feature ──→ moved to Completed                   │
  └─────────────────────────────────────────────────────────────┘
@@ -50,17 +50,17 @@ Feature lifecycle management — from raw idea to shipped code.
 | 1 | Product roadmap | `lifecycle:plan-product` | Custom | Turn raw idea into prioritized feature candidates with one-line WHY each | `product-roadmap.md` | — |
 | — | Backlog | — | Manual | Raw ideas not yet promoted to features. Live in work-state.md backlog section. | `work-state.md` | — |
 | 2 | Feature brief | `lifecycle:write-feature` | Custom | Problem, user, value, acceptance criteria, out-of-scope. Adds feature row to work-state.md. | `.features/<id>/feature.md` | — |
-| 3 | Review feature | `lifecycle:review-feature` | Custom | Audit feature.md against write-feature contract | `.features/<id>/feature.review.md` | — |
+| 3 | Review feature | `lifecycle:review` | Custom | Audit feature.md against feature-review policy | `.features/<id>/feature.review.md` | — |
 | 4 | Approve feature | — | User | User reads review, approves | — | — |
 | 5 | Design exploration | `superpowers:brainstorming` | Upstream | **Optional, not a gate.** Interactive Q&A when design is open/contested. Skip when feature.md is clear enough. | `.features/<id>/brainstorm.md` | — |
 | 6 | Design spec | `lifecycle:write-spec` | Custom | Architecture, contracts (internal + external with signatures), data model, edge cases, NFRs, design decisions | `.features/<id>/spec.md` | `spec_gen` |
-| 7 | Review spec | `lifecycle:review-spec` | Custom | Audit spec.md against feature.md coverage | `.features/<id>/spec.review.md` | — |
+| 7 | Review spec | `lifecycle:review` | Custom | Audit spec.md against spec-review policy | `.features/<id>/spec.review.md` | — |
 | 8 | Approve spec | — | User | User reads review, approves | — | `spec_ok` |
 | 9 | Implementation plan | `superpowers:writing-plans` | Upstream | Bite-sized checkbox tasks, file-structure section, interfaces block. Output redirected to `.features/<id>/plan.md` by `.features/AGENTS.md`. | `.features/<id>/plan.md` | `plan_gen` |
-| 10 | Review plan | `lifecycle:review-plan` | Custom | Audit plan: spec coverage, task granularity, dependency cycles, DoD verifiability | `.features/<id>/plan.review.md` | — |
+| 10 | Review plan | `lifecycle:review` | Custom | Audit plan against plan-review policy: spec coverage, task granularity, dependency cycles, DoD verifiability | `.features/<id>/plan.review.md` | — |
 | 11 | Approve plan | — | User | User reads review, approves. Feature enters implementation. | — | `plan_ok` |
 | 12 | Implementation | `superpowers:executing-plans` | Upstream | Execute tasks from plan.md. **Default mode.** Use `subagent-driven-development` only for multi-module parallel work. | Code changes | — |
-| 13 | Code review | `lifecycle:review-code` | Custom | Audit code diff against spec + task DoD from plan.md | `.features/<id>/reviews/<task>.code.review.md` | — |
+| 13 | Code review | `lifecycle:review` | Custom | Audit code diff against code-review policy: spec + task DoD from plan.md | `.features/<id>/reviews/<task>.code.review.md` | — |
 | 14 | Archive | `lifecycle:archive-feature` | Custom | Move feature to Completed in work-state.md. Requires `plan_ok = ✅`. | `work-state.md` updated | — |
 
 ---

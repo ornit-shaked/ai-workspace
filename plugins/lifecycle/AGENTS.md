@@ -5,12 +5,12 @@ Always-on rule for feature lifecycle management.
 ## When to use which skill
 
 - **Planning a product:** `plan-product`
-- **Promoting a roadmap item to a feature:** `write-feature` → `review-feature` → user approves
+- **Promoting a roadmap item to a feature:** `write-feature` → `review` (feature) → user approves
 - **Design exploration (optional, when approach is unclear):** `brainstorming`
-- **Writing a design spec:** `write-spec` → `review-spec` → user approves
-- **Creating an implementation plan:** `writing-plans` → `review-plan` → user approves. Output goes to `.features/<id>/plan.md` per `.features/AGENTS.md`.
+- **Writing a design spec:** `write-spec` → `review` (spec) → user approves
+- **Creating an implementation plan:** `writing-plans` → `review` (plan) → user approves. Output goes to `.features/<id>/plan.md` per `.features/AGENTS.md`.
 - **Implementing:** `executing-plans` (default) or `subagent-driven-development` (multi-module parallel work only)
-- **Reviewing code:** `review-code`
+- **Reviewing code:** `review` (code)
 - **Archiving a completed feature:** `archive-feature`
 
 ## Gates

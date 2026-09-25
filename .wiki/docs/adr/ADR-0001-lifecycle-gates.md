@@ -1,6 +1,6 @@
 # ADR-0001: Lifecycle Gates Architecture
 
-**Status:** Accepted  
+**Status:** Accepted (updated 2026-09-25)  
 **Date:** 2026-08-29  
 **Deciders:** Project Team
 
@@ -14,14 +14,14 @@ Features need structured progression from idea to implementation. Without clear 
 
 ## Decision
 
-Implement a 6-gate lifecycle system tracked in `work-state.md`:
+Implement a 4-gate lifecycle system tracked in `work-state.md`:
 
 1. **spec_gen** — Spec file generated (`.features/<id>/spec.md` exists)
 2. **spec_ok** — Spec approved by user
 3. **plan_gen** — Plan file generated (`.features/<id>/plan.md` exists)
 4. **plan_ok** — Plan approved by user
-5. **todo_gen** — Tasks file generated (`.features/<id>/tasks.md` exists)
-6. **todo_ok** — All tasks complete
+
+> **Update (v2.0.0, 2026-09-25):** Originally a 6-gate system with `todo_gen` and `todo_ok`. Those gates were removed when `write-tasks` and `review-tasks` were eliminated in favour of `superpowers:writing-plans`, which produces inline checkbox tasks inside `plan.md`. See `plan-v2.md` for the full rationale.
 
 Each gate is a boolean (✅ or ⬜) displayed in a table in `work-state.md`.
 
