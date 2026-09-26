@@ -9,5 +9,5 @@ Format: YYYY-MM-DD | topic | outcome (max 20 words after date)
 
 ---
 
-<!-- Sessions will be appended here by /wrap -->
+<!-- Newest entries go here, above older entries -->
 

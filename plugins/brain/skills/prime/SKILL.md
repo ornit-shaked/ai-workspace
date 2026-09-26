@@ -21,6 +21,7 @@ Read the following files to understand the current project context:
 
 1. Read `.project-brain/memory/history.md` — last 10 entries to understand recent work
 2. Read `work-state.md` (if it exists) — identify current focus and active features
+3. List `.project-brain/runbooks/` (if it exists) — read any runbook files found. These contain permanent how-to procedures (e.g., how to run the app, start the emulator). Apply them when relevant during the session without asking the user to re-explain.
 
 ## Print Summary
 
@@ -31,5 +32,6 @@ Then print a summary:
   approval flags), read them and suggest a concrete next step for that feature (e.g. "spec approved,
   not yet planned → write the plan"), not just the raw status
 - What happened in the last few sessions
+- Runbooks loaded: list names (or "none" if directory is empty/missing)
 
 Ask me to confirm or correct before proceeding.

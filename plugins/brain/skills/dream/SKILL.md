@@ -28,6 +28,7 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 
 | Lesson Pattern | Destination | Action |
 |---|---|---|
+| Recurring procedure (how to run/build/deploy/test) | `.project-brain/runbooks/<slug>.md` | Create runbook |
 | Soft preference, correction, behavioral fix | `instructions.md` | Diff |
 | Missing knowledge, project-specific rule | `CLAUDE.md` | Diff |
 | Idea, not actionable | `work-state.md` (Backlog section) | Route |
@@ -51,6 +52,7 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 |---|---|
 | `.project-brain/inbox/lessons.md` | Unprocessed lessons (primary input) |
 | `.project-brain/memory/instructions.md` | Where to add preferences/corrections + check for duplicates |
+| `.project-brain/runbooks/` (directory) | Where to create runbook files + check for duplicate how-tos |
 | `CLAUDE.md` (project root) | Where to add hard rules/knowledge + check for duplicates |
 | `work-state.md` | Check Backlog section for duplicate ideas/artifacts |
 | `.ai-workspace/plugins/` (directory) | List directory to discover installed plugins (for plugin feedback detection) |
@@ -83,11 +85,30 @@ Process one lesson at a time. Present proposal with **semantic analysis** and ro
   - Origin: YYYY-MM-DD | session-slug
 ```
 
+**For runbooks (howto):** Create a new file `.project-brain/runbooks/<slug>.md` with this structure:
+```markdown
+# <Title>
+
+**When:** <one-line description of when to use this>
+
+## Steps
+
+1. <step>
+2. <step>
+
+## Notes
+
+- <gotchas, flags, environment requirements>
+```
+Slug = lowercase-kebab-case derived from the procedure name (e.g., `run-python-app.md`).
+Check existing runbooks first — if a similar one exists, propose updating it instead of creating a new file.
+
 **For duplicates:** Alert user, ask if already tracked
 
 ## Duplicate Detection
 
 Check all relevant destinations:
+- `.project-brain/runbooks/` — check if a similar how-to runbook already exists
 - `work-state.md` (Backlog section) — match on keywords, artifact type, goal
 - `instructions.md` — check if similar preference/correction already exists
 - `CLAUDE.md` — check if similar rule/knowledge already exists
@@ -128,7 +149,7 @@ Summarize, don't copy verbatim. Archive is write-only.
    - **Apply changes** if approved (or tag as `plugin-feedback:<plugin-name>`)
 5. **Remove processed lessons** from `inbox/lessons.md` (keep only session header if all processed)
 6. **Archive** processed block to `inbox/archive/YYYY-MM-DD.md`
-7. Print summary: lessons processed, diffs applied, items added to backlog, plugin feedback tagged, discarded/duplicates
+7. Print summary: lessons processed, diffs applied, runbooks created, items added to backlog, plugin feedback tagged, discarded/duplicates
 
 ## Constraints
 
@@ -145,4 +166,5 @@ Summarize, don't copy verbatim. Archive is write-only.
 - **Verbose archive entries** — summarize lessons, don't copy verbatim text
 - **Tag-only routing** — must analyze lesson content, not just rely on tag hint
 - **Leaving processed lessons in inbox** — remove from inbox after archiving
-- **Skipping duplicate detection** — always check instructions.md and CLAUDE.md for similar rules
+- **Skipping duplicate detection** — always check runbooks/, instructions.md and CLAUDE.md for similar content
+- **Routing howto to instructions.md** — recurring procedures go to runbooks/, not instructions.md. Instructions is for preferences and corrections.

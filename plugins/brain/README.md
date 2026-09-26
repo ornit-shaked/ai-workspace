@@ -2,7 +2,7 @@
 
 Official plugin for project memory and session management.
 
-**Version:** 1.0.3 • **License:** MIT
+**Version:** 1.1.0 • **License:** MIT
 
 ## What This Does
 
@@ -17,6 +17,7 @@ Plugin system handles installation automatically.
 ## What Gets Installed
 
 - **Project memory:** `.project-brain/memory/` (history, instructions)
+- **Runbooks:** `.project-brain/runbooks/` (permanent how-to procedures — loaded at session start)
 - **Lesson capture:** `.project-brain/inbox/lessons.md`
 - **Work state:** `work-state.md` (current focus, features, backlog)
 - **Global config:** `about-me.md`, `CLAUDE.md` in agent config directory
@@ -59,10 +60,15 @@ Five auto-loaded skills:
 - Read at start of every session
 - Updated by `dream` skill
 
+**Runbooks (`.project-brain/runbooks/`):**
+- Permanent how-to procedures (how to run the app, start emulator, deploy, etc.)
+- Created by `dream` skill from `howto` lessons
+- Read by `prime` at session start — agents never ask twice
+
 **Lesson Capture (`.project-brain/inbox/lessons.md`):**
 - Temporary holding area for learnings
 - Processed by `dream` skill
-- Routed to instructions, backlog, or archive
+- Routed to runbooks, instructions, backlog, or archive
 
 **Work State (`work-state.md`):**
 - Current focus
