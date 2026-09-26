@@ -2,7 +2,7 @@
 
 Feature lifecycle management — from raw idea to shipped code.
 
-**Version:** 2.1.0 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) ~6.4.1 (auto-installed)
+**Version:** 2.1.1 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) ~6.4.1 (auto-installed)
 
 ---
 

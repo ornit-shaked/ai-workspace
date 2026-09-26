@@ -3,7 +3,7 @@
   "owner": {
     "name": "Ornit Shaked"
   },
-  "allowCrossMarketplaceDependenciesOn": ["obra/superpowers"],
+  "allowCrossMarketplaceDependenciesOn": ["claude-plugins-official"],
   "plugins": [
     {
       "name": "brain",
