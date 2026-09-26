@@ -109,7 +109,7 @@ Append results to `research-native-planning.md` or create `phase-1-results.md`. 
 **`plugins/lifecycle/.claude-plugin/plugin.json`** — add:
 ```json
 "dependencies": [
-  { "name": "superpowers", "marketplace": "obra/superpowers", "version": "~6.4.1" }
+  { "name": "superpowers", "marketplace": "claude-plugins-official" }
 ]
 ```
 
@@ -122,7 +122,7 @@ Append results to `research-native-planning.md` or create `phase-1-results.md`. 
 
 **Root `/.claude-plugin/marketplace.json`** — add:
 ```json
-"allowCrossMarketplaceDependenciesOn": ["obra/superpowers"]
+"allowCrossMarketplaceDependenciesOn": ["claude-plugins-official"]
 ```
 
 ### Task 2.2: Remove replaced skills
