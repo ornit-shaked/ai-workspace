@@ -4,7 +4,7 @@ slug: project-brain-plugin
 title: Project Brain Plugin — Todo
 owner: Ornit Shaked
 created: 2026-08-09
-status: implementing
+status: deferred  # remaining T-D1..T-D5 are optional memory-maintenance ideas
 spec_gen: ✅
 spec_ok: ✅
 plan_gen: ✅

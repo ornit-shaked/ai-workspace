@@ -4,7 +4,7 @@ slug: flutter-plugin-v1.1
 title: Flutter Plugin v1.1 — Tasks
 owner: Ornit Shaked
 created: 2026-08-25
-status: todo-draft
+status: superseded  # targets pre-migration plugins/flutter-plugin paths
 spec_gen: ✅
 spec_ok: ⬜
 plan_gen: ✅

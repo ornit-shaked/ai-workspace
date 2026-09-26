@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Lifecycle v2.0.0 shipped (superpowers adoption). Next: push, test on other machines (superpowers auto-install, .features/AGENTS.md creation, output-path override, work-state.md fence safety). Phase 1 empirical validation still needed before declaring stable. Usage-cost and doc-governance features remain at idea stage.
+Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes handoff, 4 stale features closed. Next: review + commit the diff, then bump/reinstall brain and confirm hook output in a fresh session; then doc-governance and usage-cost-optimization at write-spec. Optional: remove closed rows from features table.
 <!-- brain:current-focus-end -->
 
 ---

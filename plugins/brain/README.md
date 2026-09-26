@@ -2,7 +2,7 @@
 
 Official plugin for project memory and session management.
 
-**Version:** 1.0.3 • **License:** MIT
+**Version:** 1.1.0 • **License:** MIT
 
 ## What This Does
 

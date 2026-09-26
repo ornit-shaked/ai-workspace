@@ -46,9 +46,15 @@ Add lessons to `.project-brain/inbox/lessons.md` (below `---`, above older entri
 
 If zero lessons qualify, write none. An empty inbox is fine.
 
-## 3. Update work-state.md
+## 3. Write the handoff (work-state.md)
 
-Mark completed tasks `[x]`. Update feature status if advanced. Add new tasks that emerged.
+The next session starts from this — make it specific enough that the user never has to re-explain.
+
+- Rewrite the text between `<!-- brain:current-focus-begin -->` and `<!-- brain:current-focus-end -->`
+  (max 60 words): what is in flight, the **exact next step** (feature + task id), and any blocker or open
+  decision. Replace it; don't append.
+- Tick finished tasks `[x]` in the feature's `tasks.md`/`todo.md`; update the gate columns if a stage advanced.
+- Add new tasks that emerged.
 
 ## 4. Print summary
 

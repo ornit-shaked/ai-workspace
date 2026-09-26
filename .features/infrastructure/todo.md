@@ -4,7 +4,7 @@ slug: infrastructure
 title: AI-Workspace Core Installer Infrastructure — Todo
 owner: Ornit Shaked
 created: 2026-08-09
-status: implementing
+status: superseded  # custom CLI removed in official-plugin-migration
 spec_gen: ✅
 spec_ok: ✅
 plan_gen: ✅

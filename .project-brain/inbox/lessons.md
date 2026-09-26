@@ -21,6 +21,7 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ---
 
+2026-09-26 | preference | brain-prime | claude | Session-start hook should show digest of open features and next tasks, not raw history
 2026-09-26 | correction | lifecycle-deps | claude | Claude Code plugin dependency `marketplace` must be a marketplace NAME (e.g. claude-plugins-official), not a GitHub path like obra/superpowers
 2026-09-26 | correction | lifecycle-deps | claude | No version range on a dependency whose upstream does not tag releases as Claude Code expects (obra/superpowers uses plain vX.Y.Z; range failed "no git tag satisfying >=6.4.1 <6.5.0-0"); leave unpinned
 2026-09-26 | missing-knowledge | lifecycle-deps | claude | Consuming marketplace.json must list the dependency marketplace in allowCrossMarketplaceDependenciesOn
