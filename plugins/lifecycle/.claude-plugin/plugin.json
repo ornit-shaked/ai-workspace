@@ -1,6 +1,6 @@
 {
   "name": "lifecycle",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Feature lifecycle management — structured progression from idea to implementation",
   "author": {
     "name": "Ornit Shaked",
@@ -18,6 +18,6 @@
     "superpowers"
   ],
   "dependencies": [
-    { "name": "superpowers", "marketplace": "claude-plugins-official", "version": "~6.4.1" }
+    { "name": "superpowers", "marketplace": "claude-plugins-official" }
   ]
 }
