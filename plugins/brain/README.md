@@ -2,7 +2,7 @@
 
 Official plugin for project memory and session management.
 
-**Version:** 1.1.0 • **License:** MIT
+**Version:** 1.2.0 • **License:** MIT
 
 ## What This Does
 
@@ -17,19 +17,20 @@ Plugin system handles installation automatically.
 ## What Gets Installed
 
 - **Project memory:** `.project-brain/memory/` (history, instructions)
-- **Runbooks:** `.project-brain/runbooks/` (permanent how-to procedures — loaded at session start)
 - **Lesson capture:** `.project-brain/inbox/lessons.md`
+- **Runbooks:** `.wiki/runbooks/` (operational procedures — searched on-demand)
 - **Work state:** `work-state.md` (current focus, features, backlog)
 - **Global config:** `about-me.md`, `CLAUDE.md` in agent config directory
 - **Tracking file:** `.ai-workspace/plugins/brain.md`
 
 ## Skills
 
-Five auto-loaded skills:
+Six auto-loaded skills:
 - `setup` — Bootstrap memory system for new projects
-- `prime` — Session start (load context + history)
+- `prime` — Session start (load context + history + runbooks index)
 - `wrap` — Session end (update history + capture learnings)
 - `dream` — Process lessons from inbox
+- `create-runbook` — Create operational procedure (how to run/build/deploy)
 - `commit-push-pr` — Git workflow (commit, push, create PR)
 
 ## Quick Commands
@@ -60,15 +61,16 @@ Five auto-loaded skills:
 - Read at start of every session
 - Updated by `dream` skill
 
-**Runbooks (`.project-brain/runbooks/`):**
-- Permanent how-to procedures (how to run the app, start emulator, deploy, etc.)
-- Created by `dream` skill from `howto` lessons
-- Read by `prime` at session start — agents never ask twice
-
 **Lesson Capture (`.project-brain/inbox/lessons.md`):**
 - Temporary holding area for learnings
 - Processed by `dream` skill
-- Routed to runbooks, instructions, backlog, or archive
+- Routed to instructions, backlog, or archive
+
+**Runbooks (`.wiki/runbooks/`):**
+- Operational procedures (how to run the app, start emulator, deploy, etc.)
+- Created with `/create-runbook` skill
+- Indexed in `.wiki/runbooks/index.md` — agents search on-demand, not loaded at session start
+- Agent instructions in `.wiki/runbooks/AGENTS.md` (how to search and maintain)
 
 **Work State (`work-state.md`):**
 - Current focus

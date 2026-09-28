@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Installation manifest for brain plugin",
   "global_files": [
     {
@@ -31,11 +31,19 @@
     {
       "source": "templates/project/work-state.md",
       "target": "work-state.md"
+    },
+    {
+      "source": "templates/project/.wiki/runbooks/AGENTS.md",
+      "target": ".wiki/runbooks/AGENTS.md"
+    },
+    {
+      "source": "templates/project/.wiki/runbooks/index.md",
+      "target": ".wiki/runbooks/index.md"
     }
   ],
   "project_dirs": [
     ".project-brain/inbox/archive",
-    ".project-brain/runbooks",
+    ".wiki/runbooks",
     ".ai-workspace/plugins"
   ]
 }

@@ -32,28 +32,18 @@ Add lessons to `.project-brain/inbox/lessons.md` (below `---`, above older entri
 1. Something actually happened in the session (not a suggestion, not a plan, not a hypothetical).
 2. The user confirmed or applied it — rejected suggestions are NOT lessons.
 3. It teaches something reusable for future sessions (not a one-off fact).
-4. It is NOT already covered in `instructions.md`, `AGENTS.md`, or `.project-brain/runbooks/`.
+4. It is NOT already covered in `instructions.md` or `AGENTS.md`.
 
 **Each lesson = one line, max 15 words.** State the rule or fact, not the story.
 
 **Good:** `2026-09-25 | correction | wrap-fix | devin | Wrap must not log rejected suggestions as lessons`
 **Bad:** `2026-09-25 | correction | wrap-fix | devin | During the session we discussed improving the wrap skill and the user pointed out that sometimes lessons are written about suggestions that were rejected which is incorrect behavior`
 
-### How-to lessons (tag: `howto`)
-
-When the user explains a recurring procedure (how to run the app, start the emulator, deploy, etc.), capture it with the `howto` tag. Include enough detail so DREAM can create a runbook.
-
-**Good:** `2026-09-26 | howto | session-name | devin | Run Python app: cd backend && python -m uvicorn main:app --reload`
-**Bad:** `2026-09-26 | howto | session-name | devin | The user showed how to run things`
-
-**Recognize how-to patterns:** User says "this is how you...", user corrects agent on how to run/build/deploy something, user explains a multi-step procedure they'll need again.
-
-### Do NOT capture
-
+**Do NOT capture:**
 - Suggestions you made that the user rejected or ignored.
 - Things you planned but didn't execute.
 - Restatements of what the task was ("we worked on X" — that's history, not a lesson).
-- Facts already in `instructions.md`, `AGENTS.md`, or runbooks.
+- Facts already in `instructions.md` or `AGENTS.md`.
 - Intermediate debugging steps (only the final fix/insight, if reusable).
 - Generic knowledge the agent should already know (e.g., "use git add before commit").
 

@@ -17,7 +17,6 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 - `candidate-hook` — Check that should always run automatically
 - `standard` — Pattern that should become a coding standard
 - `missing-knowledge` — Context the agent lacked and should know
-- `howto` — Recurring procedure the user explained (e.g., how to run app, start emulator)
 - `idea` — Open-ended idea for future consideration
 
 ---
