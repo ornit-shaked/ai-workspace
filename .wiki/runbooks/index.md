@@ -2,4 +2,4 @@
 
 | Name | When to Use | File |
 |------|-------------|------|
-| *(empty — add runbooks with `/create-runbook`)* | | |
+| Commit, Push, and Create PR | Ready to commit and push work, optionally creating a pull request | [commit-push-pr.md](commit-push-pr.md) |

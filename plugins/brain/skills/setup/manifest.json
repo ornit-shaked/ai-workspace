@@ -39,6 +39,10 @@
     {
       "source": "templates/project/.wiki/runbooks/index.md",
       "target": ".wiki/runbooks/index.md"
+    },
+    {
+      "source": "templates/project/.wiki/runbooks/commit-push-pr.md",
+      "target": ".wiki/runbooks/commit-push-pr.md"
     }
   ],
   "project_dirs": [

@@ -12,29 +12,48 @@ When you need a procedure (e.g., "how to run the app", "how to deploy"):
 
 **Do NOT load all runbooks** — search the index on-demand.
 
-## How to Maintain
+## How to Create a Runbook
 
-When creating or updating runbooks:
+When adding a new operational procedure:
 
-1. **Create the runbook file** as `.wiki/runbooks/<slug>.md` (lowercase-kebab-case)
-2. **Update the index** — add a row to `index.md` in alphabetical order
-3. **Use the template:**
-   ```markdown
-   # <Title>
-   
-   **When:** <one-line description>
-   
-   ## Steps
-   
-   1. ...
-   2. ...
-   
-   ## Notes
-   
-   - <gotchas, flags, requirements>
+### Steps
+
+1. **Create the runbook file**
+   - Path: `.wiki/runbooks/<slug>.md`
+   - Slug: lowercase-kebab-case (e.g., `run-python-app`, `deploy-staging`)
+   - Use this template:
+     ```markdown
+     # <Title>
+     
+     **When:** <one-line description>
+     
+     ## Steps
+     
+     1. ...
+     2. ...
+     
+     ## Notes
+     
+     - <gotchas, flags, requirements>
+     ```
+
+2. **Update the index**
+   - Edit `.wiki/runbooks/index.md`
+   - Add a row: `| <Title> | <When> | [<slug>.md](<slug>.md) |`
+   - Insert in **alphabetical order** by title
+   - Remove the "(empty)" placeholder if this is the first runbook
+
+3. **Commit both files**
+   ```bash
+   git add .wiki/runbooks/<slug>.md .wiki/runbooks/index.md
+   git commit -m "Add <title> runbook"
    ```
 
-**Use `/create-runbook` skill** — it handles formatting and index updates automatically.
+### Notes
+
+- Keep runbooks short (< 50 lines) — they're loaded on-demand
+- One procedure per file
+- If a runbook becomes outdated, update it in place (don't create a new one)
 
 ## Index Format
 

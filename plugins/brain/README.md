@@ -25,13 +25,11 @@ Plugin system handles installation automatically.
 
 ## Skills
 
-Six auto-loaded skills:
+Four auto-loaded skills:
 - `setup` — Bootstrap memory system for new projects
 - `prime` — Session start (load context + history + runbooks index)
 - `wrap` — Session end (update history + capture learnings)
 - `dream` — Process lessons from inbox
-- `create-runbook` — Create operational procedure (how to run/build/deploy)
-- `commit-push-pr` — Git workflow (commit, push, create PR)
 
 ## Quick Commands
 
@@ -44,10 +42,9 @@ Six auto-loaded skills:
 
 # Process lessons
 /brain:dream
-
-# Commit and push
-/brain:commit-push-pr
 ```
+
+**Operational procedures** (commit/push, run app, deploy) are in `.wiki/runbooks/` — search the index when needed.
 
 ## Memory System
 
@@ -67,10 +64,10 @@ Six auto-loaded skills:
 - Routed to instructions, backlog, or archive
 
 **Runbooks (`.wiki/runbooks/`):**
-- Operational procedures (how to run the app, start emulator, deploy, etc.)
-- Created with `/create-runbook` skill
+- Operational procedures (commit/push, run app, deploy, etc.)
+- Created by following `.wiki/runbooks/AGENTS.md` (how to create a runbook)
 - Indexed in `.wiki/runbooks/index.md` — agents search on-demand, not loaded at session start
-- Agent instructions in `.wiki/runbooks/AGENTS.md` (how to search and maintain)
+- Includes `commit-push-pr.md` by default (git workflow)
 
 **Work State (`work-state.md`):**
 - Current focus
