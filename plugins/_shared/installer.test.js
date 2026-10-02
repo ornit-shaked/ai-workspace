@@ -153,6 +153,52 @@ test('upsertTrackingSection updates the root section in place when the plugin it
   assert.equal(isInstalled(projectRoot, 'flutter', '1.1.0'), true);
 });
 
+test('upsertTrackingSection handles CRLF line endings (Windows checkouts)', () => {
+  const projectRoot = makeTempProject();
+  writeTrackingFile(
+    projectRoot,
+    'flutter',
+    '# flutter\r\n\r\n<!-- component:flutter v1.0.0 -->\r\nInstalled 2026-01-01 (v1.0.0)\r\n\r\n' +
+      '[Plugin Documentation](https://example.com/flutter)\r\n'
+  );
+  const trackingPath = path.join(projectRoot, '.ai-workspace/plugins/flutter.md');
+
+  upsertTrackingSection(trackingPath, {
+    pluginName: 'flutter',
+    componentId: 'flame',
+    version: '1.0.0',
+    installDate: '2026-02-02'
+  });
+
+  const content = fs.readFileSync(trackingPath, 'utf-8');
+  assert.match(content, /## flame\r\n<!-- component:flame v1\.0\.0 -->\r\nInstalled 2026-02-02 \(v1\.0\.0\)/);
+  assert.equal(isInstalled(projectRoot, 'flutter', '1.0.0', 'flame'), true);
+});
+
+test('upsertTrackingSection updates a legacy root section (CRLF, no marker yet) in place', () => {
+  const projectRoot = makeTempProject();
+  writeTrackingFile(
+    projectRoot,
+    'brain',
+    '# brain\r\n\r\nInstalled 2026-09-15 (v1.0.0)\r\n\r\n' +
+      '[Plugin Documentation](https://example.com/brain)\r\n'
+  );
+  const trackingPath = path.join(projectRoot, '.ai-workspace/plugins/brain.md');
+
+  upsertTrackingSection(trackingPath, {
+    pluginName: 'brain',
+    componentId: 'brain',
+    version: '1.1.0',
+    installDate: '2026-10-02'
+  });
+
+  const content = fs.readFileSync(trackingPath, 'utf-8');
+  const rootHeadingCount = (content.match(/^# brain$/gm) || []).length;
+  assert.equal(rootHeadingCount, 1, 'must not duplicate the root heading');
+  assert.match(content, /# brain\r\n\r\n<!-- component:brain v1\.1\.0 -->\r\nInstalled 2026-10-02 \(v1\.1\.0\)/);
+  assert.equal(isInstalled(projectRoot, 'brain', '1.1.0'), true);
+});
+
 test('installProjectFiles upserts the tracking file section instead of skipping it when it already exists', () => {
   const projectRoot = makeTempProject();
   const skillRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'installer-skill-'));

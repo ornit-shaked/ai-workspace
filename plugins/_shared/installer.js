@@ -109,28 +109,35 @@ function escapeRegExp(str) {
  */
 function upsertTrackingSection(trackingPath, { pluginName, componentId, version, installDate }) {
   let content = fs.readFileSync(trackingPath, 'utf-8');
+  // Match the file's own line endings — a Windows checkout (git autocrlf)
+  // leaves tracking files as CRLF, and a literal \n-only regex silently
+  // never matches, which previously surfaced as "missing root section"
+  // on every real CRLF project.
+  const eol = content.includes('\r\n') ? '\r\n' : '\n';
+  const nl = escapeRegExp(eol);
+
   const marker = componentMarker(componentId, version);
   const isRoot = componentId === pluginName;
   const heading = isRoot ? `# ${pluginName}` : `## ${componentId}`;
   const headingLine = escapeRegExp(heading);
 
   const sectionBodyRe = isRoot
-    ? new RegExp(`(^${headingLine}\\n\\n)(?:<!-- component:[^\\n]*-->\\n)?Installed [^\\n]*\\n`, 'm')
-    : new RegExp(`(^${headingLine}\\n)(?:<!-- component:[^\\n]*-->\\n)?Installed [^\\n]*\\n`, 'm');
+    ? new RegExp(`(^${headingLine}${nl}${nl})(?:<!-- component:[^\\r\\n]*-->${nl})?Installed [^\\r\\n]*${nl}`, 'm')
+    : new RegExp(`(^${headingLine}${nl})(?:<!-- component:[^\\r\\n]*-->${nl})?Installed [^\\r\\n]*${nl}`, 'm');
 
-  const newBody = `$1${marker}\nInstalled ${installDate} (v${version})\n`;
+  const newBody = `$1${marker}${eol}Installed ${installDate} (v${version})${eol}`;
 
   if (sectionBodyRe.test(content)) {
     content = content.replace(sectionBodyRe, newBody);
   } else if (isRoot) {
     throw new Error(`Tracking file ${trackingPath} is missing its root "${heading}" section`);
   } else {
-    const newSection = `## ${componentId}\n${marker}\nInstalled ${installDate} (v${version})\n`;
-    const docLinkRe = /\n(\[[^\]]*\]\([^\n]*\)\n?)$/;
+    const newSection = `## ${componentId}${eol}${marker}${eol}Installed ${installDate} (v${version})${eol}`;
+    const docLinkRe = new RegExp(`${nl}(\\[[^\\]]*\\]\\([^\\r\\n]*\\)${nl}?)$`);
     if (docLinkRe.test(content)) {
-      content = content.replace(docLinkRe, `\n${newSection}\n$1`);
+      content = content.replace(docLinkRe, `${eol}${newSection}${eol}$1`);
     } else {
-      content = content.replace(/\n*$/, '\n') + `\n${newSection}`;
+      content = content.replace(new RegExp(`(?:${nl})*$`), eol) + `${eol}${newSection}`;
     }
   }
 
