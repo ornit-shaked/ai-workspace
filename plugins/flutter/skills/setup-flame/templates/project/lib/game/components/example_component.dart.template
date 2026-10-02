@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 /// Demonstrates this plugin's Flame update-loop pattern — delete once real
 /// game components exist (see `docs/flame-rive-integration.md`).
 class ExampleComponent extends PositionComponent {
+  /// Creates an [ExampleComponent] moving at [velocity].
   ExampleComponent({
     required this.velocity,
     super.position,

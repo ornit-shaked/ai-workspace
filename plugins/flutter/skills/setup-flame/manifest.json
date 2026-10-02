@@ -1,0 +1,48 @@
+{
+  "version": "1.2.0",
+  "description": "Installation manifest for flutter plugin's Flame profile",
+  "global_files": [],
+  "project_files": [
+    { "source": "templates/project/.ai-workspace/plugins/flutter.md.template", "target": ".ai-workspace/plugins/flutter.md" },
+    { "source": "templates/project/docs/adr/ADR-0009-flame-runtime-boundary.md", "target": "docs/adr/ui/ADR-0009-flame-runtime-boundary.md" },
+    { "source": "templates/project/docs/flame-profile.md", "target": "docs/flame-profile.md" },
+    { "source": "templates/project/lib/game/game/app_game.dart.template", "target": "lib/game/game/app_game.dart" },
+    { "source": "templates/project/lib/game/components/example_component.dart.template", "target": "lib/game/components/example_component.dart" },
+    { "source": "templates/project/test/game/components/example_component_test.dart.template", "target": "test/game/components/example_component_test.dart" }
+  ],
+  "project_dirs": [
+    "lib/game/game",
+    "lib/game/world",
+    "lib/game/components",
+    "lib/game/systems",
+    "lib/game/adapters/bloc",
+    "lib/game/adapters/rive",
+    "assets/sprites",
+    "assets/audio/music",
+    "assets/audio/sfx",
+    "assets/audio/voice",
+    "assets/tiles",
+    "test/game/components",
+    "test/game/systems",
+    "test/game/game",
+    "integration_test/game"
+  ],
+  "pubspec_deps": {
+    "dependencies": {
+      "flame": "^1.38.2",
+      "flame_bloc": "^1.12.24"
+    },
+    "dev_dependencies": {
+      "flame_test": "^2.3.1"
+    }
+  },
+  "pubspec_flutter_config": {
+    "assets": [
+      "assets/sprites/",
+      "assets/audio/music/",
+      "assets/audio/sfx/",
+      "assets/audio/voice/",
+      "assets/tiles/"
+    ]
+  }
+}
