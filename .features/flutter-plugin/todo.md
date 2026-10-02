@@ -4,7 +4,7 @@ slug: flutter-plugin
 title: Flutter Delta Plugin — Todo
 owner: Ornit Shaked
 created: 2026-08-09
-status: implementing
+status: superseded  # old plugin layout replaced by plugins/flutter in official-plugin-migration
 spec_gen: ✅
 spec_ok: ✅
 plan_gen: ✅

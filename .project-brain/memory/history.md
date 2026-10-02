@@ -9,6 +9,7 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-09-26 | brain-prime | Session start now prints compact status digest; wrap writes handoff; four stale features closed
 2026-09-25 | lifecycle-v2.0.0 | Adopted obra/superpowers as hard dependency; removed write-plan, write-tasks, review-tasks (3 skills, 2 agents); kept write-spec (structural gap with brainstorming); created .features/AGENTS.md template with output-path overrides and fence rules; adapted review-plan for combined plan+tasks format; thin-wrapped review-code with superpowers reviewer; gate model reduced to 4 gates; bumped to v2.0.0 | plugins/lifecycle/* (22 files), .claude-plugin/marketplace.json, .features/lifecycle-management/research-native-planning.md, .features/lifecycle-management/plan-v2.md
 
 2026-09-24 | usage-cost-investigation | Diagnosed kiddi-verse's `lifecycle-workflow.md` rule (auto-chained write/review loop across 4 artifacts, no per-stage checkpoint) as the likely root cause of heavy Claude Code usage; created usage-cost-optimization feature; sharpened doc-governance with kiddi-verse rule case, wrap's noisy lesson capture, narrative-ADR evidence, and a candidate "git holds why, docs hold current what" principle. No plugin/rule code changed. | .features/usage-cost-optimization/feature.md, .features/doc-governance/feature.md, work-state.md
