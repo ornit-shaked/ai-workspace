@@ -10,3 +10,4 @@ Always-on rule for Flutter development with Bloc/Cubit, Freezed, and very_good_a
 - When handling async operations that can fail, pull in the manual rule `rules/error-handling.md`.
 - For new projects, use the `setup` skill to bootstrap with ADRs, folder structure, and CI.
 - When building Flame games or components, pull in the manual rule `rules/flame.md`.
+- When integrating Rive animations, pull in the manual rule `rules/rive.md`.
