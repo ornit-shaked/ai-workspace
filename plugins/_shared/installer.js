@@ -89,6 +89,55 @@ function isInstalled(projectRoot, pluginName, version, componentId = pluginName)
   return content.includes(componentMarker(componentId, version));
 }
 
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Append or update one component's section in a plugin's tracking file
+ * (`.ai-workspace/plugins/<pluginName>.md`), instead of the generic
+ * copy-if-missing behavior used for every other project file.
+ *
+ * The tracking file is shared across every skill of a plugin (e.g.
+ * flutter's `setup`, `setup-flame`, `setup-rive`), so once it exists,
+ * installing another component must add/update that component's own
+ * section rather than being skipped because the file is already there.
+ *
+ * `componentId === pluginName` targets the root `# <pluginName>` section
+ * (re-running the base setup skill, e.g. after a version bump);
+ * otherwise it targets/creates a `## <componentId>` section.
+ */
+function upsertTrackingSection(trackingPath, { pluginName, componentId, version, installDate }) {
+  let content = fs.readFileSync(trackingPath, 'utf-8');
+  const marker = componentMarker(componentId, version);
+  const isRoot = componentId === pluginName;
+  const heading = isRoot ? `# ${pluginName}` : `## ${componentId}`;
+  const headingLine = escapeRegExp(heading);
+
+  const sectionBodyRe = isRoot
+    ? new RegExp(`(^${headingLine}\\n\\n)(?:<!-- component:[^\\n]*-->\\n)?Installed [^\\n]*\\n`, 'm')
+    : new RegExp(`(^${headingLine}\\n)(?:<!-- component:[^\\n]*-->\\n)?Installed [^\\n]*\\n`, 'm');
+
+  const newBody = `$1${marker}\nInstalled ${installDate} (v${version})\n`;
+
+  if (sectionBodyRe.test(content)) {
+    content = content.replace(sectionBodyRe, newBody);
+  } else if (isRoot) {
+    throw new Error(`Tracking file ${trackingPath} is missing its root "${heading}" section`);
+  } else {
+    const newSection = `## ${componentId}\n${marker}\nInstalled ${installDate} (v${version})\n`;
+    const docLinkRe = /\n(\[[^\]]*\]\([^\n]*\)\n?)$/;
+    if (docLinkRe.test(content)) {
+      content = content.replace(docLinkRe, `\n${newSection}\n$1`);
+    } else {
+      content = content.replace(/\n*$/, '\n') + `\n${newSection}`;
+    }
+  }
+
+  fs.writeFileSync(trackingPath, content, 'utf-8');
+  return content;
+}
+
 /**
  * Copy file with placeholder replacement
  */
@@ -143,15 +192,29 @@ function installGlobalFiles(manifest, skillRoot, replacements, contentTransforme
 
 /**
  * Install project files
+ *
+ * `trackingContext`, when given, identifies this plugin's tracking file
+ * (`.ai-workspace/plugins/<pluginName>.md`) among `project_files`. That one
+ * target is append-not-skip: if it already exists, its component's section
+ * is upserted (see upsertTrackingSection) instead of the file being left
+ * alone, since the file is shared by every skill of the plugin.
  */
-function installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers) {
+function installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers, trackingContext = null) {
   const files = {};
+  const trackingTarget = trackingContext
+    ? `.ai-workspace/plugins/${trackingContext.pluginName}.md`
+    : null;
 
   for (const fileSpec of manifest.project_files || []) {
     const sourcePath = path.join(skillRoot, fileSpec.source);
     const targetPath = path.join(projectRoot, fileSpec.target);
 
     if (fs.existsSync(targetPath)) {
+      if (trackingTarget && fileSpec.target === trackingTarget) {
+        upsertTrackingSection(targetPath, trackingContext);
+        files[fileSpec.target] = { status: 'updated', reason: 'component section upserted' };
+        continue;
+      }
       files[fileSpec.target] = { status: 'skipped', reason: 'already exists' };
       continue;
     }
@@ -215,11 +278,13 @@ async function run(options) {
 
     // Prepare replacements
     const projectName = path.basename(projectRoot);
+    const installDate = new Date().toISOString().split('T')[0];
     const replacements = {
       '\\[project-name\\]': projectName,
       '\\[package-name\\]': projectName.toLowerCase().replace(/[^a-z0-9_]/g, '_'),
       '\\[plugin-version\\]': version,
-      '\\[install-date\\]': new Date().toISOString().split('T')[0],
+      '\\[install-date\\]': installDate,
+      '\\[component-marker\\]': componentMarker(componentId, version),
       '\\[global-config-dir\\]': getGlobalConfigDir(),
       ...(hooks.getReplacements ? hooks.getReplacements({ projectRoot, pluginRoot, manifest, version }) : {})
     };
@@ -235,7 +300,12 @@ async function run(options) {
 
     // Install files
     const globalFiles = installGlobalFiles(manifest, skillRoot, replacements, contentTransformers);
-    const projectFiles = installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers);
+    const projectFiles = installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers, {
+      pluginName,
+      componentId,
+      version,
+      installDate
+    });
     const projectDirs = createProjectDirs(manifest, projectRoot);
 
     // Post-install hook
@@ -268,6 +338,7 @@ module.exports = {
   getPluginVersion,
   isInstalled,
   componentMarker,
+  upsertTrackingSection,
   copyFile,
   installGlobalFiles,
   installProjectFiles,
