@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes handoff, 4 stale features closed. Next: review + commit the diff, then bump/reinstall brain and confirm hook output in a fresh session; then doc-governance and usage-cost-optimization at write-spec. Optional: remove closed rows from features table.
+flutter-flame-rive-support: feature→spec→plan→tasks all approved (3 review rounds each, real bugs caught and fixed). Next: implement via tasks.md's 31 tasks (W1 installer fix first, W2/W3 parallel, W4 join) — different session/agent, tasks.md written to be self-contained. Also pending from before: doc-governance and usage-cost-optimization still at write-spec; Brain 1.1.0 diff still uncommitted.
 <!-- brain:current-focus-end -->
 
 ---
@@ -24,7 +24,7 @@ Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes hando
 | **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 <!-- lifecycle:features-end -->
 
 ---
