@@ -402,3 +402,206 @@ It can also drive screenshots with:
 - pointer input
 
 This makes
+
+---
+
+# Proposed Project Structure — Flutter + Flame + Rive
+
+kiddi-verse/
+│
+├── assets/
+│   ├── data/
+│   ├── fonts/
+│   │   ├── Lexend/
+│   │   └── Rubik/
+│   ├── images/
+│   │   ├── avatars/
+│   │   ├── brand/
+│   │   └── learning/
+│   ├── audio/                         # Flame / game audio
+│   │   ├── music/
+│   │   ├── sfx/
+│   │   └── voice/
+│   ├── tiles/                         # Optional — only if tile maps are used
+│   └── rive/                          # Runtime .riv assets
+│       ├── characters/
+│       ├── ui/
+│       └── effects/
+│
+├── rive_projects/                     # Optional — Rive authoring/source projects
+│
+├── docs/
+│   └── adr/
+│       ├── ...existing Flutter ADRs
+│       ├── ADR-flame-runtime-boundary.md
+│       ├── ADR-rive-runtime-boundary.md
+│       └── ADR-state-ownership-flutter-flame-rive.md
+│
+├── example/
+│
+├── integration_test/
+│   ├── ...existing tests
+│   ├── game/
+│   └── rive/
+│
+├── ios/
+│
+├── lib/
+│   ├── config/
+│   │   └── ...existing
+│   │
+│   ├── data/
+│   │   └── ...existing
+│   │
+│   ├── domain/
+│   │   └── ...existing
+│   │
+│   ├── l10n/
+│   │   └── ...existing
+│   │
+│   ├── routing/
+│   │   └── ...existing
+│   │
+│   ├── ui/
+│   │   ├── core/
+│   │   │   ├── localization/
+│   │   │   ├── themes/
+│   │   │   ├── ui/
+│   │   │   ├── access_cubit.dart
+│   │   │   ├── auth_cubit.dart
+│   │   │   ├── child_session_scope.dart
+│   │   │   ├── design_system_session.dart
+│   │   │   ├── locale_cubit.dart
+│   │   │   └── reading_mode_cubit.dart
+│   │   │
+│   │   ├── features/
+│   │   │   ├── auth/
+│   │   │   ├── parent_dashboard/
+│   │   │   ├── profiles_and_parent_access/
+│   │   │   ├── rbac/
+│   │   │   └── ...
+│   │   │
+│   │   └── rive/                      # Rive used directly by Flutter UI
+│   │       ├── widgets/
+│   │       ├── controllers/
+│   │       └── adapters/
+│   │
+│   ├── game/                          # Flame runtime boundary
+│   │   ├── game/
+│   │   │   └── kiddi_game.dart
+│   │   │
+│   │   ├── world/
+│   │   │   └── ...
+│   │   │
+│   │   ├── components/
+│   │   │   ├── characters/
+│   │   │   ├── environment/
+│   │   │   ├── interactions/
+│   │   │   └── ...
+│   │   │
+│   │   ├── systems/
+│   │   │   ├── collision/
+│   │   │   ├── spawning/
+│   │   │   └── ...
+│   │   │
+│   │   └── adapters/
+│   │       ├── bloc/                  # Flame ↔ application state
+│   │       └── rive/                  # Flame ↔ Rive
+│   │
+│   ├── utils/
+│   │   └── ...existing
+│   │
+│   ├── firebase_options_development.dart
+│   ├── main.dart
+│   ├── main_development.dart
+│   ├── main_staging.dart
+│   └── main_production.dart
+│
+├── test/
+│   ├── ...existing Flutter tests
+│   ├── game/
+│   │   ├── components/
+│   │   ├── systems/
+│   │   └── game/
+│   └── rive/
+│       ├── widgets/
+│       ├── controllers/
+│       └── adapters/
+│
+├── testing/
+│   ├── fakes/
+│   ├── fixtures/
+│   └── helpers/
+│
+├── CLAUDE.md
+├── AGENTS.md
+├── analysis_options.yaml
+└── pubspec.yaml
+
+
+## Architectural Ownership
+lib/config/       → Application configuration
+lib/data/         → Repositories, services, persistence, external data
+lib/domain/       → Business/domain logic and optional use cases
+lib/l10n/         → Localization
+lib/routing/      → Application navigation using go_router
+lib/ui/           → Flutter presentation layer
+lib/game/         → Flame runtime and game simulation
+lib/utils/        → Shared utilities
+
+## Rive Placement
+Rive does not become a separate application layer.
+### Rive used by Flutter UI
+lib/ui/rive/
+├── widgets/
+├── controllers/
+└── adapters/
+
+### Rive used inside Flame
+lib/game/
+├── components/
+│   └── ...
+└── adapters/
+    └── rive/
+
+Use the official flame_rive integration when Rive is rendered inside Flame.
+
+### Rive Assets vs. Rive Sources
+Runtime assets:
+assets/rive/
+├── characters/
+├── ui/
+└── effects/
+
+Rive authoring/source projects:
+rive_projects/
+
+assets/rive/ contains files consumed by the application at runtime.
+rive_projects/ contains Rive authoring/source material and is optional.
+
+## Key Structural Principle
+Do not structure the application as:
+lib/
+├── flutter/
+├── flame/
+└── rive/
+
+Flutter remains the application architecture.
+The correct model is:
+lib/
+├── config/
+├── data/
+├── domain/
+├── l10n/
+├── routing/
+├── ui/          # Flutter presentation
+├── game/        # Flame runtime
+└── utils/
+
+Rive is placed according to where it is consumed:
+Flutter UI → lib/ui/rive/
+Flame      → lib/game/... + lib/game/adapters/rive/
+Runtime    → assets/rive/
+Authoring  → rive_projects/
+
+The existing Flutter structure remains unchanged; Flame and Rive extend it only where required.
