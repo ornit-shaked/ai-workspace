@@ -9,6 +9,11 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+
+2026-10-01 | flutter-flame-rive-support | Created feature for extending Flutter plugin with Flame (2D game engine) and Rive (animation tool) support; comprehensive research completed (404 lines) covering authoritative sources, architecture, lifecycle, state boundaries, asset management, testing, and integration patterns; recommendation: extend as optional composable modules, reuse official ecosystems, no custom MCP servers | .features/flutter-flame-rive-support/*
+
+2026-10-01 | adr-criteria | Added ADR decision criteria (Matt Rickard) to backlog: write ADR if hard to reverse AND surprising without context AND result of real trade-off; skip otherwise | work-state.md
+
 2026-09-26 | brain-prime | Session start now prints compact status digest; wrap writes handoff; four stale features closed
 2026-09-25 | lifecycle-v2.0.0 | Adopted obra/superpowers as hard dependency; removed write-plan, write-tasks, review-tasks (3 skills, 2 agents); kept write-spec (structural gap with brainstorming); created .features/AGENTS.md template with output-path overrides and fence rules; adapted review-plan for combined plan+tasks format; thin-wrapped review-code with superpowers reviewer; gate model reduced to 4 gates; bumped to v2.0.0 | plugins/lifecycle/* (22 files), .claude-plugin/marketplace.json, .features/lifecycle-management/research-native-planning.md, .features/lifecycle-management/plan-v2.md
 
