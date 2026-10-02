@@ -24,6 +24,7 @@ Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes hando
 | **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
