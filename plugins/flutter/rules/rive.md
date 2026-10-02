@@ -28,7 +28,12 @@ fidelity and performance on actual target platforms, not just the simulator/desk
 
 **Testing:** headless/widget tests with `Factory.flutter` for loading, data-binding, and error
 states; device integration tests for `Factory.rive`, shared textures, and other GPU-dependent
-behavior.
+behavior. Do **not** call `RiveNative.init()` in a widget test — the Rive runtime's own widget
+tests decode with `Factory.flutter` and never call it; `init()` belongs in app startup. Note that
+widget tests still need `rive_native`'s platform library present: a bare `flutter test` does not
+always provision it (on Windows it fails with `Failed to load dynamic library
+'rive_native.dll'`), so run Rive widget tests in an environment where that library is built, or
+cover the behavior with an integration test instead.
 
 **Rive CLI caveat:** the Rive CLI exists for asset validation (`rive create`, `rive push`/`pull`,
 live preview), but do not hardcode specific verify/test/screenshot flags into any script —

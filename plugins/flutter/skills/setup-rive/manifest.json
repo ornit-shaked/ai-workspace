@@ -1,0 +1,35 @@
+{
+  "version": "1.2.0",
+  "description": "Installation manifest for flutter plugin's Rive profile",
+  "global_files": [],
+  "project_files": [
+    { "source": "templates/project/.ai-workspace/plugins/flutter.md.template", "target": ".ai-workspace/plugins/flutter.md" },
+    { "source": "templates/project/docs/adr/ADR-0010-rive-runtime-boundary.md", "target": "docs/adr/ui/ADR-0010-rive-runtime-boundary.md" },
+    { "source": "templates/project/docs/rive-profile.md", "target": "docs/rive-profile.md" },
+    { "source": "templates/project/lib/ui/rive/widgets/example_rive_widget.dart.template", "target": "lib/ui/rive/widgets/example_rive_widget.dart" },
+    { "source": "templates/project/test/rive/widgets/example_rive_widget_test.dart.template", "target": "test/rive/widgets/example_rive_widget_test.dart" }
+  ],
+  "project_dirs": [
+    "lib/ui/rive/widgets",
+    "lib/ui/rive/controllers",
+    "lib/ui/rive/adapters",
+    "assets/rive/characters",
+    "assets/rive/ui",
+    "assets/rive/effects",
+    "test/rive/widgets",
+    "test/rive/controllers",
+    "test/rive/adapters"
+  ],
+  "pubspec_deps": {
+    "dependencies": {
+      "rive": "^0.14.11"
+    }
+  },
+  "pubspec_flutter_config": {
+    "assets": [
+      "assets/rive/characters/",
+      "assets/rive/ui/",
+      "assets/rive/effects/"
+    ]
+  }
+}

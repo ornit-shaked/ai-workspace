@@ -7,6 +7,27 @@ This project has the Rive animation-runtime profile installed via the `setup-riv
 The base `setup` skill must have run first — `setup-rive` assumes `lib/` and `pubspec.yaml`
 already exist and fails with a clear message otherwise.
 
+## ⚠️ Fixture pending
+
+The example widget expects a fixture at `assets/rive/ui/example.riv` exposing a boolean View
+Model property named `isActive` on an exported View Model instance. **That fixture is not shipped
+yet** — it can only be authored in the Rive Editor or via `rive create`, not generated from code.
+Until it is added:
+
+- `lib/ui/rive/widgets/example_rive_widget.dart` installs and analyzes cleanly, but fails at
+  runtime when it tries to load the asset.
+- `test/rive/widgets/example_rive_widget_test.dart` cannot pass yet.
+
+Separately, Rive widget tests need `rive_native`'s platform library present. A bare
+`flutter test` does not always provision it (on Windows it fails with `Failed to load dynamic
+library 'rive_native.dll'`) — run them where that library is built, or cover the behavior with an
+integration test. See `rules/rive.md`'s testing section.
+
+To finish it: create a single-artboard `.riv` with one state machine and one boolean View Model
+property named `isActive` toggling two visibly distinct states, save it to
+`assets/rive/ui/example.riv`, and (if contributing upstream) add it to this skill's
+`templates/project/assets/rive/ui/` plus its `manifest.json` `project_files`.
+
 ## What it installs
 
 - **Folders:** `lib/ui/rive/{widgets,controllers,adapters}`,

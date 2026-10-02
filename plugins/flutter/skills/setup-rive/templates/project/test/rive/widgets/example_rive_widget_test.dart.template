@@ -1,0 +1,44 @@
+// NOTE: this test is not runnable as shipped. It needs BOTH:
+//  1. the fixture `assets/rive/ui/example.riv`, exposing a boolean View Model
+//     property named `isActive` on an exported View Model instance (see
+//     `docs/rive-profile.md`'s "fixture pending" note); and
+//  2. rive_native's platform library available to `flutter test` — a bare
+//     `flutter test` does not always provision it (on Windows it fails with
+//     "Failed to load dynamic library 'rive_native.dll'").
+// See `rules/rive.md`'s testing section.
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:[package-name]/ui/rive/widgets/example_rive_widget.dart';
+
+void main() {
+  // No RiveNative.init() here on purpose: the Flutter factory
+  // (Factory.flutter, which the widget uses) needs no native library, and
+  // calling init() under `flutter test` fails to load rive_native.dll.
+  testWidgets('flips the fixture boolean property on tap', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: ExampleRiveWidget()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final state = tester.state<ExampleRiveWidgetState>(
+      find.byType(ExampleRiveWidget),
+    );
+    final property = state.isActive;
+
+    expect(
+      property,
+      isNotNull,
+      reason: 'fixture must expose a boolean property named '
+          '"${ExampleRiveWidget.booleanPropertyName}"',
+    );
+
+    final before = property!.value;
+    await tester.tap(find.byType(ExampleRiveWidget));
+    await tester.pump();
+
+    expect(property.value, !before);
+    expect(state.isActive?.value, !before);
+  });
+}
