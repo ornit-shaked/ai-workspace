@@ -64,13 +64,29 @@ function getPluginVersion(pluginRoot) {
 }
 
 /**
- * Check if plugin is already installed
+ * Build the component-scoped tracking marker line for a given component
+ * and version. Used by both isInstalled() (read) and the tracking-file
+ * writer (write) so the two always agree on the format.
  */
-function isInstalled(projectRoot, pluginName, version) {
+function componentMarker(componentId, version) {
+  return `<!-- component:${componentId} v${version} -->`;
+}
+
+/**
+ * Check if a specific component of a plugin is already installed.
+ *
+ * `componentId` defaults to `pluginName`, so callers that don't pass it
+ * (brain, lifecycle, base flutter `setup`) check the plugin's own
+ * top-level marker — today's behavior, now marker-based instead of a bare
+ * version substring so sibling components (e.g. flutter's `setup-flame`
+ * and `setup-rive`) sharing one tracking file don't see each other's
+ * install as their own.
+ */
+function isInstalled(projectRoot, pluginName, version, componentId = pluginName) {
   const trackingPath = path.join(projectRoot, '.ai-workspace/plugins', `${pluginName}.md`);
   if (!fs.existsSync(trackingPath)) return false;
   const content = fs.readFileSync(trackingPath, 'utf-8');
-  return content.includes(`v${version}`);
+  return content.includes(componentMarker(componentId, version));
 }
 
 /**
@@ -175,6 +191,7 @@ function createProjectDirs(manifest, projectRoot) {
 async function run(options) {
   const {
     pluginName,
+    componentId = pluginName,
     skillRoot = process.cwd(),
     projectRoot = process.cwd(),
     hooks = {}
@@ -190,7 +207,7 @@ async function run(options) {
     const manifest = readManifest(manifestPath);
 
     // Check if already installed (fast path)
-    if (isInstalled(projectRoot, pluginName, version)) {
+    if (isInstalled(projectRoot, pluginName, version, componentId)) {
       const elapsed = Date.now() - startTime;
       console.error(`[${pluginName}-setup] Already installed (${elapsed}ms)`);
       process.exit(0);
@@ -250,6 +267,7 @@ module.exports = {
   readManifest,
   getPluginVersion,
   isInstalled,
+  componentMarker,
   copyFile,
   installGlobalFiles,
   installProjectFiles,

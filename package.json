@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Claude Code / Devin plugin marketplace — memory, feature lifecycle, and Flutter scaffolding",
   "scripts": {
+    "test": "node --test plugins/_shared/installer.test.js",
     "sync-shared": "node scripts/sync-shared-installer.js",
     "sync-shared:check": "node scripts/sync-shared-installer.js --check"
   },
