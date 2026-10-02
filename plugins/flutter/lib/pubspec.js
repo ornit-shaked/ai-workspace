@@ -141,7 +141,25 @@ function injectPubspecConfig(projectRoot, manifest, { logPrefix }) {
   if (manifest.pubspec_flutter_config) {
     if (!doc.flutter) doc.flutter = {};
     for (const [key, value] of Object.entries(manifest.pubspec_flutter_config)) {
-      if (doc.flutter[key] === undefined) {
+      const existing = doc.flutter[key];
+
+      // List-valued config (notably `assets`) must union, not skip: the base
+      // setup skill already declares `assets`, so a plain skip-if-present
+      // silently dropped every asset directory added by setup-flame and
+      // setup-rive.
+      if (Array.isArray(value) && Array.isArray(existing)) {
+        const additions = value.filter((entry) => !existing.includes(entry));
+        if (additions.length > 0) {
+          doc.flutter[key] = [...existing, ...additions];
+          for (const entry of additions) {
+            console.error(`[${logPrefix}]   + flutter.${key}: ${entry}`);
+          }
+          changed = true;
+        }
+        continue;
+      }
+
+      if (existing === undefined) {
         doc.flutter[key] = value;
         console.error(`[${logPrefix}]   + flutter.${key}`);
         changed = true;

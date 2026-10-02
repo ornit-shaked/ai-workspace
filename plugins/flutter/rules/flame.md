@@ -39,7 +39,11 @@ pool recurring short-lived components with `ComponentPool` instead of churn; pre
 deterministic across platforms).
 
 **Rive integration:** if Rive is also installed (`setup-rive`), render Rive inside Flame via the
-official `flame_rive` bridge (`RiveComponent`) — do not hand-roll the integration. See
+official `flame_rive` bridge — do not hand-roll the integration. `RiveComponent` is a
+`PositionComponent` built from an **already-loaded** `Artboard` (plus an optional `StateMachine`),
+not from an asset path: load with `flame_rive`'s own
+`loadArtboard(file, {artboardName})` in `onLoad`, then pass the result as
+`RiveComponent(artboard: ..., stateMachine: ...)`. Verified against flame_rive 1.11.2. See
 [`rive.md`](rive.md).
 
 **Tile-based maps:** when a game spec requires tile-based maps (Tiled editor / `.tmx` / JSON grid
