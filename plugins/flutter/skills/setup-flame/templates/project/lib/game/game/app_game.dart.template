@@ -1,0 +1,14 @@
+import 'package:flame/game.dart';
+
+/// The root [FlameGame] for this project's Flame profile.
+///
+/// A bare skeleton — [world] and [camera] use Flame's defaults (no extra
+/// `World`/`CameraComponent` wiring). Add components via `add`/`addAll`,
+/// either here in [onLoad] or from outside once this game is embedded in a
+/// `GameWidget`. See `docs/flame-profile.md` and `rules/flame.md`.
+class AppGame extends FlameGame {
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+  }
+}
