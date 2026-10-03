@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-flutter-flame-rive-support: feature→spec→plan→tasks all approved (3 review rounds each, real bugs caught and fixed). Next: implement via tasks.md's 31 tasks (W1 installer fix first, W2/W3 parallel, W4 join) — different session/agent, tasks.md written to be self-contained. Also pending from before: doc-governance and usage-cost-optimization still at write-spec; Brain 1.1.0 diff still uncommitted.
+flutter-flame-rive-support: IMPLEMENTED on branch `feature/flutter-flame-rive-support-work` (worktree `.worktrees/flutter-flame-rive-support-work`), 28 of 31 tasks done, not yet merged. Flame profile fully working and verified (pub get/analyze/test green). Rive profile scaffolded + analyze-clean but BLOCKED on FFR-T021: `assets/rive/ui/example.riv` needs the Rive Editor/CLI to author (deliberately not declared in setup-rive's manifest.json — a missing source would ENOENT the whole install). Rive widget tests additionally need rive_native's platform lib, which bare `flutter test` doesn't provision on Windows. Next: (1) author the fixture + add it to manifest, (2) fresh-eyes review (`/code-review`) since only self-review was done, (3) merge. Also pending from before: doc-governance and usage-cost-optimization still at write-spec; Brain 1.1.0 diff still uncommitted.
 <!-- brain:current-focus-end -->
 
 ---
