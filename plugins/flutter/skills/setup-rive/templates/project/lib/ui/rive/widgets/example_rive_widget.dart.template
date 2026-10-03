@@ -10,7 +10,7 @@ import 'package:rive/rive.dart';
 /// Rive runtime in favour of View Model properties.
 ///
 /// Delete this widget, its test, and the fixture `.riv` once real animation
-/// content exists (see `docs/flame-rive-integration.md`).
+/// content exists (see `docs/rive-profile.md`).
 class ExampleRiveWidget extends StatefulWidget {
   /// Creates an [ExampleRiveWidget].
   const ExampleRiveWidget({super.key});

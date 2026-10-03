@@ -31,6 +31,38 @@ function requireBaseSetup(projectRoot, skillName) {
 }
 
 /**
+ * Build the installer.run() hooks for one profile skill. A profile skill's
+ * manifest.json has no project_files entry for the tracking file — unlike
+ * base `setup`/`brain`/`lifecycle`, a profile skill's tracking file is
+ * guaranteed to already exist (requireBaseSetup already proved `setup` ran,
+ * and `setup` always creates it), so there is nothing to template a fresh
+ * copy from. Its component section is upserted directly instead.
+ *
+ * Exported (not inlined in run()) so this logic is unit-testable without
+ * going through installer.run(), which calls process.exit().
+ */
+function buildHooks({ componentId, skillName }) {
+  return {
+    contentTransformers: [sortDartImportBlock],
+
+    preInstall: ({ projectRoot }) => requireBaseSetup(projectRoot, skillName),
+
+    postInstall: ({ projectRoot, manifest, replacements }) => {
+      console.error(`[flutter-${skillName}] Configuring pubspec.yaml...`);
+      injectPubspecConfig(projectRoot, manifest, { logPrefix: `flutter-${skillName}` });
+
+      const trackingPath = path.join(projectRoot, '.ai-workspace', 'plugins', 'flutter.md');
+      installer.upsertTrackingSection(trackingPath, {
+        pluginName: 'flutter',
+        componentId,
+        version: replacements['\\[plugin-version\\]'],
+        installDate: replacements['\\[install-date\\]']
+      });
+    }
+  };
+}
+
+/**
  * Run an optional profile skill (setup-flame, setup-rive, ...). Each
  * skill's own script.js is just:
  *
@@ -46,15 +78,8 @@ function run({ componentId, skillName, skillRoot, projectRoot = process.cwd() })
     componentId,
     skillRoot,
     projectRoot,
-    hooks: {
-      contentTransformers: [sortDartImportBlock],
-      preInstall: ({ projectRoot: root }) => requireBaseSetup(root, skillName),
-      postInstall: ({ projectRoot: root, manifest }) => {
-        console.error(`[flutter-${skillName}] Configuring pubspec.yaml...`);
-        injectPubspecConfig(root, manifest, { logPrefix: `flutter-${skillName}` });
-      }
-    }
+    hooks: buildHooks({ componentId, skillName })
   });
 }
 
-module.exports = { run, requireBaseSetup };
+module.exports = { run, buildHooks, requireBaseSetup };

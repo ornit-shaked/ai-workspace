@@ -3,10 +3,8 @@
   "description": "Installation manifest for flutter plugin's Flame profile",
   "global_files": [],
   "project_files": [
-    { "source": "templates/project/.ai-workspace/plugins/flutter.md.template", "target": ".ai-workspace/plugins/flutter.md" },
     { "source": "templates/project/docs/adr/ADR-0009-flame-runtime-boundary.md", "target": "docs/adr/ui/ADR-0009-flame-runtime-boundary.md" },
     { "source": "templates/project/docs/flame-profile.md", "target": "docs/flame-profile.md" },
-    { "source": "templates/project/docs/flame-rive-integration.md", "target": "docs/flame-rive-integration.md" },
     { "source": "templates/project/lib/game/game/app_game.dart.template", "target": "lib/game/game/app_game.dart" },
     { "source": "templates/project/lib/game/components/example_component.dart.template", "target": "lib/game/components/example_component.dart" },
     { "source": "templates/project/test/game/components/example_component_test.dart.template", "target": "test/game/components/example_component_test.dart" }

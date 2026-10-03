@@ -23,9 +23,9 @@ The script:
 - Checks `.ai-workspace/plugins/flutter.md` for a `## rive` component marker at the current
   version (exits if already installed) — installs independently of `setup-flame`.
 - Copies project templates: `docs/adr/ui/ADR-0010-rive-runtime-boundary.md`,
-  `docs/rive-profile.md`, `docs/flame-rive-integration.md`, the example widget, its test, and the
-  working fixture `assets/rive/ui/example.riv` (one artboard, one state machine, one exported
-  View Model with a boolean property `isActive`).
+  `docs/rive-profile.md`, the example widget, its test, and the working fixture
+  `assets/rive/ui/example.riv` (one artboard, one state machine, one exported View Model with a
+  boolean property `isActive`).
 
 **Note on running the Rive test:** `flutter pub get` does not provision `rive_native`'s platform
 library, so the shipped widget test needs

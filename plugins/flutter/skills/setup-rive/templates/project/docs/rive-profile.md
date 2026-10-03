@@ -35,8 +35,7 @@ This project has the Rive animation-runtime profile installed via the `setup-riv
 - **Dependencies:** `rive`, plus the three `assets/rive/*` directories declared in
   `pubspec.yaml`'s `flutter.assets`.
 - **Docs:** `docs/adr/ui/ADR-0010-rive-runtime-boundary.md` (state-ownership boundary and
-  disposal rules, see `rules/rive.md`), `docs/flame-rive-integration.md` (adopting Rive and/or
-  Flame together or separately — see [the integration guide](flame-rive-integration.md)).
+  disposal rules, see `rules/rive.md`).
 - **Data Binding boilerplate:** `lib/ui/rive/widgets/example_rive_widget.dart` — a working
   `FileLoader` → `RiveWidgetBuilder` → `RiveWidgetController` → View Model wiring, including the
   loading/failed/loaded states and correct disposal (the widget owns and disposes the
@@ -54,15 +53,24 @@ This project has the Rive animation-runtime profile installed via the `setup-riv
 /flutter:setup-rive
 ```
 
-Independent of `setup-flame` — install either or both, in either order.
+Independent of `setup-flame` — install either or both, in either order. Each records its own
+section in `.ai-workspace/plugins/flutter.md`, so installing one never affects the other, and
+re-running either is idempotent.
 
 ## What the example proves
 
 `example_rive_widget_test.dart` exercises real state-machine/controller behavior, not just the
 loading or error path: it simulates a tap, then asserts the fixture's boolean property flipped
 and the widget reports the new state. (It needs prerequisite 2 above to run.) Once real animation
-content exists, delete `example_rive_widget.dart`/its test and the fixture `example.riv` — see
-`docs/flame-rive-integration.md` for the cleanup note.
+content exists, delete `example_rive_widget.dart`/its test and the fixture `example.riv` —
+nothing else in the scaffolding imports them.
+
+## Using Flame & Rive together
+
+If `setup-flame` is also installed and you want this Rive animation rendered inside the Flame
+world, use the official `flame_rive` bridge (`RiveComponent`) — do not hand-roll the integration.
+See `rules/rive.md`'s Flame-integration note and `docs/adr/ui/ADR-0009-flame-runtime-boundary.md`
+for where Flame's own state-ownership line falls.
 
 ## Creating your own animations
 

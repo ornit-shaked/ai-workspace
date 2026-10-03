@@ -22,8 +22,7 @@ The script:
 - Checks `.ai-workspace/plugins/flutter.md` for a `## flame` component marker at the current
   version (exits if already installed) — installs independently of `setup-rive`.
 - Copies project templates: `docs/adr/ui/ADR-00NN-flame-runtime-boundary.md`,
-  `docs/flame-profile.md`, `docs/flame-rive-integration.md`, the example game/component, and its
-  test.
+  `docs/flame-profile.md`, the example game/component, and its test.
 - Creates Flame's project directories (`lib/game/**`, `assets/sprites`, `assets/audio/**`,
   `assets/tiles`, `test/game/**`, `integration_test/game`).
 - Injects `flame`/`flame_bloc` (and `flame_test` as a dev dependency) plus the new asset

@@ -48,8 +48,9 @@ and both require `setup` to have run first:
   ADR, a Data Binding example widget + fixture `.riv` + test, and `rive` pinned in `pubspec.yaml`.
   See `docs/rive-profile.md` after installing.
 
-Independent and composable — install either, both, or neither, in any order. See
-`docs/flame-rive-integration.md` (installed by whichever runs first) for combining them.
+Independent and composable — install either, both, or neither, in any order. Combining them (Rive
+inside Flame via `flame_rive`) is covered in each profile's own README under "Using Flame & Rive
+together".
 
 ## Quick Commands
 
