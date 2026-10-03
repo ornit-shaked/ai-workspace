@@ -28,6 +28,13 @@ Four spec/plan corrections and one pre-existing defect found by executing rather
   `AGENTS.md` now points at the matching skill when scaffolding is missing; `README.md` documents
   both under "Optional profiles".
 
+A documentation-scope review round followed: three ADRs/READMEs/tracking-file questions, all
+upheld as real issues and fixed — ADR-0009/0010 cut from 40/37 to 22/23 lines (zero repetition of
+the rule files' content), the two duplicate `docs/flame-rive-integration.md` copies dropped in
+favor of a short section in each profile README, and the two dead-weight per-skill
+`.ai-workspace/plugins/flutter.md.template` copies removed (traced: never read in the enforced
+flow) in favor of `profile-setup.js` calling `upsertTrackingSection` directly.
+
 Open, not blocking merge: the Rive widget test is unrun on the dev machine — `rive_native.dll`
 fails with error 126 even by absolute path (missing MSVC-runtime dependency of that DLL, an
 environment gap). Prerequisite documented as `dart run rive_native:setup`. Only a self-review plus
