@@ -3,17 +3,12 @@
 /**
  * setup-rive script.js
  *
- * Thin wrapper around shared installer.
- * Plugin-specific logic is in hooks.js.
+ * Thin wrapper around the shared optional-profile installer. No
+ * Rive-specific logic lives here — see plugins/flutter/lib/profile-setup.js.
  */
 
-const installer = require('../../lib/installer.js');
-const hooks = require('./hooks.js');
-
-installer.run({
-  pluginName: 'flutter',
+require('../../lib/profile-setup.js').run({
   componentId: 'rive',
-  skillRoot: __dirname,
-  projectRoot: process.cwd(),
-  hooks: hooks
+  skillName: 'setup-rive',
+  skillRoot: __dirname
 });

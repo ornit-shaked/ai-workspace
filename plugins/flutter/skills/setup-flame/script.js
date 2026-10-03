@@ -3,17 +3,12 @@
 /**
  * setup-flame script.js
  *
- * Thin wrapper around shared installer.
- * Plugin-specific logic is in hooks.js.
+ * Thin wrapper around the shared optional-profile installer. No
+ * Flame-specific logic lives here — see plugins/flutter/lib/profile-setup.js.
  */
 
-const installer = require('../../lib/installer.js');
-const hooks = require('./hooks.js');
-
-installer.run({
-  pluginName: 'flutter',
+require('../../lib/profile-setup.js').run({
   componentId: 'flame',
-  skillRoot: __dirname,
-  projectRoot: process.cwd(),
-  hooks: hooks
+  skillName: 'setup-flame',
+  skillRoot: __dirname
 });
