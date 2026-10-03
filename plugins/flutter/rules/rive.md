@@ -15,9 +15,23 @@ the View Model Instance — never mirror a whole Bloc state into Rive, and never
 transition back out as business truth. The adapter is the only place that translates between the
 two.
 
-**Disposal:** dispose View Model Instances, controllers, files, and listeners. `RiveWidgetBuilder`
-handles most of this for you, but the owner that created a `FileLoader` is still responsible for
-disposing it.
+**Legacy assets without Data Binding:** prefer Data Binding, but do not re-author a `.riv` just to
+get it. Older and third-party files often expose only state-machine inputs
+(`stateMachine.boolean`/`number`/`trigger`, deprecated but still the only route for those assets).
+When an asset has no View Model, keep the same boundary and let the adapter bridge Bloc/Flame
+state to state-machine inputs instead — the adapter is still the only place that translates. Do
+not mix both styles for one asset.
+
+**Disposal and shared files:** dispose View Model Instances, controllers, files, and listeners.
+`RiveWidgetBuilder` handles most of this for you, but the owner that created a `FileLoader` is
+still responsible for disposing it.
+
+When the same `.riv` appears in more than one widget, give it a single owner — a cache/service
+that hands out the loaded `File` (or its `FileLoader`) and disposes it once, when the last
+consumer goes away. Do not let each widget construct its own `FileLoader` for a shared asset
+(duplicate decodes, duplicate GPU resources), and never dispose a shared `File` from a widget
+that merely borrowed it while another is still rendering. A per-widget loader is correct only for
+an asset that widget exclusively owns.
 
 **Renderer selection (benchmark, don't assume):** `Factory.rive` for performance-critical or
 many-widget scenes via `RivePanel`; `Factory.flutter` for simpler or interleaved content.
@@ -76,6 +90,12 @@ Rules for agents doing this:
   runtime.
 - Keep the `.rml` source in the repo next to the built `.riv`, so the binary stays reproducible
   rather than becoming an opaque blob.
+- **Do not wire `rive` commands into ordinary `flutter test` / build CI steps.** The Rive CLI is a
+  separate toolchain that is not installed by `flutter pub get`, so `rive . --once` or
+  `--screenshot` in a standard CI job fails on any runner that has not installed it. Either commit
+  the built `.riv` (what this plugin does) or give RML compilation its own CI job that installs
+  the CLI first. Note `--once` and `--screenshot` are local and need **no** `rive login`; only
+  `--publish`, `--rev` and `push` require a session, so never put those in an unauthenticated job.
 
 For interactive/visual work with a human designer, the official
 [Rive MCP server](https://rive.app/docs/editor/ai/mcp) drives the Rive Editor — this plugin does

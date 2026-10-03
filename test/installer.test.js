@@ -6,7 +6,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const { isInstalled, upsertTrackingSection, installProjectFiles, copyFile } = require('./installer');
+const { isInstalled, upsertTrackingSection, installProjectFiles, copyFile } = require('../plugins/_shared/installer');
 
 function makeTempProject() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'installer-test-'));

@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { dumpPubspec, injectPubspecConfig } = require('../../lib/pubspec.js');
+const { createMinimalPubspec, injectPubspecConfig } = require('../../lib/pubspec.js');
 const { sortDartImportBlock } = require('../../lib/dart-imports.js');
 
 // ---------------------------------------------------------------------------
@@ -17,24 +17,8 @@ function configurePubspec(projectRoot, manifest) {
   // Create minimal pubspec if missing
   if (!fs.existsSync(pubspecPath)) {
     const projectName = path.basename(projectRoot).toLowerCase().replace(/[^a-z0-9_]/g, '_');
-    const minimal = {
-      name: projectName,
-      description: 'A new Flutter project.',
-      publish_to: 'none',
-      version: '1.0.0+1',
-      environment: { sdk: '>=3.0.0 <4.0.0' },
-      dependencies: { flutter: { sdk: 'flutter' } },
-      dev_dependencies: { flutter_test: { sdk: 'flutter' } },
-      flutter: {}
-    };
-    const content = dumpPubspec(minimal);
-    if (content) {
-      fs.writeFileSync(pubspecPath, content, 'utf-8');
-      console.error('[flutter-setup]   Created minimal pubspec.yaml');
-    } else {
-      console.error('[flutter-setup]   Cannot create pubspec.yaml (no YAML writer)');
-      return;
-    }
+    fs.writeFileSync(pubspecPath, createMinimalPubspec(projectName), 'utf-8');
+    console.error('[flutter-setup]   Created minimal pubspec.yaml');
   }
 
   injectPubspecConfig(projectRoot, manifest, { logPrefix: 'flutter-setup' });

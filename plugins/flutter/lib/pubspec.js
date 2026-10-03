@@ -1,206 +1,263 @@
 /**
- * Shared pubspec.yaml parsing/dumping and dependency injection, used by every
- * flutter-plugin skill that needs to merge manifest.pubspec_deps /
- * pubspec_flutter_config into an existing pubspec.yaml (base `setup`,
- * `setup-flame`, `setup-rive`). Extracted out of `setup`'s hooks.js so the
- * ~150-line fallback YAML parser isn't duplicated per skill.
+ * Shared pubspec.yaml editing for every flutter-plugin skill that merges
+ * manifest.pubspec_deps / pubspec_flutter_config into a project's
+ * pubspec.yaml (base `setup`, `setup-flame`, `setup-rive`).
+ *
+ * Line-based by design — NEVER parse the whole document into an object and
+ * reserialize it. A round trip drops every comment and blank line (no YAML
+ * dumper remembers them), which corrupted real projects before; see commit
+ * f804d42. The only edits made here are insertions of lines that are
+ * missing: existing lines are never rewritten, reordered or reindented.
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Minimal YAML parser/dumper for pubspec.yaml (block mappings + block sequences only).
-//
-// `js-yaml` is a devDependency of this repo, but plugins are distributed as plain
-// files (git clone / marketplace copy) with no `npm install` step, so `require('js-yaml')`
-// reliably fails at runtime in the target project. The fallback below is therefore the
-// real code path, not a rare edge case — it must be indentation-aware and recursive, or
-// nested keys silently attach to the wrong parent and get serialized as "[object Object]"
-// (this happened for real: see git history around the flutter plugin's pubspec corruption).
-function parseScalar(value) {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
-  if (value === '{}') return {};
-  if (value === '[]') return [];
-  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-    return value.slice(1, -1);
-  }
-  return value;
+function detectEol(content) {
+  return content.includes('\r\n') ? '\r\n' : '\n';
 }
 
-function parsePubspecFallback(content) {
-  const root = {};
-  // Stack of open containers, innermost last. Each frame knows its indent level
-  // and how to reach back to its parent, so a block sequence ("- item") can convert
-  // a lazily-created {} into [] the first time a list item is seen under it.
-  const stack = [{ indent: -1, container: root, parent: null, key: null }];
+function isBlank(line) {
+  return line.trim() === '';
+}
 
-  for (const raw of content.split('\n')) {
-    if (raw.trim() === '' || raw.trim().startsWith('#')) continue;
-    const indent = raw.search(/\S/);
-    const trimmed = raw.trim();
+function isComment(line) {
+  return line.trim().startsWith('#');
+}
 
-    while (stack.length > 1 && indent <= stack[stack.length - 1].indent) {
-      stack.pop();
+/** A top-level key line, e.g. `dependencies:` at column 0. */
+function isTopLevelKey(line, key) {
+  return line === `${key}:` || line.startsWith(`${key}:`) && !line.startsWith(' ');
+}
+
+/**
+ * Index of the top-level `<key>:` line, or -1.
+ */
+function findTopLevelSection(lines, key) {
+  for (let i = 0; i < lines.length; i++) {
+    if (!isBlank(lines[i]) && !isComment(lines[i]) && isTopLevelKey(lines[i], key)) return i;
+  }
+  return -1;
+}
+
+/**
+ * Exclusive end index of the block owned by the top-level section at
+ * `startIdx`: the first later line that is non-blank, non-comment and starts
+ * at column 0. Trailing blank/comment lines are left to the following
+ * section so an insertion lands tight against the last real entry.
+ */
+function sectionEnd(lines, startIdx) {
+  let end = lines.length;
+  for (let i = startIdx + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (isBlank(line) || isComment(line)) continue;
+    if (!/^\s/.test(line)) {
+      end = i;
+      break;
     }
-    const frame = stack[stack.length - 1];
+  }
+  // Walk back over blank lines so we insert before them, not after.
+  while (end > startIdx + 1 && isBlank(lines[end - 1])) end--;
+  return end;
+}
 
-    if (trimmed.startsWith('- ')) {
-      if (!Array.isArray(frame.container)) {
-        const arr = [];
-        if (frame.parent && frame.key !== null) frame.parent[frame.key] = arr;
-        frame.container = arr;
+/** Does `key` already exist at the given indent inside [start, end)? */
+function hasKeyInRange(lines, start, end, indent, key) {
+  const prefix = `${' '.repeat(indent)}${key}:`;
+  for (let i = start; i < end; i++) {
+    const line = lines[i];
+    if (isComment(line)) continue;
+    if (line === prefix || line.startsWith(`${prefix} `)) return true;
+  }
+  return false;
+}
+
+/**
+ * Insert `newLines` into a top-level section, creating the section at the
+ * end of the file if it does not exist. Returns the mutated array.
+ */
+function insertIntoTopLevelSection(lines, sectionKey, newLines) {
+  let idx = findTopLevelSection(lines, sectionKey);
+
+  if (idx === -1) {
+    // Create the section at the end, separated by one blank line.
+    while (lines.length > 0 && isBlank(lines[lines.length - 1])) lines.pop();
+    lines.push('', `${sectionKey}:`, ...newLines);
+    return lines;
+  }
+
+  const end = sectionEnd(lines, idx);
+  lines.splice(end, 0, ...newLines);
+  return lines;
+}
+
+/**
+ * Merge dependency maps. Only missing packages are added; an existing pin is
+ * never touched.
+ */
+function injectDependencies(lines, sectionKey, deps, log) {
+  const additions = [];
+  const idx = findTopLevelSection(lines, sectionKey);
+  const start = idx === -1 ? 0 : idx + 1;
+  const end = idx === -1 ? 0 : sectionEnd(lines, idx);
+
+  for (const [pkg, version] of Object.entries(deps)) {
+    if (idx !== -1 && hasKeyInRange(lines, start, end, 2, pkg)) continue;
+    additions.push(`  ${pkg}: ${version}`);
+    log(`  + ${pkg}: ${version}${sectionKey === 'dev_dependencies' ? ' (dev)' : ''}`);
+  }
+
+  if (additions.length === 0) return false;
+  insertIntoTopLevelSection(lines, sectionKey, additions);
+  return true;
+}
+
+/**
+ * Merge `flutter:` config. Scalars are added only when absent. List values
+ * (notably `assets`) union with what is already declared — base `setup`
+ * already declares `flutter.assets`, so skipping an existing key would
+ * silently drop every directory added by setup-flame/setup-rive.
+ */
+function injectFlutterConfig(lines, config, log) {
+  let changed = false;
+
+  for (const [key, value] of Object.entries(config)) {
+    const flutterIdx = findTopLevelSection(lines, 'flutter');
+    const fStart = flutterIdx === -1 ? 0 : flutterIdx + 1;
+    const fEnd = flutterIdx === -1 ? 0 : sectionEnd(lines, flutterIdx);
+
+    if (Array.isArray(value)) {
+      const keyIdx = flutterIdx === -1
+        ? -1
+        : findKeyLine(lines, fStart, fEnd, 2, key);
+
+      if (keyIdx === -1) {
+        const block = [`  ${key}:`, ...value.map((v) => `    - ${v}`)];
+        value.forEach((v) => log(`  + flutter.${key}: ${v}`));
+        insertIntoTopLevelSection(lines, 'flutter', block);
+        changed = true;
+        continue;
       }
-      frame.container.push(parseScalar(trimmed.slice(2).trim()));
+
+      // Existing list: collect its items, append the missing ones.
+      const listEnd = listBlockEnd(lines, keyIdx, 4);
+      const existing = [];
+      for (let i = keyIdx + 1; i < listEnd; i++) {
+        const m = lines[i].match(/^\s*-\s*(.+?)\s*$/);
+        if (m) existing.push(m[1]);
+      }
+      const additions = value.filter((v) => !existing.includes(v));
+      if (additions.length === 0) continue;
+      additions.forEach((v) => log(`  + flutter.${key}: ${v}`));
+      lines.splice(listEnd, 0, ...additions.map((v) => `    - ${v}`));
+      changed = true;
       continue;
     }
 
-    if (trimmed.endsWith(':')) {
-      const key = trimmed.slice(0, -1).trim();
-      const child = {};
-      frame.container[key] = child;
-      stack.push({ indent, container: child, parent: frame.container, key });
-    } else if (trimmed.includes(': ')) {
-      const idx = trimmed.indexOf(': ');
-      const key = trimmed.slice(0, idx).trim();
-      frame.container[key] = parseScalar(trimmed.slice(idx + 2).trim());
-    }
+    if (flutterIdx !== -1 && hasKeyInRange(lines, fStart, fEnd, 2, key)) continue;
+    log(`  + flutter.${key}`);
+    insertIntoTopLevelSection(lines, 'flutter', [`  ${key}: ${value}`]);
+    changed = true;
   }
 
-  return root;
+  return changed;
 }
 
-function parsePubspec(content) {
-  try {
-    const yaml = require('js-yaml');
-    return yaml.load(content);
-  } catch (_) {
-    return parsePubspecFallback(content);
+/** Index of `<indent><key>:` within [start, end), or -1. */
+function findKeyLine(lines, start, end, indent, key) {
+  const prefix = `${' '.repeat(indent)}${key}:`;
+  for (let i = start; i < end; i++) {
+    if (isComment(lines[i])) continue;
+    if (lines[i] === prefix || lines[i].startsWith(`${prefix} `)) return i;
   }
+  return -1;
 }
 
-function dumpScalar(value) {
-  return String(value);
-}
-
-function dumpPubspecFallback(node, indent = 0) {
-  const pad = '  '.repeat(indent);
-  const lines = [];
-
-  if (Array.isArray(node)) {
-    for (const item of node) {
-      if (item !== null && typeof item === 'object') {
-        lines.push(`${pad}-`);
-        lines.push(dumpPubspecFallback(item, indent + 1));
-      } else {
-        lines.push(`${pad}- ${dumpScalar(item)}`);
-      }
-    }
-  } else {
-    for (const [key, value] of Object.entries(node)) {
-      if (Array.isArray(value) || (value !== null && typeof value === 'object')) {
-        if (Object.keys(value).length === 0) {
-          lines.push(`${pad}${key}: {}`);
-        } else {
-          lines.push(`${pad}${key}:`);
-          lines.push(dumpPubspecFallback(value, indent + 1));
-        }
-      } else {
-        lines.push(`${pad}${key}: ${dumpScalar(value)}`);
-      }
-    }
+/**
+ * Exclusive end of a list block whose items are indented at `itemIndent`,
+ * starting after the `key:` line at `keyIdx`. Nested continuation lines
+ * (deeper indent) belong to the item above them.
+ */
+function listBlockEnd(lines, keyIdx, itemIndent) {
+  let end = keyIdx + 1;
+  for (let i = keyIdx + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (isBlank(line)) break;
+    const indent = line.search(/\S/);
+    if (indent < itemIndent) break;
+    end = i + 1;
   }
-
-  const body = lines.join('\n');
-  return indent === 0 ? body + '\n' : body;
-}
-
-function dumpPubspec(doc) {
-  try {
-    const yaml = require('js-yaml');
-    return yaml.dump(doc, { lineWidth: -1, noRefs: true });
-  } catch (_) {
-    return dumpPubspecFallback(doc);
-  }
+  return end;
 }
 
 /**
  * Merge `manifest.pubspec_flutter_config` and `manifest.pubspec_deps` into an
- * already-existing pubspec.yaml. Does not create the file — callers that may
- * run before base `setup` (none currently do; setup-flame/setup-rive fail
- * fast instead, see their hooks.js) must ensure it exists first.
+ * existing pubspec.yaml, preserving comments, blank lines and existing
+ * formatting. Does not create the file — callers that may run before base
+ * `setup` fail fast instead (see setup-flame/setup-rive hooks.js).
  */
-function injectPubspecConfig(projectRoot, manifest, { logPrefix }) {
+function injectPubspecConfig(projectRoot, manifest, { logPrefix, quiet = false } = {}) {
   const pubspecPath = path.join(projectRoot, 'pubspec.yaml');
-  const pubspecContent = fs.readFileSync(pubspecPath, 'utf-8');
-  const doc = parsePubspec(pubspecContent);
-  if (!doc) return;
+  const original = fs.readFileSync(pubspecPath, 'utf-8');
+  const eol = detectEol(original);
+  const lines = original.split(/\r?\n/);
+  const log = (msg) => {
+    if (!quiet) console.error(`[${logPrefix}] ${msg}`);
+  };
 
   let changed = false;
 
   if (manifest.pubspec_flutter_config) {
-    if (!doc.flutter) doc.flutter = {};
-    for (const [key, value] of Object.entries(manifest.pubspec_flutter_config)) {
-      const existing = doc.flutter[key];
-
-      // List-valued config (notably `assets`) must union, not skip: the base
-      // setup skill already declares `assets`, so a plain skip-if-present
-      // silently dropped every asset directory added by setup-flame and
-      // setup-rive.
-      if (Array.isArray(value) && Array.isArray(existing)) {
-        const additions = value.filter((entry) => !existing.includes(entry));
-        if (additions.length > 0) {
-          doc.flutter[key] = [...existing, ...additions];
-          for (const entry of additions) {
-            console.error(`[${logPrefix}]   + flutter.${key}: ${entry}`);
-          }
-          changed = true;
-        }
-        continue;
-      }
-
-      if (existing === undefined) {
-        doc.flutter[key] = value;
-        console.error(`[${logPrefix}]   + flutter.${key}`);
-        changed = true;
-      }
-    }
+    changed = injectFlutterConfig(lines, manifest.pubspec_flutter_config, log) || changed;
   }
 
   if (manifest.pubspec_deps) {
-    if (!doc.dependencies) doc.dependencies = {};
-    if (!doc.dev_dependencies) doc.dev_dependencies = {};
-
     const deps = manifest.pubspec_deps.dependencies || {};
-    for (const [pkg, ver] of Object.entries(deps)) {
-      if (!doc.dependencies[pkg]) {
-        doc.dependencies[pkg] = ver;
-        console.error(`[${logPrefix}]   + ${pkg}: ${ver}`);
-        changed = true;
-      }
-    }
-
     const devDeps = manifest.pubspec_deps.dev_dependencies || {};
-    for (const [pkg, ver] of Object.entries(devDeps)) {
-      if (!doc.dev_dependencies[pkg]) {
-        doc.dev_dependencies[pkg] = ver;
-        console.error(`[${logPrefix}]   + ${pkg}: ${ver} (dev)`);
-        changed = true;
-      }
+    if (Object.keys(deps).length > 0) {
+      changed = injectDependencies(lines, 'dependencies', deps, log) || changed;
+    }
+    if (Object.keys(devDeps).length > 0) {
+      changed = injectDependencies(lines, 'dev_dependencies', devDeps, log) || changed;
     }
   }
 
-  if (changed) {
-    const updated = dumpPubspec(doc);
-    if (updated) {
-      fs.writeFileSync(pubspecPath, updated, 'utf-8');
-      console.error(`[${logPrefix}]   pubspec.yaml updated`);
-    }
-  }
+  if (!changed) return false;
+
+  fs.writeFileSync(pubspecPath, lines.join(eol), 'utf-8');
+  log('  pubspec.yaml updated');
+  return true;
+}
+
+/**
+ * A minimal, valid pubspec.yaml for a project that has none yet. Written as
+ * literal text rather than serialized from an object, for the same reason
+ * injectPubspecConfig is line-based.
+ */
+function createMinimalPubspec(projectName) {
+  return [
+    `name: ${projectName}`,
+    'description: A new Flutter project.',
+    'publish_to: none',
+    'version: 1.0.0+1',
+    '',
+    'environment:',
+    "  sdk: '>=3.0.0 <4.0.0'",
+    '',
+    'dependencies:',
+    '  flutter:',
+    '    sdk: flutter',
+    '',
+    'dev_dependencies:',
+    '  flutter_test:',
+    '    sdk: flutter',
+    '',
+    'flutter:',
+    ''
+  ].join('\n');
 }
 
 module.exports = {
-  parsePubspec,
-  dumpPubspec,
-  injectPubspecConfig
+  injectPubspecConfig,
+  createMinimalPubspec
 };
