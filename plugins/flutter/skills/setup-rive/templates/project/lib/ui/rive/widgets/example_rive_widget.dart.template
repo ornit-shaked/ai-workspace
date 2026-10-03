@@ -9,11 +9,25 @@ import 'package:rive/rive.dart';
 /// `stateMachine.boolean(name)` state-machine-input API is deprecated in the
 /// Rive runtime in favour of View Model properties.
 ///
+/// The Rive layer is replaceable through [riveBuilder] so widget tests can run
+/// without `rive_native`'s platform library (loading it fails under
+/// `flutter test` on machines where it is not provisioned).
+///
 /// Delete this widget, its test, and the fixture `.riv` once real animation
 /// content exists (see `docs/rive-profile.md`).
 class ExampleRiveWidget extends StatefulWidget {
   /// Creates an [ExampleRiveWidget].
-  const ExampleRiveWidget({super.key});
+  const ExampleRiveWidget({super.key, this.riveBuilder});
+
+  /// Builds the Rive-backed content and reports the bound boolean property
+  /// through `onBound`. Defaults to the real [RiveWidgetBuilder]; tests pass a
+  /// fake that never touches the native library.
+  @visibleForTesting
+  final Widget Function(
+    BuildContext context,
+    ValueChanged<BooleanProperty?> onBound,
+  )?
+  riveBuilder;
 
   /// Asset path of the fixture this example drives.
   static const String assetPath = 'assets/rive/ui/example.riv';
@@ -29,34 +43,56 @@ class ExampleRiveWidget extends StatefulWidget {
   ExampleRiveWidgetState createState() => ExampleRiveWidgetState();
 }
 
+/// A boolean the example widget toggles: the surface of
+/// [ViewModelInstanceBoolean] this widget needs, so tests can fake it.
+abstract interface class BooleanProperty {
+  /// Current value.
+  bool get value;
+  set value(bool newValue);
+}
+
+class _RiveBooleanProperty implements BooleanProperty {
+  _RiveBooleanProperty(this._property);
+  final ViewModelInstanceBoolean _property;
+
+  @override
+  bool get value => _property.value;
+  @override
+  set value(bool newValue) => _property.value = newValue;
+}
+
 /// State for [ExampleRiveWidget].
 ///
 /// Public so a host holding a `GlobalKey<ExampleRiveWidgetState>` (or a test)
 /// can read the bound property via [isActive].
 class ExampleRiveWidgetState extends State<ExampleRiveWidget> {
-  late final FileLoader _fileLoader;
+  // Null when a test supplies `riveBuilder`: even creating a FileLoader
+  // touches the native library.
+  FileLoader? _fileLoader;
 
-  ViewModelInstanceBoolean? _isActive;
+  BooleanProperty? _isActive;
 
   /// The fixture's bound boolean property, available once the file has loaded
   /// (`null` while loading, or if the fixture does not expose
   /// [ExampleRiveWidget.booleanPropertyName]).
-  ViewModelInstanceBoolean? get isActive => _isActive;
+  BooleanProperty? get isActive => _isActive;
 
   @override
   void initState() {
     super.initState();
-    _fileLoader = FileLoader.fromAsset(
-      ExampleRiveWidget.assetPath,
-      riveFactory: Factory.flutter,
-    );
+    if (widget.riveBuilder == null) {
+      _fileLoader = FileLoader.fromAsset(
+        ExampleRiveWidget.assetPath,
+        riveFactory: Factory.flutter,
+      );
+    }
   }
 
   @override
   void dispose() {
     // RiveWidgetBuilder disposes the controller and the view model instance;
     // the FileLoader is owned here, so it is disposed here.
-    _fileLoader.dispose();
+    _fileLoader?.dispose();
     super.dispose();
   }
 
@@ -68,21 +104,31 @@ class ExampleRiveWidgetState extends State<ExampleRiveWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final riveBuilder = widget.riveBuilder;
+    if (riveBuilder != null) {
+      return GestureDetector(
+        onTap: _toggle,
+        child: riveBuilder(context, (p) => _isActive = p),
+      );
+    }
     return RiveWidgetBuilder(
-      fileLoader: _fileLoader,
+      fileLoader: _fileLoader!,
       dataBind: DataBind.auto(),
-      onLoaded: (state) => _isActive = state.viewModelInstance?.boolean(
-        ExampleRiveWidget.booleanPropertyName,
-      ),
+      onLoaded: (state) {
+        final property = state.viewModelInstance?.boolean(
+          ExampleRiveWidget.booleanPropertyName,
+        );
+        _isActive = property == null ? null : _RiveBooleanProperty(property);
+      },
       builder: (context, state) => switch (state) {
         RiveLoading() => const Center(child: CircularProgressIndicator()),
         RiveFailed() => Center(
-            child: Text('Failed to load Rive file: ${state.error}'),
-          ),
+          child: Text('Failed to load Rive file: ${state.error}'),
+        ),
         RiveLoaded() => GestureDetector(
-            onTap: _toggle,
-            child: RiveWidget(controller: state.controller),
-          ),
+          onTap: _toggle,
+          child: RiveWidget(controller: state.controller),
+        ),
       },
     );
   }

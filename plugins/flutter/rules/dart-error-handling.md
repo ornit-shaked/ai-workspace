@@ -1,6 +1,8 @@
 ---
 description: Dart error handling — Result<T> pattern for async operations
-globs: "lib/**/*.dart, test/**/*.dart"
+paths:
+  - "lib/**/*.dart"
+  - "test/**/*.dart"
 ---
 
 # Dart Error Handling with Result<T>

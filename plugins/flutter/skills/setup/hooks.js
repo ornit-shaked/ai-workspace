@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { createMinimalPubspec, injectPubspecConfig } = require('../../lib/pubspec.js');
 const { sortDartImportBlock } = require('../../lib/dart-imports.js');
+const { buildRulesIndex } = require('../../lib/rules-index.js');
 
 // ---------------------------------------------------------------------------
 // Pubspec configuration
@@ -32,6 +33,9 @@ module.exports = {
   contentTransformers: [
     sortDartImportBlock
   ],
+
+  // Emitted on every session start (see lib/rules-index.js for why).
+  sessionContext: ({ projectRoot, pluginRoot }) => buildRulesIndex({ projectRoot, pluginRoot }),
 
   postInstall: ({ projectRoot, manifest }) => {
     console.error('[flutter-setup] Configuring pubspec.yaml...');

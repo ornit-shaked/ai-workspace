@@ -9,6 +9,7 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-10-04 | flutter-rules-delivery | Plugin rules aren't loaded natively; SessionStart hook now indexes them; Rive test fakes native layer | plugins/flutter/*
 2026-10-03 | flutter-flame-rive-support | Implemented all 31 tasks; Rive fixture authored from RML via Rive CLI; 3 real bugs fixed | plugins/flutter/*, plugins/_shared/installer.js
 
 2026-10-02 | flutter-flame-rive-support | Spec/plan/tasks approved after 3 review rounds each; fixed lifecycle, asset, and installer-sharing bugs | .features/flutter-flame-rive-support/*

@@ -1,44 +1,49 @@
-// NOTE: this test needs rive_native's platform library, which `flutter pub
-// get` does not provision. Run once per machine/CI image:
-//   dart run rive_native:setup --platform <windows|macos|linux|android|ios>
-// Otherwise it fails with "Failed to load dynamic library 'rive_native.dll'".
-// See `docs/rive-profile.md`'s prerequisites and `rules/rive.md`.
-//
-// It binds to the shipped fixture `assets/rive/ui/example.riv` by name: a
-// boolean View Model property `isActive` on an exported instance.
+// Runs without `rive_native`'s platform library: the widget's Rive layer is
+// replaced through `riveBuilder`, because loading that library fails under
+// `flutter test` where it is not provisioned. This test covers the widget's
+// own logic (tap -> toggle the bound property). That the real fixture
+// `assets/rive/ui/example.riv` exposes a boolean View Model property named
+// `isActive` is verified by running the app, not here.
+// See `docs/rive-profile.md` and `rules/rive.md`.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:[package-name]/ui/rive/widgets/example_rive_widget.dart';
 
+class _FakeBooleanProperty implements BooleanProperty {
+  @override
+  bool value = false;
+}
+
 void main() {
-  // No RiveNative.init() here on purpose: the Flutter factory
-  // (Factory.flutter, which the widget uses) needs no native library, and
-  // calling init() under `flutter test` fails to load rive_native.dll.
-  testWidgets('flips the fixture boolean property on tap', (tester) async {
+  testWidgets('flips the bound boolean property on tap', (tester) async {
+    final property = _FakeBooleanProperty();
+
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(body: ExampleRiveWidget()),
+      MaterialApp(
+        home: Scaffold(
+          body: ExampleRiveWidget(
+            riveBuilder: (context, onBound) {
+              onBound(property);
+              return const SizedBox.expand(
+                child: ColoredBox(color: Colors.blue),
+              );
+            },
+          ),
+        ),
       ),
     );
-    await tester.pumpAndSettle();
 
     final state = tester.state<ExampleRiveWidgetState>(
       find.byType(ExampleRiveWidget),
     );
-    final property = state.isActive;
+    expect(state.isActive, same(property));
 
-    expect(
-      property,
-      isNotNull,
-      reason: 'fixture must expose a boolean property named '
-          '"${ExampleRiveWidget.booleanPropertyName}"',
-    );
-
-    final before = property!.value;
     await tester.tap(find.byType(ExampleRiveWidget));
     await tester.pump();
+    expect(property.value, isTrue);
 
-    expect(property.value, !before);
-    expect(state.isActive?.value, !before);
+    await tester.tap(find.byType(ExampleRiveWidget));
+    await tester.pump();
+    expect(property.value, isFalse);
   });
 }

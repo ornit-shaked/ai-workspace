@@ -1,6 +1,8 @@
 ---
 description: Flame game engine — lifecycle, Flutter/Flame boundary, state ownership, performance, testing
-globs: "lib/game/**/*.dart, test/game/**/*.dart"
+paths:
+  - "lib/game/**/*.dart"
+  - "test/game/**/*.dart"
 ---
 
 # Rule: Flame Game Engine

@@ -22,6 +22,10 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ---
 
+2026-10-04 | correction | rules-delivery | claude | Claude Code ignores plugin rules/ and AGENTS.md; verify platform claims live before asserting
+2026-10-04 | preference | rules-delivery | claude | Never copy plugin files into host project repos; deliver via SessionStart hook context
+2026-10-04 | preference | rules-delivery | claude | Standardise on AGENTS.md only, no CLAUDE.md, across workspace and plugins
+
 2026-10-03 | missing-knowledge | flutter-flame-rive-support | claude | Rive CLI compiles .riv from RML text; no Editor or designer needed
 
 2026-10-03 | standard | flutter-flame-rive-support | claude | Installer must copy binary assets byte-for-byte; utf-8 round-trip corrupts them

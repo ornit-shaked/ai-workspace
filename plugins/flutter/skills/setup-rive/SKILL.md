@@ -27,9 +27,8 @@ The script:
   `assets/rive/ui/example.riv` (one artboard, one state machine, one exported View Model with a
   boolean property `isActive`).
 
-**Note on running the Rive test:** `flutter pub get` does not provision `rive_native`'s platform
-library, so the shipped widget test needs
-`dart run rive_native:setup --platform <os>` first. See `docs/rive-profile.md`'s prerequisites.
+**Note on the Rive test:** it fakes the Rive layer through `ExampleRiveWidget.riveBuilder`, so it needs no
+native library. Real `.riv` loading is checked by running the app.
 - Creates Rive's project directories (`lib/ui/rive/**`, `assets/rive/**`, `test/rive/**`).
 - Injects `rive` plus the new asset directories into `pubspec.yaml`.
 - Sorts Dart import blocks alphabetically (very_good_analysis compliance).

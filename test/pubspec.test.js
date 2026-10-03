@@ -226,3 +226,19 @@ test('createMinimalPubspec produces a valid starting file', () => {
   assert.match(content, /^  flutter:\n    sdk: flutter$/m);
   assert.match(content, /^flutter:$/m);
 });
+
+test('puts .gitkeep only in declared asset dirs that are empty', () => {
+  const root = makeProject('name: demo\nflutter:\n  uses-material-design: true\n');
+  fs.mkdirSync(path.join(root, 'assets/empty'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'assets/full'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'assets/full/a.txt'), 'x');
+
+  injectPubspecConfig(
+    root,
+    { pubspec_flutter_config: { assets: ['assets/empty/', 'assets/full/'] } },
+    silent
+  );
+
+  assert.ok(fs.existsSync(path.join(root, 'assets/empty/.gitkeep')));
+  assert.ok(!fs.existsSync(path.join(root, 'assets/full/.gitkeep')));
+});

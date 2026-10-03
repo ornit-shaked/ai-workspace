@@ -48,6 +48,6 @@ line falls.
 
 ## Further reading
 
-- `rules/flame.md` (plugin-native rule — lifecycle, Flutter/Flame boundary, state ownership,
-  performance, testing; discovered automatically, not copied into this project).
+- `rules/flame.md` (plugin rule — lifecycle, Flutter/Flame boundary, state ownership,
+  performance, testing; listed in the session-start rules index, not copied into this project).
 - `docs/adr/ui/ADR-0009-flame-runtime-boundary.md` — why the boundary falls where it does.

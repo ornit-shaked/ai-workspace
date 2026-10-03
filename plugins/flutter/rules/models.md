@@ -1,6 +1,8 @@
 ---
 description: Flutter models — Freezed everywhere enforcement
-globs: "lib/**/*.dart, test/**/*.dart"
+paths:
+  - "lib/**/*.dart"
+  - "test/**/*.dart"
 ---
 
 # Rule: Model Strategy — Freezed Everywhere

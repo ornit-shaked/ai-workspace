@@ -9,8 +9,7 @@ Bloc".
 ## Decision
 
 Bloc/Cubit stays authoritative for durable state; Flame is authoritative for per-frame/transient
-state, bridged only through `flame_bloc` (never a custom bridge). Full rules: `rules/flame.md`
-(plugin-native, not copied into this project).
+state, bridged only through `flame_bloc` (never a custom bridge). Full rules: `rules/flame.md`.
 
 ## Consequences
 

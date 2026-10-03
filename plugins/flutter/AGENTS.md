@@ -1,17 +1,11 @@
 # Flutter
 
-Always-on rule for Flutter development with Bloc/Cubit, Freezed, and very_good_analysis.
+Claude Code does not load a plugin's `AGENTS.md` or `rules/` into a consuming project, so nothing here
+reaches an agent directly. Rules reach agents only through the SessionStart hook, which emits an index
+of `rules/*.md` (absolute paths from `${CLAUDE_PLUGIN_ROOT}`, see `lib/rules-index.js`) every session.
+Each rule needs `description:` and `paths:` frontmatter. This is a workaround until Claude Code loads
+plugin rules natively; nothing is copied into projects.
 
-- When managing UI state, pull in the manual rule `rules/state-management.md`.
-- When creating data classes (domain models, DTOs, Bloc states/events), pull in the manual rule `rules/models.md`.
-- Before committing code, pull in the manual rule `rules/linting.md`.
-- When adding environment-dependent config (API URLs, feature flags), pull in the manual rule `rules/flavors.md`.
-- When adding assets or localization, pull in the manual rule `rules/assets-and-l10n.md`.
-- When handling async operations that can fail, pull in the manual rule `rules/error-handling.md`.
-- For new projects, use the `setup` skill to bootstrap with ADRs, folder structure, and CI.
-- When building Flame games or components, pull in the manual rule `rules/flame.md`. If the
-  project has no Flame scaffolding yet (no `lib/game/`), offer the `setup-flame` skill
-  (`/flutter:setup-flame`) to add it — requires `setup` to have already run; does not auto-run.
-- When integrating Rive animations, pull in the manual rule `rules/rive.md`. If the project has no
-  Rive scaffolding yet (no `lib/ui/rive/`), offer the `setup-rive` skill (`/flutter:setup-rive`) to
-  add it — requires `setup` to have already run; does not auto-run.
+- New project: use the `setup` skill (ADRs, folder structure, CI, base rules).
+- Flame games: `setup-flame` (`/flutter:setup-flame`) — requires `setup` first; does not auto-run.
+- Rive animations: `setup-rive` (`/flutter:setup-rive`) — requires `setup` first; does not auto-run.

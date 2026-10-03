@@ -1,11 +1,13 @@
 ---
 description: Rive animation runtime — init order, state ownership, disposal, renderer choice, testing
-globs: "lib/ui/rive/**/*.dart, test/rive/**/*.dart"
+paths:
+  - "lib/ui/rive/**/*.dart"
+  - "test/rive/**/*.dart"
 ---
 
 # Rule: Rive Animation Runtime
 
-**Runtime order:** `RiveNative.init()` at app startup → prefer `RiveWidgetBuilder` →
+**Runtime order:** `await RiveNative.init()` in `main()` before `runApp` (required on web) → prefer `RiveWidgetBuilder` →
 `RiveWidgetController` → drive state via Data Binding → manual resource management only when
 Data Binding genuinely can't express what's needed.
 
@@ -45,20 +47,14 @@ states; device integration tests for `Factory.rive`, shared textures, and other 
 behavior. Do **not** call `RiveNative.init()` in a widget test — the Rive runtime's own widget
 tests decode with `Factory.flutter` and never call it; `init()` belongs in app startup.
 
-Widget tests additionally need `rive_native`'s platform library, which `flutter pub get` does
-**not** provision. Install it once per machine/CI image:
-
-```bash
-dart run rive_native:setup --verbose --clean --platform <windows|macos|linux|android|ios>
-```
-
-That downloads prebuilt binaries into `build/rive_native/...`, where the runtime looks for them
-while `FLUTTER_TEST` is set. If loading still fails with `Failed to load dynamic library
-'rive_native.dll'` **(error code: 126)** even though the file exists — confirm by
-`DynamicLibrary.open()` on its absolute path — the missing module is one of the DLL's *own*
-dependencies (typically the MSVC runtime), not the DLL. Install the platform's C++ redistributable
-or run the tests on an image that has it; otherwise cover the behavior with an integration test
-on a real device.
+**Keep widget tests off the native library.** Even creating a `FileLoader` or mounting
+`RiveWidgetBuilder` loads `rive_native`'s platform library, and under `flutter test` that fails on
+machines where it isn't provisioned (`Failed to load dynamic library 'rive_native.dll'`), including
+with error code 126 after `dart run rive_native:setup` when the DLL's own dependencies (typically
+the MSVC runtime) are missing. So give widgets that wrap Rive an injectable Rive layer (see
+`ExampleRiveWidget.riveBuilder`), fake it in widget tests, and cover real `.riv` loading and
+rendering with a device integration test. Only if a test truly needs the real runtime, run
+`dart run rive_native:setup --verbose --clean --platform <os>` once per machine/CI image first.
 
 ## Authoring `.riv` files without a designer
 

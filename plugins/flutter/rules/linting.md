@@ -1,6 +1,8 @@
 ---
 description: Flutter linting — very_good_analysis enforcement
-globs: "**/*.dart, analysis_options.yaml"
+paths:
+  - "**/*.dart"
+  - "analysis_options.yaml"
 ---
 
 # Rule: Linting — very_good_analysis

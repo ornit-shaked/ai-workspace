@@ -6,15 +6,15 @@ This project has the Rive animation-runtime profile installed via the `setup-riv
 
 1. **Base `setup` skill must have run first** — `setup-rive` assumes `lib/` and `pubspec.yaml`
    already exist and fails with a clear message otherwise.
-2. **`rive_native`'s platform library, before running Rive tests.** `flutter pub get` does not
-   provision it. Once per machine / CI image:
+2. **`rive_native`'s platform library — only for real-Rive tests/runs.** The shipped widget test
+   fakes the Rive layer (`ExampleRiveWidget.riveBuilder`) and does **not** need it. A test that
+   mounts real Rive does (`flutter pub get` doesn't provision it):
    ```bash
    dart run rive_native:setup --verbose --clean --platform <windows|macos|linux|android|ios>
    ```
-   Without it, Rive widget tests fail with `Failed to load dynamic library 'rive_native.dll'`.
-   If that persists with **error code 126** even though the file exists, the missing module is one
-   of that library's *own* dependencies (typically the MSVC runtime on Windows), not the library
-   — install the platform C++ redistributable or use a CI image that has it. See `rules/rive.md`.
+   If loading still fails with **error code 126**, the missing module is one of that library's
+   *own* dependencies (typically the MSVC runtime on Windows) — install the C++ redistributable or
+   cover that behavior with a device integration test. See `rules/rive.md`.
 3. **The [Rive CLI](https://rive.app/docs/cli/overview) — only if you or an agent will generate or
    modify `.riv` files locally.** Not needed to use this profile as shipped; the example fixture
    is already included. Install it when you want animations authored from code rather than by a
@@ -44,8 +44,7 @@ This project has the Rive animation-runtime profile installed via the `setup-riv
   `Example`, one state machine, one exported View Model with a boolean property `isActive`).
   `isActive = false` shows a small blue circle; `true` transitions it to a larger green circle.
 - **Test setup:** `test/rive/widgets/example_rive_widget_test.dart` — a widget test that taps the
-  widget and asserts the bound boolean actually flipped, via the public
-  `ExampleRiveWidgetState.isActive` getter.
+  widget and asserts the bound boolean flipped, with the Rive layer faked (no native library).
 
 ## How to run
 
@@ -57,13 +56,28 @@ Independent of `setup-flame` — install either or both, in either order. Each r
 section in `.ai-workspace/plugins/flutter.md`, so installing one never affects the other, and
 re-running either is idempotent.
 
+## App startup (web)
+
+Rive needs its runtime initialised before any `.riv` loads. On **web** this is mandatory and must
+be awaited before `runApp`; do it on every platform for consistency:
+
+```dart
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await RiveNative.init();
+  runApp(const MyApp());
+}
+```
+
+The shipped example widget does not call it (the app owns startup), and widget tests must not
+(see `rules/rive.md`).
+
 ## What the example proves
 
-`example_rive_widget_test.dart` exercises real state-machine/controller behavior, not just the
-loading or error path: it simulates a tap, then asserts the fixture's boolean property flipped
-and the widget reports the new state. (It needs prerequisite 2 above to run.) Once real animation
-content exists, delete `example_rive_widget.dart`/its test and the fixture `example.riv` —
-nothing else in the scaffolding imports them.
+`example_rive_widget_test.dart` covers the widget's own logic (tap flips the bound boolean) with
+the Rive layer faked, so it runs anywhere. It does **not** prove the real fixture works — run the
+app (or a device integration test) for that. Once real animation content exists, delete
+`example_rive_widget.dart`/its test and the fixture `example.riv` — nothing else in the scaffolding imports them.
 
 ## Using Flame & Rive together
 
@@ -97,6 +111,6 @@ instead.
 
 ## Further reading
 
-- `rules/rive.md` (plugin-native rule — runtime order, state ownership, disposal, renderer
-  selection, testing; discovered automatically, not copied into this project).
+- `rules/rive.md` (plugin rule — runtime order, state ownership, disposal, renderer
+  selection, testing; listed in the session-start rules index, not copied into this project).
 - `docs/adr/ui/ADR-0010-rive-runtime-boundary.md` — why the boundary falls where it does.

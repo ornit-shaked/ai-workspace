@@ -1,6 +1,10 @@
 ---
 description: Flutter assets and localization conventions
-globs: "lib/l10n/**, lib/ui/core/localization/**, assets/**, pubspec.yaml"
+paths:
+  - "lib/l10n/**"
+  - "lib/ui/core/localization/**"
+  - "assets/**"
+  - "pubspec.yaml"
 ---
 
 # Flutter Assets and Localization

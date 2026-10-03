@@ -283,6 +283,10 @@ function createProjectDirs(manifest, projectRoot) {
   return dirs;
 }
 
+function emitSessionStart(additionalContext) {
+  console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext } }));
+}
+
 /**
  * Main installer
  */
@@ -306,6 +310,9 @@ async function run(options) {
 
     // Check if already installed (fast path)
     if (isInstalled(projectRoot, pluginName, version, componentId)) {
+      // Nothing to install, but a plugin may still need to add context every session.
+      const sessionContext = hooks.sessionContext ? hooks.sessionContext({ projectRoot, pluginRoot }) : '';
+      if (sessionContext) emitSessionStart(sessionContext);
       const elapsed = Date.now() - startTime;
       console.error(`[${pluginName}-setup] Already installed (${elapsed}ms)`);
       process.exit(0);
@@ -349,11 +356,10 @@ async function run(options) {
     }
 
     // Emit hook output for SessionStart
-    const hookOutput = {
-      hookEventName: 'SessionStart',
-      additionalContext: `${pluginName} plugin initialized (v${version}).`
-    };
-    console.log(JSON.stringify({ hookSpecificOutput: hookOutput }));
+    const sessionContext = hooks.sessionContext ? hooks.sessionContext({ projectRoot, pluginRoot }) : '';
+    emitSessionStart(
+      [`${pluginName} plugin initialized (v${version}).`, sessionContext].filter(Boolean).join(String.fromCharCode(10, 10))
+    );
 
     const elapsed = Date.now() - startTime;
     console.error(`[${pluginName}-setup] Installation complete (${elapsed}ms)`);

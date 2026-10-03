@@ -10,7 +10,7 @@ ADR-0001.
 
 Rive is a rendering target, not a source of state: Bloc/Flame state flows one-way into a Rive
 View Model Instance through an adapter; a visual transition is never read back as business truth.
-Full rules: `rules/rive.md` (plugin-native, not copied into this project).
+Full rules: `rules/rive.md`.
 
 ## Consequences
 

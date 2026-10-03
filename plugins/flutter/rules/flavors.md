@@ -1,6 +1,8 @@
 ---
 description: Flutter flavors — dev/staging/prod entry points and AppConfig
-globs: "lib/main*.dart, lib/config/**/*.dart"
+paths:
+  - "lib/main*.dart"
+  - "lib/config/**/*.dart"
 ---
 
 # Rule: Flavors — Development / Staging / Production

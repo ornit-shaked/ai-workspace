@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-flutter-flame-rive-support: PR #9 open against master, three review rounds addressed (pubspec corruption fixed line-based; profile-skill discovery + plumbing dedup; doc-bloat cut — ADRs to ~22 lines, integration guide folded into READMEs, 2 dead tracking templates removed). Next: `/code-review` (still no fresh-eyes pass), run the Rive widget test on a machine with the MSVC runtime, then merge. Still pending from before: doc-governance and usage-cost-optimization at write-spec; Brain 1.1.0 diff uncommitted.
+flutter-flame-rive-support: plugin v1.2.1 — SessionStart hook indexes rules (Claude ignores plugin rules/), Rive test fakes native layer, .gitkeep for empty asset dirs. Next: update plugin, re-run live rules check in scratch project; then doc-governance spec. Open: remove CLAUDE.md in favour of AGENTS.md workspace-wide.
 <!-- brain:current-focus-end -->
 
 ---

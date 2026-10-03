@@ -2,7 +2,7 @@
 
 Official plugin for Flutter development with opinionated architectural decisions.
 
-**Version:** 1.2.0 • **License:** MIT
+**Version:** 1.2.1 • **License:** MIT
 
 ## What This Does
 
@@ -22,13 +22,13 @@ Plugin system handles installation automatically. Requires [flutter/agent-plugin
 
 ## Rules
 
-Manual rules in `rules/`, pulled in by an agent when the matching topic comes up:
+Claude Code doesn't load a plugin's `rules/` itself, so the SessionStart hook lists them (absolute paths, with the file patterns each applies to) in the agent's context every session; nothing is copied into your project. `flame.md` and `rive.md` are listed only once `setup-flame` / `setup-rive` has run:
 - `state-management.md` — Bloc/Cubit enforcement
 - `models.md` — Freezed everywhere
 - `linting.md` — very_good_analysis standards
 - `flavors.md` — Environment configuration
 - `assets-and-l10n.md` — Asset and localization patterns
-- `error-handling.md` — Result type for async operations
+- `dart-error-handling.md` — Result type for async operations
 - `flame.md` — Flame game engine: lifecycle, Flutter/Flame boundary, state ownership, performance, testing
 - `rive.md` — Rive animation runtime: init order, state ownership, disposal, renderer choice, testing, authoring `.riv` from RML
 

@@ -1,6 +1,8 @@
 ---
 description: Flutter state management — Bloc/Cubit enforcement
-globs: "lib/ui/**/*.dart, test/ui/**/*.dart"
+paths:
+  - "lib/ui/**/*.dart"
+  - "test/ui/**/*.dart"
 ---
 
 # Rule: State Management — Bloc/Cubit

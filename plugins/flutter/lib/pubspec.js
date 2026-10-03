@@ -196,6 +196,21 @@ function listBlockEnd(lines, keyIdx, itemIndent) {
  * formatting. Does not create the file — callers that may run before base
  * `setup` fail fast instead (see setup-flame/setup-rive hooks.js).
  */
+/**
+ * Git doesn't track empty directories, but Flutter fails the build when a
+ * pubspec `flutter.assets` directory is missing. Put a `.gitkeep` in every
+ * declared asset directory that is still empty so fresh checkouts build.
+ */
+function keepEmptyAssetDirs(projectRoot, manifest) {
+  const assets = (manifest.pubspec_flutter_config || {}).assets || [];
+  for (const asset of assets) {
+    if (!asset.endsWith('/')) continue;
+    const dir = path.join(projectRoot, asset);
+    if (!fs.existsSync(dir) || fs.readdirSync(dir).length > 0) continue;
+    fs.writeFileSync(path.join(dir, '.gitkeep'), '');
+  }
+}
+
 function injectPubspecConfig(projectRoot, manifest, { logPrefix, quiet = false } = {}) {
   const pubspecPath = path.join(projectRoot, 'pubspec.yaml');
   const original = fs.readFileSync(pubspecPath, 'utf-8');
@@ -204,6 +219,8 @@ function injectPubspecConfig(projectRoot, manifest, { logPrefix, quiet = false }
   const log = (msg) => {
     if (!quiet) console.error(`[${logPrefix}] ${msg}`);
   };
+
+  keepEmptyAssetDirs(projectRoot, manifest);
 
   let changed = false;
 
