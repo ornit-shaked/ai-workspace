@@ -51,6 +51,21 @@ function readManifest(manifestPath) {
 }
 
 /**
+ * Dart package name for `[package-name]`: the `name:` in the project's
+ * pubspec.yaml (what `package:` imports must use), falling back to the folder
+ * name when there is no pubspec yet. The folder name is wrong in git worktrees
+ * and any checkout whose folder differs from the package.
+ */
+function getPackageName(projectRoot) {
+  const pubspecPath = path.join(projectRoot, 'pubspec.yaml');
+  if (fs.existsSync(pubspecPath)) {
+    const match = /^name:\s*['"]?([A-Za-z0-9_]+)['"]?\s*(?:#.*)?$/m.exec(fs.readFileSync(pubspecPath, 'utf-8'));
+    if (match) return match[1];
+  }
+  return path.basename(projectRoot).toLowerCase().replace(/[^a-z0-9_]/g, '_');
+}
+
+/**
  * Get plugin version from plugin.json
  */
 function getPluginVersion(pluginRoot) {
@@ -323,7 +338,7 @@ async function run(options) {
     const installDate = new Date().toISOString().split('T')[0];
     const replacements = {
       '\\[project-name\\]': projectName,
-      '\\[package-name\\]': projectName.toLowerCase().replace(/[^a-z0-9_]/g, '_'),
+      '\\[package-name\\]': getPackageName(projectRoot),
       '\\[plugin-version\\]': version,
       '\\[install-date\\]': installDate,
       '\\[component-marker\\]': componentMarker(componentId, version),
@@ -377,6 +392,7 @@ module.exports = {
   getGlobalConfigDir,
   readManifest,
   getPluginVersion,
+  getPackageName,
   isInstalled,
   componentMarker,
   upsertTrackingSection,

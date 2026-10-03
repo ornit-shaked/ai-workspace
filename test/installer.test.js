@@ -266,3 +266,16 @@ test('installProjectFiles upserts the tracking file section instead of skipping 
   assert.match(content, /## flame\n<!-- component:flame v1\.0\.0 -->\nInstalled 2026-02-02 \(v1\.0\.0\)/);
   assert.equal(result['.ai-workspace/plugins/flutter.md'].status, 'updated');
 });
+
+test('getPackageName reads pubspec name, not the folder name', () => {
+  const { getPackageName } = require('../plugins/_shared/installer');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'My-Worktree-'));
+  fs.writeFileSync(path.join(root, 'pubspec.yaml'), "name: kiddi_verse # app\nversion: 1.0.0\n");
+  assert.equal(getPackageName(root), 'kiddi_verse');
+});
+
+test('getPackageName falls back to a sanitized folder name without a pubspec', () => {
+  const { getPackageName } = require('../plugins/_shared/installer');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'My-App-'));
+  assert.match(getPackageName(root), /^my_app_/);
+});

@@ -2,7 +2,7 @@
 
 Official plugin for Flutter development with opinionated architectural decisions.
 
-**Version:** 1.2.1 • **License:** MIT
+**Version:** 1.2.2 • **License:** MIT
 
 ## What This Does
 
