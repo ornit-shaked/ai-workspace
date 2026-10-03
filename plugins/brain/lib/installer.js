@@ -69,22 +69,122 @@ function getPluginVersion(pluginRoot) {
 }
 
 /**
- * Check if plugin is already installed
+ * Build the component-scoped tracking marker line for a given component
+ * and version. Used by both isInstalled() (read) and the tracking-file
+ * writer (write) so the two always agree on the format.
  */
-function isInstalled(projectRoot, pluginName, version) {
+function componentMarker(componentId, version) {
+  return `<!-- component:${componentId} v${version} -->`;
+}
+
+/**
+ * Check if a specific component of a plugin is already installed.
+ *
+ * `componentId` defaults to `pluginName`, so callers that don't pass it
+ * (brain, lifecycle, base flutter `setup`) check the plugin's own
+ * top-level marker — today's behavior, now marker-based instead of a bare
+ * version substring so sibling components (e.g. flutter's `setup-flame`
+ * and `setup-rive`) sharing one tracking file don't see each other's
+ * install as their own.
+ */
+function isInstalled(projectRoot, pluginName, version, componentId = pluginName) {
   const trackingPath = path.join(projectRoot, '.ai-workspace/plugins', `${pluginName}.md`);
   if (!fs.existsSync(trackingPath)) return false;
   const content = fs.readFileSync(trackingPath, 'utf-8');
-  return content.includes(`v${version}`);
+  return content.includes(componentMarker(componentId, version));
+}
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Append or update one component's section in a plugin's tracking file
+ * (`.ai-workspace/plugins/<pluginName>.md`), instead of the generic
+ * copy-if-missing behavior used for every other project file.
+ *
+ * The tracking file is shared across every skill of a plugin (e.g.
+ * flutter's `setup`, `setup-flame`, `setup-rive`), so once it exists,
+ * installing another component must add/update that component's own
+ * section rather than being skipped because the file is already there.
+ *
+ * `componentId === pluginName` targets the root `# <pluginName>` section
+ * (re-running the base setup skill, e.g. after a version bump);
+ * otherwise it targets/creates a `## <componentId>` section.
+ */
+function upsertTrackingSection(trackingPath, { pluginName, componentId, version, installDate }) {
+  let content = fs.readFileSync(trackingPath, 'utf-8');
+  // Match the file's own line endings — a Windows checkout (git autocrlf)
+  // leaves tracking files as CRLF, and a literal \n-only regex silently
+  // never matches, which previously surfaced as "missing root section"
+  // on every real CRLF project.
+  const eol = content.includes('\r\n') ? '\r\n' : '\n';
+  const nl = escapeRegExp(eol);
+
+  const marker = componentMarker(componentId, version);
+  const isRoot = componentId === pluginName;
+  const heading = isRoot ? `# ${pluginName}` : `## ${componentId}`;
+  const headingLine = escapeRegExp(heading);
+
+  const sectionBodyRe = isRoot
+    ? new RegExp(`(^${headingLine}${nl}${nl})(?:<!-- component:[^\\r\\n]*-->${nl})?Installed [^\\r\\n]*${nl}`, 'm')
+    : new RegExp(`(^${headingLine}${nl})(?:<!-- component:[^\\r\\n]*-->${nl})?Installed [^\\r\\n]*${nl}`, 'm');
+
+  const newBody = `$1${marker}${eol}Installed ${installDate} (v${version})${eol}`;
+
+  if (sectionBodyRe.test(content)) {
+    content = content.replace(sectionBodyRe, newBody);
+  } else if (isRoot) {
+    throw new Error(`Tracking file ${trackingPath} is missing its root "${heading}" section`);
+  } else {
+    const newSection = `## ${componentId}${eol}${marker}${eol}Installed ${installDate} (v${version})${eol}`;
+    const docLinkRe = new RegExp(`${nl}(\\[[^\\]]*\\]\\([^\\r\\n]*\\)${nl}?)$`);
+    if (docLinkRe.test(content)) {
+      content = content.replace(docLinkRe, `${eol}${newSection}${eol}$1`);
+    } else {
+      content = content.replace(new RegExp(`(?:${nl})*$`), eol) + `${eol}${newSection}`;
+    }
+  }
+
+  fs.writeFileSync(trackingPath, content, 'utf-8');
+  return content;
+}
+
+// Assets that must be copied byte-for-byte. Reading these as utf-8 and
+// writing them back replaces every invalid sequence with U+FFFD, which
+// silently corrupts the file (a .riv's 0xC4 becomes EF BF BD and the
+// runtime then fails to decode it).
+const BINARY_ASSET_EXTENSIONS = new Set([
+  '.riv', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.bmp',
+  '.ttf', '.otf', '.woff', '.woff2',
+  '.mp3', '.wav', '.ogg', '.m4a',
+  '.zip', '.pdf'
+]);
+
+function isBinaryAsset(filePath) {
+  return BINARY_ASSET_EXTENSIONS.has(path.extname(filePath).toLowerCase());
 }
 
 /**
  * Copy file with placeholder replacement
+ *
+ * Binary assets (see BINARY_ASSET_EXTENSIONS) bypass both the placeholder
+ * replacements and the content transformers — neither is meaningful for
+ * them, and routing them through a utf-8 round trip corrupts the bytes.
  */
 function copyFile(sourcePath, targetPath, replacements = {}, contentTransformers = []) {
   const targetDir = path.dirname(targetPath);
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  if (isBinaryAsset(sourcePath)) {
+    fs.copyFileSync(sourcePath, targetPath);
+    return {
+      status: 'created',
+      size: fs.statSync(targetPath).size,
+      createdAt: new Date().toISOString()
+    };
   }
 
   let content = fs.readFileSync(sourcePath, 'utf-8');
@@ -132,15 +232,29 @@ function installGlobalFiles(manifest, skillRoot, replacements, contentTransforme
 
 /**
  * Install project files
+ *
+ * `trackingContext`, when given, identifies this plugin's tracking file
+ * (`.ai-workspace/plugins/<pluginName>.md`) among `project_files`. That one
+ * target is append-not-skip: if it already exists, its component's section
+ * is upserted (see upsertTrackingSection) instead of the file being left
+ * alone, since the file is shared by every skill of the plugin.
  */
-function installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers) {
+function installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers, trackingContext = null) {
   const files = {};
+  const trackingTarget = trackingContext
+    ? `.ai-workspace/plugins/${trackingContext.pluginName}.md`
+    : null;
 
   for (const fileSpec of manifest.project_files || []) {
     const sourcePath = path.join(skillRoot, fileSpec.source);
     const targetPath = path.join(projectRoot, fileSpec.target);
 
     if (fs.existsSync(targetPath)) {
+      if (trackingTarget && fileSpec.target === trackingTarget) {
+        upsertTrackingSection(targetPath, trackingContext);
+        files[fileSpec.target] = { status: 'updated', reason: 'component section upserted' };
+        continue;
+      }
       files[fileSpec.target] = { status: 'skipped', reason: 'already exists' };
       continue;
     }
@@ -180,6 +294,7 @@ function createProjectDirs(manifest, projectRoot) {
 async function run(options) {
   const {
     pluginName,
+    componentId = pluginName,
     skillRoot = process.cwd(),
     projectRoot = process.cwd(),
     hooks = {}
@@ -195,7 +310,7 @@ async function run(options) {
     const manifest = readManifest(manifestPath);
 
     // Check if already installed (fast path)
-    if (isInstalled(projectRoot, pluginName, version)) {
+    if (isInstalled(projectRoot, pluginName, version, componentId)) {
       const elapsed = Date.now() - startTime;
       console.error(`[${pluginName}-setup] Already installed (${elapsed}ms)`);
       process.exit(0);
@@ -203,11 +318,13 @@ async function run(options) {
 
     // Prepare replacements
     const projectName = path.basename(projectRoot);
+    const installDate = new Date().toISOString().split('T')[0];
     const replacements = {
       '\\[project-name\\]': projectName,
       '\\[package-name\\]': projectName.toLowerCase().replace(/[^a-z0-9_]/g, '_'),
       '\\[plugin-version\\]': version,
-      '\\[install-date\\]': new Date().toISOString().split('T')[0],
+      '\\[install-date\\]': installDate,
+      '\\[component-marker\\]': componentMarker(componentId, version),
       '\\[global-config-dir\\]': getGlobalConfigDir(),
       ...(hooks.getReplacements ? hooks.getReplacements({ projectRoot, pluginRoot, manifest, version }) : {})
     };
@@ -223,7 +340,12 @@ async function run(options) {
 
     // Install files
     const globalFiles = installGlobalFiles(manifest, skillRoot, replacements, contentTransformers);
-    const projectFiles = installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers);
+    const projectFiles = installProjectFiles(manifest, skillRoot, projectRoot, replacements, contentTransformers, {
+      pluginName,
+      componentId,
+      version,
+      installDate
+    });
     const projectDirs = createProjectDirs(manifest, projectRoot);
 
     // Post-install hook
@@ -255,6 +377,8 @@ module.exports = {
   readManifest,
   getPluginVersion,
   isInstalled,
+  componentMarker,
+  upsertTrackingSection,
   copyFile,
   installGlobalFiles,
   installProjectFiles,

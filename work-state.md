@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes handoff, 4 stale features closed. Next: review + commit the diff, then bump/reinstall brain and confirm hook output in a fresh session; then doc-governance and usage-cost-optimization at write-spec. Optional: remove closed rows from features table.
+flutter-flame-rive-support: PR #9 open against master, three review rounds addressed (pubspec corruption fixed line-based; profile-skill discovery + plumbing dedup; doc-bloat cut — ADRs to ~22 lines, integration guide folded into READMEs, 2 dead tracking templates removed). Next: `/code-review` (still no fresh-eyes pass), run the Rive widget test on a machine with the MSVC runtime, then merge. Still pending from before: doc-governance and usage-cost-optimization at write-spec; Brain 1.1.0 diff uncommitted.
 <!-- brain:current-focus-end -->
 
 ---
@@ -24,7 +24,7 @@ Brain 1.1.0 (uncommitted): SessionStart prints compact digest, wrap writes hando
 | **official-plugin-migration** - Migrate to Official Plugin Format (Devin, Claude Code) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 <!-- lifecycle:features-end -->
 
 ---

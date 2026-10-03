@@ -1,0 +1,85 @@
+# Tasks: Flutter Plugin — Flame and Rive Support
+
+**Feature:** [feature.md](feature.md) · **Spec:** [spec.md](spec.md) · **Plan:** [plan.md](plan.md)
+
+**Note for whoever implements this:** these tasks are written to be self-contained. Each `Inputs` cell names the exact spec.md section (D1–D8/D4a) to read before starting that task — spec.md itself carries the full rationale, verified API details, and provenance; this file deliberately does not restate any of it. `Outputs` are exact file paths. No task assumes context from how this plan was derived.
+
+## Status — 2026-10-03
+
+**All 31 tasks implemented** on `feature/flutter-flame-rive-support-work`, PR #9 open against
+master, under human review. Verified: `npm test` 26/26, `sync-shared:check` clean, versions 1.2.0
+across all 5 flutter manifests, both install orders green (`pub get` / `analyze --fatal-infos` /
+Flame test), brain+lifecycle regression holds.
+
+Four spec/plan corrections and one pre-existing defect found by executing rather than reading:
+
+- **FFR-T021's premise was wrong.** The fixture does *not* need the Rive Editor — the Rive CLI
+  compiles `.riv` from RML (XML text). Authored that way; RML source in `setup-rive/fixture-src/`.
+- **`copyFile` corrupted binary assets** (utf-8 round trip turned `0xC4` into `EF BF BD`). Fixed
+  byte-for-byte copying by extension.
+- **`injectPubspecConfig` dropped every Flame/Rive asset dir**, because base `setup` already
+  declared `flutter.assets` and the logic skipped existing keys. Now unions lists.
+- **Pre-existing on master: `configurePubspec` destroyed comments/blank lines** on every write
+  (parse-to-object-reserialize, banned by commit f804d42, reintroduced after it). This feature
+  widened the blast radius from one caller to three. Rewritten line-based; `pubspec.yaml` edits
+  are now pure insertions.
+- **`setup-flame`/`setup-rive` were undiscoverable** — not in `hooks.json` (correctly, as opt-in
+  profiles), unmentioned in `AGENTS.md` beyond their rule trigger, absent from `README.md`. Fixed:
+  `AGENTS.md` now points at the matching skill when scaffolding is missing; `README.md` documents
+  both under "Optional profiles".
+
+A documentation-scope review round followed: three ADRs/READMEs/tracking-file questions, all
+upheld as real issues and fixed — ADR-0009/0010 cut from 40/37 to 22/23 lines (zero repetition of
+the rule files' content), the two duplicate `docs/flame-rive-integration.md` copies dropped in
+favor of a short section in each profile README, and the two dead-weight per-skill
+`.ai-workspace/plugins/flutter.md.template` copies removed (traced: never read in the enforced
+flow) in favor of `profile-setup.js` calling `upsertTrackingSection` directly.
+
+Open, not blocking merge: the Rive widget test is unrun on the dev machine — `rive_native.dll`
+fails with error 126 even by absolute path (missing MSVC-runtime dependency of that DLL, an
+environment gap). Prerequisite documented as `dart run rive_native:setup`. Only a self-review plus
+the human reviewer's pass have happened so far — no fresh-eyes `/code-review`.
+
+## Task Table
+
+| ID | Wave | Title | Inputs | Outputs | DoD | Depends On | Est |
+|----|------|-------|--------|---------|-----|------------|-----|
+| **FFR-T001** | W1 | Add `componentId` + component-scoped tracking marker to shared installer | spec.md D8 | `plugins/_shared/installer.js` (updated `run()`/`isInstalled()` signatures) | `isInstalled()` accepts a `componentId` param and checks for a `<!-- component:<id> v<version> -->` marker instead of a bare version substring; omitting `componentId` defaults it to `pluginName`, preserving today's behavior for `brain`/`lifecycle`/base `setup` | – | 2h |
+| **FFR-T002** | W1 | Make tracking-file write append-not-skip | spec.md D8 | `plugins/_shared/installer.js` (updated tracking-file write path) | Writing a new `componentId`'s marker into an existing `.ai-workspace/plugins/<pluginName>.md` appends a `## <componentId>` section instead of skipping because the file exists; re-running the same `componentId` updates its own section in place without duplicating it | FFR-T001 | 2h |
+| **FFR-T003** | W1 | Propagate installer change to vendored copies | FFR-T001, FFR-T002 | `plugins/brain/lib/installer.js`, `plugins/lifecycle/lib/installer.js`, `plugins/flutter/lib/installer.js` | `npm run sync-shared` run; `npm run sync-shared:check` passes with zero diff | FFR-T002 | 30m |
+| **FFR-T004** | W1 | Regression-test existing plugins against the installer change | FFR-T003 | test results (no file artifact) | Fresh scratch-project installs of `brain@latest`, `lifecycle@latest`, and `flutter@latest` (base `setup` only) each produce tracking-file content identical in shape to pre-change behavior; idempotent re-run of each still no-ops | FFR-T003 | 1h |
+| **FFR-T005** | W1 | Bump flutter plugin version for the D8 change | spec.md D8 (process note) | `plugins/flutter/.claude-plugin/plugin.json`, `plugins/flutter/.devin-plugin/plugin.json`, `plugins/flutter/skills/setup/manifest.json` (version fields) | All three files' version strings match each other and are incremented from the prior release | FFR-T004 | 30m |
+| **FFR-T006** | W2 | Author `rules/flame.md` | spec.md D1 | `plugins/flutter/rules/flame.md` | File contains, in substance, every bullet in D1: corrected lifecycle order, Flutter/Flame boundary table, `GameWidget`'s concrete API names, `flame_bloc`'s five widget names + the explicit ADR-0001-extension note, performance rules, testing rules, the `flame_rive` pointer, and the `flame_tiled` tile-map guidance | FFR-T005 | 2h |
+| **FFR-T007** | W2 | Add Flame trigger line to AGENTS.md | spec.md D1 (audience trigger) | `plugins/flutter/AGENTS.md` (updated) | New line present, matching D1's trigger wording, pointing at `rules/flame.md` | FFR-T006 | 15m |
+| **FFR-T008** | W2 | Scaffold `setup-flame` skill shape | `plugins/flutter/skills/setup/` (structural reference), spec.md D3 | `plugins/flutter/skills/setup-flame/script.js`, `.../hooks.js`, `.../SKILL.md` | `script.js` calls `installer.run({ pluginName: 'flutter', componentId: 'flame', ... })`; `hooks.js` mirrors base `setup`'s `configurePubspec` pattern; `SKILL.md` states the "base `setup` must have run first, else fail with a clear message" behavior from D3 | FFR-T005 | 2h |
+| **FFR-T009** | W2 | Author Flame ADR template | spec.md D3, D1 (state-ownership table) | `plugins/flutter/skills/setup-flame/templates/project/docs/adr/ADR-00NN-flame-runtime-boundary.md` | Context section explicitly links to `ADR-0001-state-management-bloc.md` by number; Decision section states where the Flame/Bloc line falls per D1; does not re-decide "why Bloc" | FFR-T008 | 1h |
+| **FFR-T010** | W2 | Author Flame profile README template | spec.md D6 | `plugins/flutter/skills/setup-flame/templates/project/docs/flame-profile.md` | Covers install contents, prerequisite, how to run the skill, example location/purpose, and pointers to `rules/flame.md` and the ADR, per D6's content list | FFR-T008 | 1h |
+| **FFR-T011** | W2 | Author Flame example game + component templates | spec.md D3 | `plugins/flutter/skills/setup-flame/templates/project/lib/game/game/app_game.dart.template`, `.../lib/game/components/example_component.dart.template` | `app_game.dart` defines a `FlameGame` subclass with no extra `World`/`CameraComponent` wiring beyond the default; `example_component.dart` defines a `PositionComponent` that moves at constant velocity in `update()` | FFR-T008 | 2h |
+| **FFR-T012** | W2 | Author Flame example test template | spec.md D3, FFR-T011 | `plugins/flutter/skills/setup-flame/templates/project/test/game/components/example_component_test.dart.template` | Uses `testWithFlameGame`; asserts the component's position changed after an explicit `game.update(dt)` | FFR-T011 | 1h |
+| **FFR-T013** | W2 | Configure `setup-flame` manifest.json | spec.md D3 (`project_dirs`, `pubspec_deps`, `pubspec_flutter_config.assets`), FFR-T009, FFR-T010, FFR-T012 | `plugins/flutter/skills/setup-flame/manifest.json` | `project_dirs` matches D3's full list including `assets/tiles`; `project_files` references the ADR/README/example/test from the prior tasks; `pubspec_deps.dependencies` includes `flame` + `flame_bloc`, `dev_dependencies` includes `flame_test`; `pubspec_flutter_config.assets` includes `assets/sprites/`, `assets/audio/music/`, `assets/audio/sfx/`, `assets/audio/voice/`, `assets/tiles/` | FFR-T009, FFR-T010, FFR-T011, FFR-T012 | 1h |
+| **FFR-T014** | W2 | Confirm no `analysis_options.yaml` changes needed for Flame | spec.md D5, FFR-T011, FFR-T012 | none (verification only) | `flutter analyze --fatal-infos` on the Flame example + test produces 0 issues against the base plugin's unmodified `analysis_options.yaml` | FFR-T013 | 30m |
+| **FFR-T015** | W2 | Scratch-project test: `setup-flame` standalone | FFR-T013, FFR-T014 | test results | Fresh project + base `setup` + `setup-flame` → `flutter pub get` / `analyze --fatal-infos` / `test` all succeed; re-running `setup-flame` is idempotent (no duplicate pubspec keys or tracking sections) | FFR-T014 | 1h |
+| **FFR-T016** | W3 | Author `rules/rive.md` | spec.md D2 | `plugins/flutter/rules/rive.md` | File contains, in substance, every bullet in D2: runtime order, state-ownership boundary, disposal rules, renderer selection, rendering/perf rules, testing, the Rive-CLI-flags caveat, and the `rive_projects`/AGENTS.md + Rive MCP pointer | FFR-T005 | 2h |
+| **FFR-T017** | W3 | Add Rive trigger line to AGENTS.md | spec.md D2 (audience trigger) | `plugins/flutter/AGENTS.md` (updated) | New line present, matching D2's trigger wording, pointing at `rules/rive.md` | FFR-T016 | 15m |
+| **FFR-T018** | W3 | Scaffold `setup-rive` skill shape | `plugins/flutter/skills/setup/` (structural reference), spec.md D4 | `plugins/flutter/skills/setup-rive/script.js`, `.../hooks.js`, `.../SKILL.md` | `script.js` calls `installer.run({ pluginName: 'flutter', componentId: 'rive', ... })`; `SKILL.md` states the same prerequisite/fail-fast behavior as D3, scoped to Rive | FFR-T005 | 2h |
+| **FFR-T019** | W3 | Author Rive ADR template | spec.md D4, D2 | `plugins/flutter/skills/setup-rive/templates/project/docs/adr/ADR-00NN-rive-runtime-boundary.md` | States the ownership boundary + disposal rules in decision form, per D4 | FFR-T018 | 1h |
+| **FFR-T020** | W3 | Author Rive profile README template | spec.md D6 | `plugins/flutter/skills/setup-rive/templates/project/docs/rive-profile.md` | Same content checklist as D6, Rive-scoped | FFR-T018 | 1h |
+| **FFR-T021** | W3 | Produce the fixture `.riv` | spec.md D4a | `plugins/flutter/skills/setup-rive/templates/project/assets/rive/ui/example.riv` | One artboard, one state machine with exactly one boolean input that toggles two visibly distinct states (e.g. color or scale); opens and plays correctly in the Rive runtime. Requires the Rive Editor or CLI — not generatable from code | FFR-T018 | 3h |
+| **FFR-T022** | W3 | Author Rive example widget template | spec.md D4a, FFR-T021 (needs the fixture's actual input name) | `plugins/flutter/skills/setup-rive/templates/project/lib/ui/rive/widgets/example_rive_widget.dart.template` | Wraps `RiveWidgetBuilder`, loads `assets/rive/ui/example.riv`, drives the fixture's boolean input via `RiveWidgetController`/Data Binding on a tap | FFR-T021 | 2h |
+| **FFR-T023** | W3 | Author Rive example test template | spec.md D4a, FFR-T022 | `plugins/flutter/skills/setup-rive/templates/project/test/rive/widgets/example_rive_widget_test.dart.template` | Widget test asserts the boolean input flips and the controller reports the new state after a simulated tap (not just an error/loading path) | FFR-T022 | 2h |
+| **FFR-T024** | W3 | Configure `setup-rive` manifest.json | spec.md D4/D4a (`project_dirs`, `pubspec_deps`, `pubspec_flutter_config.assets`), FFR-T019, FFR-T020, FFR-T023 | `plugins/flutter/skills/setup-rive/manifest.json` | `project_dirs` matches D4's list (`rive_projects/` excluded, per spec); `project_files` references the ADR/README/example/test/fixture; `pubspec_deps.dependencies` includes `rive`; `pubspec_flutter_config.assets` includes `assets/rive/characters/`, `assets/rive/ui/`, `assets/rive/effects/` | FFR-T019, FFR-T020, FFR-T021, FFR-T023 | 1h |
+| **FFR-T025** | W3 | Confirm no `analysis_options.yaml` changes needed for Rive | spec.md D5, FFR-T022, FFR-T023 | none (verification only) | `flutter analyze --fatal-infos` on the Rive example + test produces 0 issues | FFR-T024 | 30m |
+| **FFR-T026** | W3 | Scratch-project test: `setup-rive` standalone | FFR-T024, FFR-T025 | test results | Fresh project + base `setup` + `setup-rive` → pub get/analyze/test succeed; idempotent re-run confirmed; manual visual check confirms the fixture actually animates on tap | FFR-T025 | 1h |
+| **FFR-T027** | W4 | Author integration guide template (two synced copies) | spec.md D7 (corrected shape — two independent copies, not one shared file, per installer.js's skillRoot-relative path resolution) | `plugins/flutter/skills/setup-flame/templates/project/docs/flame-rive-integration.md` AND `plugins/flutter/skills/setup-rive/templates/project/docs/flame-rive-integration.md` (identical content in both) | Both files are word-for-word identical; both cover adoption order-independence, the "base `setup` not found" failure path, example/fixture cleanup guidance, and the `flame_rive` bridge pointer, per D7's content list | FFR-T015, FFR-T026 | 1h |
+| **FFR-T028** | W4 | Declare integration guide in both manifests | FFR-T027 | `plugins/flutter/skills/setup-flame/manifest.json` (updated), `plugins/flutter/skills/setup-rive/manifest.json` (updated) | Both manifests' `project_files` list the same project-relative target path `docs/flame-rive-integration.md`, each sourced from its own skill's local copy from FFR-T027 — installing either first creates it, installing the second leaves it alone (`copyFile`'s existing skip-if-exists behavior) | FFR-T027 | 30m |
+| **FFR-T029** | W4 | Correctness pass on the `flame_rive` bridge note | `plugins/flutter/rules/flame.md` (FFR-T006), current official `flame_rive` bridge docs | `plugins/flutter/rules/flame.md` (updated if drifted) | The `RiveComponent`/`flame_rive` reference in `rules/flame.md` is checked against the current official bridge-package docs and corrected if anything has changed since spec.md was written | FFR-T006 | 30m |
+| **FFR-T030** | W4 | Integration test: both install orders | FFR-T028 | test results | Fresh scratch projects install (a) `setup-flame` then `setup-rive`, and (b) `setup-rive` then `setup-flame`. In both: `.ai-workspace/plugins/flutter.md` has both `## flame` and `## rive` sections; both profile READMEs and the integration guide (from either skill's synced copy) exist; `flutter analyze --fatal-infos` / `flutter test` stay green with both dependency sets installed | FFR-T028 | 2h |
+| **FFR-T031** | W4 | Final feature-level DoD pass | plan.md (Feature-Level Definition of Done) | none (verification only) | `npm run sync-shared:check` passes; version strings match across all five manifest/plugin.json files touched by this feature; FFR-T004's regression check still holds after all changes | FFR-T030, FFR-T029 | 1h |
+
+## Parallelism
+
+- **W1:** strictly sequential (FFR-T001 → T005) — each step depends on the installer change actually landing before the next check makes sense.
+- **W2 and W3 are fully independent of each other** — both depend only on FFR-T005 (end of W1) and can run in parallel, in either order, by different people/sessions.
+  - Within W2: FFR-T006→T007 can run in parallel with FFR-T008 (skill scaffold); FFR-T009, FFR-T010, FFR-T011 can run in parallel once FFR-T008 lands; FFR-T012 needs FFR-T011; FFR-T013 needs T009/T010/T012; T014→T015 are sequential after that.
+  - Within W3: FFR-T016→T017 can run in parallel with FFR-T018; FFR-T019, FFR-T020, FFR-T021 can run in parallel once FFR-T018 lands; FFR-T022 needs FFR-T021 (the fixture); FFR-T023 needs FFR-T022; FFR-T024 needs T019/T020/T023; T025→T026 sequential after that.
+- **W4 cannot start until both W2 and W3 finish** (FFR-T015 and FFR-T026) — it's the sink wave. FFR-T029 only needs FFR-T006 (W2), so it can start as soon as W2 is done without waiting on W3, but FFR-T030/T031 need the full join.

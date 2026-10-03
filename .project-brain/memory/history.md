@@ -9,6 +9,10 @@ Format: YYYY-MM-DD | Topic/Ticker | Key outcome or decision | Files created
 
 ---
 
+2026-10-03 | flutter-flame-rive-support | Implemented all 31 tasks; Rive fixture authored from RML via Rive CLI; 3 real bugs fixed | plugins/flutter/*, plugins/_shared/installer.js
+
+2026-10-02 | flutter-flame-rive-support | Spec/plan/tasks approved after 3 review rounds each; fixed lifecycle, asset, and installer-sharing bugs | .features/flutter-flame-rive-support/*
+
 
 2026-10-01 | flutter-flame-rive-support | Created feature for extending Flutter plugin with Flame (2D game engine) and Rive (animation tool) support; comprehensive research completed (404 lines) covering authoritative sources, architecture, lifecycle, state boundaries, asset management, testing, and integration patterns; recommendation: extend as optional composable modules, reuse official ecosystems, no custom MCP servers | .features/flutter-flame-rive-support/*
 

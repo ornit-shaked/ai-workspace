@@ -1,0 +1,23 @@
+import 'package:flame/components.dart';
+
+/// A minimal example component: moves at a constant velocity.
+///
+/// Demonstrates this plugin's Flame update-loop pattern — delete once real
+/// game components exist (see `docs/flame-profile.md`).
+class ExampleComponent extends PositionComponent {
+  /// Creates an [ExampleComponent] moving at [velocity].
+  ExampleComponent({
+    required this.velocity,
+    super.position,
+    super.size,
+  });
+
+  /// Constant velocity, in logical pixels per second.
+  final Vector2 velocity;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    position += velocity * dt;
+  }
+}

@@ -2,7 +2,7 @@
 
 Official plugin for Flutter development with opinionated architectural decisions.
 
-**Version:** 1.1.3 • **License:** MIT
+**Version:** 1.2.0 • **License:** MIT
 
 ## What This Does
 
@@ -22,17 +22,35 @@ Plugin system handles installation automatically. Requires [flutter/agent-plugin
 
 ## Rules
 
-Six auto-loaded rules in `rules/`:
+Manual rules in `rules/`, pulled in by an agent when the matching topic comes up:
 - `state-management.md` — Bloc/Cubit enforcement
 - `models.md` — Freezed everywhere
 - `linting.md` — very_good_analysis standards
 - `flavors.md` — Environment configuration
 - `assets-and-l10n.md` — Asset and localization patterns
 - `error-handling.md` — Result type for async operations
+- `flame.md` — Flame game engine: lifecycle, Flutter/Flame boundary, state ownership, performance, testing
+- `rive.md` — Rive animation runtime: init order, state ownership, disposal, renderer choice, testing, authoring `.riv` from RML
 
 ## Skills
 
-- `setup` — Bootstrap new Flutter project with full scaffold
+- `setup` — Bootstrap new Flutter project with full scaffold (runs automatically on first session)
+
+### Optional profiles
+
+Opt-in — run manually once a project wants the capability; neither auto-runs at session start,
+and both require `setup` to have run first:
+
+- `setup-flame` (`/flutter:setup-flame`) — Flame game-engine scaffolding: folder structure, an ADR,
+  a bare example game + component with its test, and `flame`/`flame_bloc` pinned in `pubspec.yaml`.
+  See `docs/flame-profile.md` after installing.
+- `setup-rive` (`/flutter:setup-rive`) — Rive animation-runtime scaffolding: folder structure, an
+  ADR, a Data Binding example widget + fixture `.riv` + test, and `rive` pinned in `pubspec.yaml`.
+  See `docs/rive-profile.md` after installing.
+
+Independent and composable — install either, both, or neither, in any order. Combining them (Rive
+inside Flame via `flame_rive`) is covered in each profile's own README under "Using Flame & Rive
+together".
 
 ## Quick Commands
 

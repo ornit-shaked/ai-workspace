@@ -1,0 +1,22 @@
+import 'package:flame/game.dart';
+import 'package:flame_test/flame_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:[package-name]/game/components/example_component.dart';
+
+void main() {
+  group('ExampleComponent', () {
+    testWithFlameGame('moves at constant velocity after update', (game) async {
+      final component = ExampleComponent(
+        velocity: Vector2(10, 0),
+        position: Vector2.zero(),
+      );
+      await game.ensureAdd(component);
+
+      final initialPosition = component.position.clone();
+      game.update(1);
+
+      expect(component.position, isNot(equals(initialPosition)));
+      expect(component.position, equals(initialPosition + Vector2(10, 0)));
+    });
+  });
+}
