@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-flutter-flame-rive-support: all 31 tasks done on branch `feature/flutter-flame-rive-support-work`, PR open, awaiting review before merge to master. Next: run `/code-review` (only self-review done so far), then run the Rive widget test on a machine with the MSVC runtime (error 126 here is a missing DLL dependency, not a code defect), then merge. Still pending from before: doc-governance and usage-cost-optimization at write-spec; Brain 1.1.0 diff uncommitted.
+flutter-flame-rive-support: PR #9 open against master, two review rounds addressed (pubspec corruption fixed line-based; profile-skill discovery + plumbing dedup added). Next: `/code-review` (still no fresh-eyes pass), run the Rive widget test on a machine with the MSVC runtime (error 126 here is a missing DLL dependency, not a code defect), then merge. Still pending from before: doc-governance and usage-cost-optimization at write-spec; Brain 1.1.0 diff uncommitted.
 <!-- brain:current-focus-end -->
 
 ---

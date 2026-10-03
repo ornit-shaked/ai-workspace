@@ -6,11 +6,12 @@
 
 ## Status — 2026-10-03
 
-**All 31 tasks implemented** on `feature/flutter-flame-rive-support-work`. Verified: `npm test`
-17/17, `sync-shared:check` clean, versions 1.2.0 across all 5 flutter manifests, both install
-orders green (`pub get` / `analyze --fatal-infos` / Flame test), brain+lifecycle regression holds.
+**All 31 tasks implemented** on `feature/flutter-flame-rive-support-work`, PR #9 open against
+master, under human review. Verified: `npm test` 26/26, `sync-shared:check` clean, versions 1.2.0
+across all 5 flutter manifests, both install orders green (`pub get` / `analyze --fatal-infos` /
+Flame test), brain+lifecycle regression holds.
 
-Three spec/plan corrections found by executing rather than reading:
+Four spec/plan corrections and one pre-existing defect found by executing rather than reading:
 
 - **FFR-T021's premise was wrong.** The fixture does *not* need the Rive Editor — the Rive CLI
   compiles `.riv` from RML (XML text). Authored that way; RML source in `setup-rive/fixture-src/`.
@@ -18,10 +19,19 @@ Three spec/plan corrections found by executing rather than reading:
   byte-for-byte copying by extension.
 - **`injectPubspecConfig` dropped every Flame/Rive asset dir**, because base `setup` already
   declared `flutter.assets` and the logic skipped existing keys. Now unions lists.
+- **Pre-existing on master: `configurePubspec` destroyed comments/blank lines** on every write
+  (parse-to-object-reserialize, banned by commit f804d42, reintroduced after it). This feature
+  widened the blast radius from one caller to three. Rewritten line-based; `pubspec.yaml` edits
+  are now pure insertions.
+- **`setup-flame`/`setup-rive` were undiscoverable** — not in `hooks.json` (correctly, as opt-in
+  profiles), unmentioned in `AGENTS.md` beyond their rule trigger, absent from `README.md`. Fixed:
+  `AGENTS.md` now points at the matching skill when scaffolding is missing; `README.md` documents
+  both under "Optional profiles".
 
 Open, not blocking merge: the Rive widget test is unrun on the dev machine — `rive_native.dll`
 fails with error 126 even by absolute path (missing MSVC-runtime dependency of that DLL, an
-environment gap). Prerequisite documented as `dart run rive_native:setup`.
+environment gap). Prerequisite documented as `dart run rive_native:setup`. Only a self-review plus
+the human reviewer's pass have happened so far — no fresh-eyes `/code-review`.
 
 ## Task Table
 
