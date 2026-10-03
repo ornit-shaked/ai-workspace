@@ -145,13 +145,41 @@ function upsertTrackingSection(trackingPath, { pluginName, componentId, version,
   return content;
 }
 
+// Assets that must be copied byte-for-byte. Reading these as utf-8 and
+// writing them back replaces every invalid sequence with U+FFFD, which
+// silently corrupts the file (a .riv's 0xC4 becomes EF BF BD and the
+// runtime then fails to decode it).
+const BINARY_ASSET_EXTENSIONS = new Set([
+  '.riv', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.bmp',
+  '.ttf', '.otf', '.woff', '.woff2',
+  '.mp3', '.wav', '.ogg', '.m4a',
+  '.zip', '.pdf'
+]);
+
+function isBinaryAsset(filePath) {
+  return BINARY_ASSET_EXTENSIONS.has(path.extname(filePath).toLowerCase());
+}
+
 /**
  * Copy file with placeholder replacement
+ *
+ * Binary assets (see BINARY_ASSET_EXTENSIONS) bypass both the placeholder
+ * replacements and the content transformers — neither is meaningful for
+ * them, and routing them through a utf-8 round trip corrupts the bytes.
  */
 function copyFile(sourcePath, targetPath, replacements = {}, contentTransformers = []) {
   const targetDir = path.dirname(targetPath);
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  if (isBinaryAsset(sourcePath)) {
+    fs.copyFileSync(sourcePath, targetPath);
+    return {
+      status: 'created',
+      size: fs.statSync(targetPath).size,
+      createdAt: new Date().toISOString()
+    };
   }
 
   let content = fs.readFileSync(sourcePath, 'utf-8');

@@ -23,12 +23,13 @@ The script:
 - Checks `.ai-workspace/plugins/flutter.md` for a `## rive` component marker at the current
   version (exits if already installed) — installs independently of `setup-flame`.
 - Copies project templates: `docs/adr/ui/ADR-0010-rive-runtime-boundary.md`,
-  `docs/rive-profile.md`, `docs/flame-rive-integration.md`, the example widget, and its test.
+  `docs/rive-profile.md`, `docs/flame-rive-integration.md`, the example widget, its test, and the
+  working fixture `assets/rive/ui/example.riv` (one artboard, one state machine, one exported
+  View Model with a boolean property `isActive`).
 
-**Known gap:** the example widget expects a fixture `.riv` at `assets/rive/ui/example.riv` with a
-boolean View Model property named `isActive`. That fixture is not shipped yet (it requires the
-Rive Editor/CLI to author) — the example widget and test install and analyze cleanly but fail at
-asset load until it exists. See `docs/rive-profile.md`.
+**Note on running the Rive test:** `flutter pub get` does not provision `rive_native`'s platform
+library, so the shipped widget test needs
+`dart run rive_native:setup --platform <os>` first. See `docs/rive-profile.md`'s prerequisites.
 - Creates Rive's project directories (`lib/ui/rive/**`, `assets/rive/**`, `test/rive/**`).
 - Injects `rive` plus the new asset directories into `pubspec.yaml`.
 - Sorts Dart import blocks alphabetically (very_good_analysis compliance).

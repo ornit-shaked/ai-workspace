@@ -1,11 +1,11 @@
-// NOTE: this test is not runnable as shipped. It needs BOTH:
-//  1. the fixture `assets/rive/ui/example.riv`, exposing a boolean View Model
-//     property named `isActive` on an exported View Model instance (see
-//     `docs/rive-profile.md`'s "fixture pending" note); and
-//  2. rive_native's platform library available to `flutter test` — a bare
-//     `flutter test` does not always provision it (on Windows it fails with
-//     "Failed to load dynamic library 'rive_native.dll'").
-// See `rules/rive.md`'s testing section.
+// NOTE: this test needs rive_native's platform library, which `flutter pub
+// get` does not provision. Run once per machine/CI image:
+//   dart run rive_native:setup --platform <windows|macos|linux|android|ios>
+// Otherwise it fails with "Failed to load dynamic library 'rive_native.dll'".
+// See `docs/rive-profile.md`'s prerequisites and `rules/rive.md`.
+//
+// It binds to the shipped fixture `assets/rive/ui/example.riv` by name: a
+// boolean View Model property `isActive` on an exported instance.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:[package-name]/ui/rive/widgets/example_rive_widget.dart';

@@ -2,31 +2,29 @@
 
 This project has the Rive animation-runtime profile installed via the `setup-rive` skill.
 
-## Prerequisite
+## Prerequisites
 
-The base `setup` skill must have run first — `setup-rive` assumes `lib/` and `pubspec.yaml`
-already exist and fails with a clear message otherwise.
-
-## ⚠️ Fixture pending
-
-The example widget expects a fixture at `assets/rive/ui/example.riv` exposing a boolean View
-Model property named `isActive` on an exported View Model instance. **That fixture is not shipped
-yet** — it can only be authored in the Rive Editor or via `rive create`, not generated from code.
-Until it is added:
-
-- `lib/ui/rive/widgets/example_rive_widget.dart` installs and analyzes cleanly, but fails at
-  runtime when it tries to load the asset.
-- `test/rive/widgets/example_rive_widget_test.dart` cannot pass yet.
-
-Separately, Rive widget tests need `rive_native`'s platform library present. A bare
-`flutter test` does not always provision it (on Windows it fails with `Failed to load dynamic
-library 'rive_native.dll'`) — run them where that library is built, or cover the behavior with an
-integration test. See `rules/rive.md`'s testing section.
-
-To finish it: create a single-artboard `.riv` with one state machine and one boolean View Model
-property named `isActive` toggling two visibly distinct states, save it to
-`assets/rive/ui/example.riv`, and (if contributing upstream) add it to this skill's
-`templates/project/assets/rive/ui/` plus its `manifest.json` `project_files`.
+1. **Base `setup` skill must have run first** — `setup-rive` assumes `lib/` and `pubspec.yaml`
+   already exist and fails with a clear message otherwise.
+2. **`rive_native`'s platform library, before running Rive tests.** `flutter pub get` does not
+   provision it. Once per machine / CI image:
+   ```bash
+   dart run rive_native:setup --verbose --clean --platform <windows|macos|linux|android|ios>
+   ```
+   Without it, Rive widget tests fail with `Failed to load dynamic library 'rive_native.dll'`.
+   If that persists with **error code 126** even though the file exists, the missing module is one
+   of that library's *own* dependencies (typically the MSVC runtime on Windows), not the library
+   — install the platform C++ redistributable or use a CI image that has it. See `rules/rive.md`.
+3. **The [Rive CLI](https://rive.app/docs/cli/overview) — only if you or an agent will generate or
+   modify `.riv` files locally.** Not needed to use this profile as shipped; the example fixture
+   is already included. Install it when you want animations authored from code rather than by a
+   designer in the Rive Editor:
+   ```bash
+   curl -fsSL https://releases.rive.app/cli/install.sh | sh     # macOS/Linux
+   irm https://releases.rive.app/cli/install.ps1 | iex          # Windows (PowerShell)
+   ```
+   No Rive account is needed to create, preview, or build locally. See
+   [Creating your own animations](#creating-your-own-animations).
 
 ## What it installs
 
@@ -34,14 +32,21 @@ property named `isActive` toggling two visibly distinct states, save it to
   `assets/rive/{characters,ui,effects}`, `test/rive/{widgets,controllers,adapters}`.
   (`rive_projects/` is not created by default — optional, only if the project adopts the Rive
   CLI/Editor authoring workflow.)
-- **Dependencies:** `rive`.
+- **Dependencies:** `rive`, plus the three `assets/rive/*` directories declared in
+  `pubspec.yaml`'s `flutter.assets`.
 - **Docs:** `docs/adr/ui/ADR-0010-rive-runtime-boundary.md` (state-ownership boundary and
   disposal rules, see `rules/rive.md`), `docs/flame-rive-integration.md` (adopting Rive and/or
   Flame together or separately — see [the integration guide](flame-rive-integration.md)).
-- **Example:** `lib/ui/rive/widgets/example_rive_widget.dart` (wraps `RiveWidgetBuilder`, loads
-  the fixture `assets/rive/ui/example.riv`, drives its boolean input via `RiveWidgetController`/
-  Data Binding on a tap), with `test/rive/widgets/example_rive_widget_test.dart` asserting the
-  state machine's boolean input actually flips after a simulated tap.
+- **Data Binding boilerplate:** `lib/ui/rive/widgets/example_rive_widget.dart` — a working
+  `FileLoader` → `RiveWidgetBuilder` → `RiveWidgetController` → View Model wiring, including the
+  loading/failed/loaded states and correct disposal (the widget owns and disposes the
+  `FileLoader`; `RiveWidgetBuilder` disposes the controller and view model instance).
+- **A real fixture:** `assets/rive/ui/example.riv` — a working 540-byte Rive file (one artboard
+  `Example`, one state machine, one exported View Model with a boolean property `isActive`).
+  `isActive = false` shows a small blue circle; `true` transitions it to a larger green circle.
+- **Test setup:** `test/rive/widgets/example_rive_widget_test.dart` — a widget test that taps the
+  widget and asserts the bound boolean actually flipped, via the public
+  `ExampleRiveWidgetState.isActive` getter.
 
 ## How to run
 
@@ -54,10 +59,33 @@ Independent of `setup-flame` — install either or both, in either order.
 ## What the example proves
 
 `example_rive_widget_test.dart` exercises real state-machine/controller behavior, not just the
-loading or error path: it simulates a tap, then asserts the fixture's boolean input flipped and
-the controller reports the new state. Once real animation content exists, delete
-`example_rive_widget.dart`/its test and the fixture `example.riv` — see
+loading or error path: it simulates a tap, then asserts the fixture's boolean property flipped
+and the widget reports the new state. (It needs prerequisite 2 above to run.) Once real animation
+content exists, delete `example_rive_widget.dart`/its test and the fixture `example.riv` — see
 `docs/flame-rive-integration.md` for the cleanup note.
+
+## Creating your own animations
+
+You do not need a designer or the Rive Editor to produce a `.riv`. With the Rive CLI
+(prerequisite 3) you author **RML** — an XML text format — and compile it:
+
+```bash
+rive create my_animation     # scaffolds rive.yaml + scene.rml (+ its own AGENTS.md for agents)
+# edit scene.rml
+rive . --verify              # compile check
+rive . --once                # writes build/my_animation.riv (unsigned — what Flutter needs)
+rive inspect . --summary     # confirm what actually got built
+rive . --screenshot=preview.png --data=isActive=true --advance=1s   # render a frame headlessly
+```
+
+Then copy the `.riv` into `assets/rive/<category>/` and load it the way
+`example_rive_widget.dart` does. Keep the `.rml` source in your repo beside the `.riv` so the
+binary stays reproducible.
+
+Agents working in this repo get the full procedure — including "never guess a type name, use
+`rive schema` / `rive docs`" — from `rules/rive.md`. For interactive work alongside a human
+designer, the official [Rive MCP server](https://rive.app/docs/editor/ai/mcp) drives the Editor
+instead.
 
 ## Further reading
 

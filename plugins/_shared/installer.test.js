@@ -6,7 +6,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const { isInstalled, upsertTrackingSection, installProjectFiles } = require('./installer');
+const { isInstalled, upsertTrackingSection, installProjectFiles, copyFile } = require('./installer');
 
 function makeTempProject() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'installer-test-'));
@@ -197,6 +197,28 @@ test('upsertTrackingSection updates a legacy root section (CRLF, no marker yet) 
   assert.equal(rootHeadingCount, 1, 'must not duplicate the root heading');
   assert.match(content, /# brain\r\n\r\n<!-- component:brain v1\.1\.0 -->\r\nInstalled 2026-10-02 \(v1\.1\.0\)/);
   assert.equal(isInstalled(projectRoot, 'brain', '1.1.0'), true);
+});
+
+test('copyFile copies a binary asset byte-for-byte without text mangling', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'installer-binary-'));
+  const sourcePath = path.join(dir, 'example.riv');
+  const targetPath = path.join(dir, 'out', 'example.riv');
+
+  // A real .riv header plus bytes that are not valid UTF-8 — reading this
+  // as utf-8 and writing it back replaces them with U+FFFD and corrupts
+  // the file.
+  const original = Buffer.from([
+    0x52, 0x49, 0x56, 0x45, 0x07, 0x03, 0x00, 0xc4,
+    0x01, 0xec, 0x01, 0xee, 0x03, 0xaa, 0x04, 0xad,
+    0xff, 0xfe, 0x80, 0x81, 0x00, 0x1d, 0x1d, 0x1d
+  ]);
+  fs.writeFileSync(sourcePath, original);
+
+  copyFile(sourcePath, targetPath, { '\\[install-date\\]': '2026-10-03' }, []);
+
+  const copied = fs.readFileSync(targetPath);
+  assert.deepEqual(copied, original);
+  assert.equal(copied.length, original.length);
 });
 
 test('installProjectFiles upserts the tracking file section instead of skipping it when it already exists', () => {
