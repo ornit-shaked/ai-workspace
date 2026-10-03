@@ -4,6 +4,25 @@
 
 **Note for whoever implements this:** these tasks are written to be self-contained. Each `Inputs` cell names the exact spec.md section (D1–D8/D4a) to read before starting that task — spec.md itself carries the full rationale, verified API details, and provenance; this file deliberately does not restate any of it. `Outputs` are exact file paths. No task assumes context from how this plan was derived.
 
+## Status — 2026-10-03
+
+**All 31 tasks implemented** on `feature/flutter-flame-rive-support-work`. Verified: `npm test`
+17/17, `sync-shared:check` clean, versions 1.2.0 across all 5 flutter manifests, both install
+orders green (`pub get` / `analyze --fatal-infos` / Flame test), brain+lifecycle regression holds.
+
+Three spec/plan corrections found by executing rather than reading:
+
+- **FFR-T021's premise was wrong.** The fixture does *not* need the Rive Editor — the Rive CLI
+  compiles `.riv` from RML (XML text). Authored that way; RML source in `setup-rive/fixture-src/`.
+- **`copyFile` corrupted binary assets** (utf-8 round trip turned `0xC4` into `EF BF BD`). Fixed
+  byte-for-byte copying by extension.
+- **`injectPubspecConfig` dropped every Flame/Rive asset dir**, because base `setup` already
+  declared `flutter.assets` and the logic skipped existing keys. Now unions lists.
+
+Open, not blocking merge: the Rive widget test is unrun on the dev machine — `rive_native.dll`
+fails with error 126 even by absolute path (missing MSVC-runtime dependency of that DLL, an
+environment gap). Prerequisite documented as `dart run rive_native:setup`.
+
 ## Task Table
 
 | ID | Wave | Title | Inputs | Outputs | DoD | Depends On | Est |

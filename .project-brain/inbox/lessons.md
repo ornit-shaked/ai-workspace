@@ -22,6 +22,14 @@ Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the 
 
 ---
 
+2026-10-03 | missing-knowledge | flutter-flame-rive-support | claude | Rive CLI compiles .riv from RML text; no Editor or designer needed
+
+2026-10-03 | standard | flutter-flame-rive-support | claude | Installer must copy binary assets byte-for-byte; utf-8 round-trip corrupts them
+
+2026-10-03 | standard | flutter-flame-rive-support | claude | Regexes over repo files must match CRLF; this checkout is autocrlf
+
+2026-10-03 | howto | flutter-flame-rive-support | claude | Rive tests need `dart run rive_native:setup`; error 126 means missing MSVC runtime
+
 2026-10-02 | correction | flutter-flame-rive-support | claude | Verify cited precedent against actual files on disk before stating it, not from memory
 2026-10-02 | preference | flutter-flame-rive-support | claude | This plugin's goal: give agents authoritative guardrails upfront, not re-derived research each time
 2026-09-26 | preference | brain-prime | claude | Session-start hook should show digest of open features and next tasks, not raw history

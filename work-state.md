@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-flutter-flame-rive-support: IMPLEMENTED on branch `feature/flutter-flame-rive-support-work` (worktree `.worktrees/flutter-flame-rive-support-work`), all 31 tasks done, not yet merged. Flame profile fully verified (pub get/analyze/test green). Rive profile complete incl. a real `example.riv` authored from RML via the Rive CLI (spec's "needs the Editor, not generatable from code" was wrong — the CLI compiles .riv from XML text; RML source kept in setup-rive/fixture-src/ for reproducibility). The Rive widget test is still unrun ON THIS MACHINE: rive_native.dll fails to load with error 126 even by absolute path, i.e. a missing MSVC-runtime dependency of that DLL — environment gap, not a code defect; `dart run rive_native:setup` is documented as the prerequisite. Next: (1) fresh-eyes review (`/code-review`) — only a self-review was done, (2) run the Rive test on a machine with the C++ redistributable, (3) merge. Also pending from before: doc-governance and usage-cost-optimization still at write-spec; Brain 1.1.0 diff still uncommitted.
+flutter-flame-rive-support: all 31 tasks done on branch `feature/flutter-flame-rive-support-work`, PR open, awaiting review before merge to master. Next: run `/code-review` (only self-review done so far), then run the Rive widget test on a machine with the MSVC runtime (error 126 here is a missing DLL dependency, not a code defect), then merge. Still pending from before: doc-governance and usage-cost-optimization at write-spec; Brain 1.1.0 diff uncommitted.
 <!-- brain:current-focus-end -->
 
 ---
