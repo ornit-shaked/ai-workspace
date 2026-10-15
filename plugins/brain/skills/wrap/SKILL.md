@@ -13,49 +13,48 @@ triggers:
 
 Append ONE line to `.project-brain/memory/history.md` (below `---`, above older entries).
 
-**Format:** `YYYY-MM-DD | topic | outcome`
+**Format:** `YYYY-MM-DD | topic | outcome` — same style as a commit subject line.
 
-**Rules:**
-- **Max 20 words** after the date. No file lists, no implementation details.
 - `topic` = feature name, bug ID, or area (1-3 words).
-- `outcome` = the single most important result: what decision was made, what shipped, or what state changed. One clause, not a list.
-- If the session touched multiple unrelated things, write one line per topic — still max 20 words each.
+- `outcome` = what changed. One clause, max 10 words. No lists, no details.
+- Reverted work → record only the final state.
+- Multiple topics → one line each, same rules.
 
-**Good:** `2026-09-25 | lifecycle-v2.0 | Adopted superpowers as hard dependency, removed 3 redundant skills`
-**Bad:** `2026-09-25 | lifecycle-v2.0 | Adopted obra/superpowers as hard dependency; removed write-plan, write-tasks, review-tasks (3 skills, 2 agents); kept write-spec (structural gap with brainstorming); created .features/AGENTS.md template with output-path overrides and fence rules; adapted review-plan...`
+**Good:** `2026-09-25 | lifecycle-v2.0 | Adopted superpowers, removed 3 redundant skills`
+**Bad:** `2026-09-25 | lifecycle-v2.0 | Adopted obra/superpowers as hard dependency; removed write-plan, write-tasks, review-tasks (3 skills, 2 agents); kept write-spec...`
 
 ## 2. Capture lessons
 
 Add lessons to `.project-brain/inbox/lessons.md` (below `---`, above older entries) using the format and tags defined in that file.
 
-**Only capture a lesson if ALL of these are true:**
-1. Something actually happened in the session (not a suggestion, not a plan, not a hypothetical).
-2. The user confirmed or applied it — rejected suggestions are NOT lessons.
-3. It teaches something reusable for future sessions (not a one-off fact).
-4. It is NOT already covered in `instructions.md`, `AGENTS.md`, or `.project-brain/runbooks/`.
+**What to look for** — scan the session for these patterns:
 
-**Each lesson = one line, max 15 words.** State the rule or fact, not the story.
+| Pattern | Tag | Example |
+|---|---|---|
+| A procedure happened 2+ times, or will likely recur | `howto` | `Run tests: cd backend && pytest -x --tb=short` |
+| No rule/skill exists for something, so you improvised | `gap` | `No rule for error handling in API routes — agent invented a pattern` |
+| Something should be a skill, hook, rule, or automated check | `candidate` | `Lint check before commit should be a hook, not manual` |
+| The user corrected a wrong assumption about this project | `correction` | `Tests run with pytest, not jest — package.json is misleading` |
+| A constraint or preference not discoverable from code | `preference` | `User wants all API responses wrapped in {data, error} envelope` |
 
-**Good:** `2026-09-25 | correction | wrap-fix | devin | Wrap must not log rejected suggestions as lessons`
-**Bad:** `2026-09-25 | correction | wrap-fix | devin | During the session we discussed improving the wrap skill and the user pointed out that sometimes lessons are written about suggestions that were rejected which is incorrect behavior`
+**Before writing ANY lesson, answer these 3 questions out loud:**
+1. Was this already fixed in this session? → If yes, **skip**. It's in the code, not for the inbox.
+2. Would a future agent on a different task make a wrong decision without this? → If no, **skip**.
+3. Is this already written somewhere (instructions.md, AGENTS.md, rules, runbooks, code)? → If yes, **skip**.
 
-### How-to lessons (tag: `howto`)
+All 3 must pass. If any is uncertain, **skip**. Zero lessons is the correct default.
 
-When the user explains a recurring procedure (how to run the app, start the emulator, deploy, etc.), capture it with the `howto` tag. Include enough detail so DREAM can create a runbook.
-
-**Good:** `2026-09-26 | howto | session-name | devin | Run Python app: cd backend && python -m uvicorn main:app --reload`
-**Bad:** `2026-09-26 | howto | session-name | devin | The user showed how to run things`
-
-**Recognize how-to patterns:** User says "this is how you...", user corrects agent on how to run/build/deploy something, user explains a multi-step procedure they'll need again.
+**Format:** one line, max 15 words. State the fact, not the story.
 
 ### Do NOT capture
 
-- Suggestions you made that the user rejected or ignored.
-- Things you planned but didn't execute.
-- Restatements of what the task was ("we worked on X" — that's history, not a lesson).
-- Facts already in `instructions.md`, `AGENTS.md`, or runbooks.
-- Intermediate debugging steps (only the final fix/insight, if reusable).
-- Generic knowledge the agent should already know (e.g., "use git add before commit").
+- Rejected or ignored suggestions.
+- Plans not executed.
+- What the task was ("we worked on X" — that's history).
+- Facts already covered elsewhere.
+- Session-specific context (e.g., "chose approach B for auth" — that's this task, not a project lesson).
+- Things discoverable by reading the code.
+- Generic knowledge agents already have.
 
 If zero lessons qualify, write none. An empty inbox is fine.
 

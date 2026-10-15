@@ -18,6 +18,7 @@ const { execSync } = require('child_process');
 
 const root = process.cwd();
 const historyPath = path.join(root, '.project-brain', 'memory', 'history.md');
+const instructionsPath = path.join(root, '.project-brain', 'memory', 'instructions.md');
 const workStatePath = path.join(root, 'work-state.md');
 const featuresDir = path.join(root, '.features');
 
@@ -97,9 +98,28 @@ function staleWarning() {
   }
 }
 
+function loadInstructions() {
+  const raw = read(instructionsPath);
+  if (!raw) return '';
+  // Extract only non-empty lines after the first --- separator, skip section headers with no content
+  const idx = raw.indexOf('\n---\n');
+  const body = idx === -1 ? raw : raw.slice(idx + 5);
+  const lines = body.split('\n').filter((l) => {
+    const t = l.trim();
+    // skip empty, separators, section headers followed by description-only text, and template placeholders
+    if (!t || t === '---' || t.startsWith('*')) return false;
+    return true;
+  });
+  if (!lines.length) return '';
+  // Cap at 2KB to prevent bloat
+  const text = lines.join('\n');
+  return text.length > 2048 ? text.slice(0, 2045) + '...' : text;
+}
+
 const ws = read(workStatePath);
 const focus = currentFocus(ws);
 const last = lastHistoryLine(read(historyPath));
+const instructions = loadInstructions();
 
 const open = [];
 for (const f of parseFeatureRows(ws)) {
@@ -121,7 +141,8 @@ if (warn) lines.push(warn);
 lines.push('Full history: .project-brain/memory/history.md (read on demand). Ask which to continue.');
 
 const digest = lines.join('\n');
-const additionalContext = `Project digest (brain plugin). Do NOT re-summarize it unless asked; act on the user's first message, and if they open with no task, offer the open features above.\n\n${digest}`;
+const instructionsBlock = instructions ? `\n\nLearned preferences (instructions.md — apply silently):\n${instructions}` : '';
+const additionalContext = `Project digest (brain plugin). Do NOT re-summarize it unless asked; act on the user's first message, and if they open with no task, offer the open features above.\n\n${digest}${instructionsBlock}`;
 
 console.log(JSON.stringify({
   systemMessage: `brain loaded\n${digest}`,

@@ -1,19 +1,29 @@
 # About Me
 
-I am a solo developer working with Claude Code, Devin, and Cursor.
+## Who I Am
 
-## Working Style
+I am a hands-on software and AI product builder. 
+I care about production-quality systems.
 
-- Plan before code, always
-- Be direct, skip pleasantries
-- Prefer safe, incremental changes
-- I prefers detailed PRDs.
-- Always separate scope from implementation.
-- Prefer iterative delivery.
-- Ask clarifying questions when requirements are ambiguous.
+## Domain Expertise
 
-## Tech Background
-<!-- Fill in: your primary languages, frameworks, domains -->
+## Communication Style
+- Keep responses concise and focused. Use plain language, avoid repetition, and emphasize the most important points.
 
-## Communication Preferences
-<!-- Fill in: how you like AI to communicate, what tone, what level of detail -->
+- Favor high-impact improvements over perfect solutions. Know when to stop refining and when the remaining gains are not worth the additional effort.
+
+- For every significant concern, indicate:
+   - Impact: High / Medium / Low
+   - Recommendation: Must Fix / Should Fix / Nice to Have
+
+- Avoid presenting minor observations as major problems.
+
+- When information is uncertain, incomplete, or not yet decided, state that explicitly rather than making assumptions.
+- Start with the answer or recommendation before providing explanation.
+- Clearly distinguish facts, recommendations, assumptions, and open questions.
+- When information is uncertain, incomplete, or not yet decided, state that explicitly.
+
+## Opinions
+- Reusable mechanisms and clear governance scale better than large collections of specialized instructions.
+- Consistent terminology is not documentation polish; it is part of system design.
+- Production quality comes from clear boundaries, validation, and maintainability.

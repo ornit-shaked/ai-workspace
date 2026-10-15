@@ -1,25 +1,10 @@
 # Lessons Inbox
 
-One line per lesson. Newest at the top (below the `---`), same as history.md.
-This file is updated automatically by the /wrap command at the end of every session.
+Format: `YYYY-MM-DD | tag | session-name | agent-name | max 15 words`
 
-Processed by the lesson-analyzer skill (future) and cleared when routed.
+Tags: `howto` · `gap` · `candidate` · `correction` · `preference`
 
-Format: YYYY-MM-DD | tag | session-name | agent-name | short description of the learning
-
-**Available tags:**
-- `behavioral` — Agent behavior that needs correction
-- `correction` — Explicit mistake and the correct approach
-- `preference` — User preference discovered during session
-- `candidate-command` — Repeated action worth automating as a command
-- `candidate-skill` — Workflow pattern worth extracting as a skill
-- `candidate-rule` — Path-scoped rule that should exist
-- `candidate-hook` — Check that should always run automatically
-- `standard` — Pattern that should become a coding standard
-- `missing-knowledge` — Context the agent lacked and should know
-- `howto` — Recurring procedure the user explained (e.g., how to run app, start emulator)
-- `idea` — Open-ended idea for future consideration
+Processed by `/dream`. Cleared when routed.
 
 ---
 
-<!-- Newest lessons go here, above older entries -->

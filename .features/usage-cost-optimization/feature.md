@@ -44,18 +44,7 @@ Ornit Shaked, who owns both repos and runs the lifecycle plugin (from ai-workspa
 - Does the user want the rule to keep auto-advancing feature→spec→plan without asking, or was that convenience worth less than the cost once quantified?
 - Should retries on `needs-work` re-run the full `write-<artifact>` (current behavior) or a cheaper targeted fix pass scoped to just the review's fix list?
 
-## 8. Related Feature (governance angle, tracked separately)
-The user raised a further question: why did kiddi-verse end up with an ungoverned, high-cost
-automation Rule in the first place, and can ai-workspace's plugins influence or guide how
-downstream projects write Rules? That's a governance question, not a cost-diagnosis question, and
-it's already this repo's existing (not-yet-started) feature
-[doc-governance](../doc-governance/feature.md) — "Documentation & Rule-Creation Governance." Rather
-than re-scope this feature to cover it, the kiddi-verse rule has been added there as a concrete case
-study, with an open question about whether the resulting standard should reach downstream/consumer
-projects. This feature (`usage-cost-optimization`) stays scoped to diagnosing and pricing the actual
-loop; `doc-governance` owns whether/how such Rules get reviewed before adoption.
-
-## 9. Investigation History (superseded material, kept for traceability)
+## 8. Investigation History (superseded material, kept for traceability)
 - 2026-09-16, first dashboard pass: hypothesized the cause was inline skill runs vs. unused `plugins/lifecycle/agents/*` wrappers inside ai-workspace. Confirmed no auto-chaining script exists *in ai-workspace* — correct, but incomplete, because the chaining lives in kiddi-verse instead.
 - 2026-09-16, second dashboard pass (`claudestatus.txt`, 23% `general-purpose` subagent share) and `ListAgents` (6 kiddi-verse peer sessions) together pointed at kiddi-verse as the real location to check.
 - 2026-09-22: user pointed directly at `.claude/rules/lifecycle-workflow.md`; reading it confirmed the write→review-twice-per-artifact, auto-advance-on-approval mechanism described above. Problem statement and scope rewritten accordingly.

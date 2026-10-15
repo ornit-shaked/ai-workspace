@@ -35,14 +35,14 @@ A workflow that classifies lessons using a routing matrix, presents proposals fo
 | Candidate artifact (command, skill, hook, rule, standard) | `work-state.md` (Backlog section) | Recommend |
 | Documentation: WHAT/HOW to use (for humans) | `README.md` (root or scoped) | Route |
 | Documentation: HOW to work (for agents) | `CLAUDE.md` (root or scoped) | Route |
-| Documentation: WHY decision made | `docs/adr/ADR-NNNN.md` (root or scoped) | Route |
+| Documentation: WHY decision made | `record-decision` skill (applies 3-part ADR filter) | Delegate |
 | Plugin feedback (mentions plugin name or "plugin should/missing/needs") | Tag as `plugin-feedback:<plugin-name>` | Tag |
 | Session-only note, one-off | Archive only | Discard |
 
 **Routing rules:**
 - Tag is a hint, not final decision — analyze content semantically
 - **Scope:** If impacts one folder/module → scoped (e.g., `plugins/flutter-plugin/CLAUDE.md`). Else → root
-- **ADR:** If routing to ADR and `docs/adr/` missing → suggest creating it first
+- **ADR / rule candidates:** Delegate to `record-decision` skill with a decision brief (what · why · alternatives · scope). It applies the 3-part filter and writes if qualified. Do not write ADRs or rules directly from dream.
 - **Plugin names:** Discover from `.ai-workspace/plugins/` directory (see Files to Read)
 - **Uncertain:** Default to `instructions.md` (safer)
 
@@ -84,6 +84,8 @@ Process one lesson at a time. Present proposal with **semantic analysis** and ro
   - Scope: project | global
   - Origin: YYYY-MM-DD | session-slug
 ```
+
+**For howto / candidate / gap lessons:** Check `inbox/archive/` for similar past lessons. Only suggest creating a runbook, skill, hook, or rule when the same pattern appears in 2+ archived sessions. First occurrence → acknowledge and archive. The archive is the frequency counter — no separate tracking needed.
 
 **For runbooks (howto):** Create a new file `.project-brain/runbooks/<slug>.md` with this structure:
 ```markdown
