@@ -24,6 +24,7 @@ plugins/brain/                             v2.0.0 shim
 ├── .claude-plugin/plugin.json, .devin-plugin/plugin.json
 ├── README.md                              "merged into lifecycle 3.0.0"
 ├── hooks/hooks.json, hooks.json           SessionStart: print notice only
+├── AGENTS.md                              notes the deliberate break from plugin common shape
 └── notice.js
 ```
 
@@ -34,12 +35,12 @@ plugins/brain/                             v2.0.0 shim
 | `brain/agents/documenter.md` | `lifecycle/agents/` | None (its `name:` is `recorder`; keep) |
 | `brain/rules/writing-discipline.md` | `lifecycle/rules/` | None |
 | `brain/AGENTS.md` lines | `lifecycle/AGENTS.md` | Appended section "Context" |
-| `brain/skills/setup/templates/**` | `lifecycle/skills/setup/templates/**` | `work-state.md`: keep lifecycle's (same fence set as brain's — verify by diff first) |
+| `brain/skills/setup/templates/**` | `lifecycle/skills/setup/templates/**` | `work-state.md`: keep lifecycle's 4-gate template. brain's had extra `todo_gen/todo_ok/done` columns; which one a project got depended on hook order |
 | `brain/skills/setup/manifest.json` entries | `lifecycle/skills/setup/manifest.json` | Union of `global_files`, `project_files`, `project_dirs`; drop `brain.md.template` |
 
 ## 3. Setup and tracking
-- One tracking file `.ai-workspace/plugins/lifecycle.md`, with two component sections via the installer's existing `componentId` support: `lifecycle` and `brain`.
-- Upgrade path: existing `.ai-workspace/plugins/brain.md` is left in place (no deletes). Installer already skips existing files, so the `brain` component run only creates what is missing.
+- One tracking file `.ai-workspace/plugins/lifecycle.md`, root section only. The merged manifest is the union of both old manifests, so one install run covers everything; no separate `brain` component is needed.
+- Upgrade path: the version bump (2.1.2 → 3.0.0) makes setup run once. Existing files are skipped, missing ones (e.g. `.project-brain/` in a lifecycle-only project) are created, and the root marker is updated. `.ai-workspace/plugins/brain.md` is left in place (no deletes).
 - Setup SKILL.md: remove the "may already have been created by the brain plugin" wording.
 
 ## 4. Hooks

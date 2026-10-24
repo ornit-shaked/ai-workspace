@@ -16,3 +16,10 @@ Always-on rule for feature lifecycle management.
 ## Gates
 
 4 gates tracked in `work-state.md`: `spec_gen`, `spec_ok`, `plan_gen`, `plan_ok`. Never advance `_ok` gates — user does that.
+
+## Context
+
+- All writing: minimal, accurate, exact words only. No stories. One fact, one location.
+- At session start, use the `prime` skill to load context.
+- At session end, use the `wrap` skill to update history and capture learnings.
+- When a decision has been made and may need recording, use the `record-decision` skill.

@@ -25,7 +25,6 @@ const SOURCE = path.join(REPO_ROOT, 'plugins', '_shared', 'installer.js');
 
 // Every plugin that vendors the shared installer. Add new plugins here.
 const TARGETS = [
-  'plugins/brain/lib/installer.js',
   'plugins/lifecycle/lib/installer.js',
   'plugins/flutter/lib/installer.js',
 ];

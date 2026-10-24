@@ -1,7 +1,7 @@
 {
   "name": "brain",
-  "version": "1.1.0",
-  "description": "Second brain - project memory, tasks, plans, and history",
+  "version": "2.0.0",
+  "description": "Deprecated — merged into lifecycle 3.0.0. Uninstall brain.",
   "author": {
     "name": "Ornit Shaked",
     "url": "https://github.com/ornit-shaked"
@@ -9,7 +9,13 @@
   "homepage": "https://github.com/ornit-shaked/ai-workspace",
   "repository": "https://github.com/ornit-shaked/ai-workspace",
   "license": "MIT",
-  "keywords": ["memory", "tasks", "planning", "history", "project-management", "second-brain"],
-  "skills": "./skills",
+  "keywords": [
+    "memory",
+    "tasks",
+    "planning",
+    "history",
+    "project-management",
+    "second-brain"
+  ],
   "hooks": "./hooks.json"
 }

@@ -10,9 +10,9 @@ A Claude Code / Devin plugin marketplace — memory, feature lifecycle managemen
 
 ## ⚠️ CRITICAL: Two separate areas
 
-- **`plugins/`** = The three plugins this repo publishes (brain, lifecycle, flutter) — source code
+- **`plugins/`** = The plugins this repo publishes (lifecycle, flutter; brain is a deprecated shim since lifecycle 3.0.0) — source code
 - **`.project-brain/`, `.features/`, `work-state.md`** = This repo's *own* project brain — built by
-  installing the `brain`/`lifecycle` plugins into itself for dogfooding. Editing `plugins/brain/`
+  installing the `lifecycle` plugin into itself for dogfooding. Editing `plugins/lifecycle/`
   doesn't touch these, and vice versa.
 
 Don't confuse them! (Past sessions have accidentally run `flutter`'s setup skill against this repo's
@@ -34,7 +34,7 @@ throwaway project instead of installing it here.)
 - **Testing a plugin locally:**
   ```bash
   claude plugin marketplace add .
-  claude plugin install brain@ornit-workspace
+  claude plugin install lifecycle@ornit-workspace
   ```
 - **Architecture decision records:** `docs/adr/` (one subfolder per plugin — `docs/adr/ui/` is flutter's).
 - **`docs/plugins/{flutter-plugin,project-brain}/`** is historical research/design material from

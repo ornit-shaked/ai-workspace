@@ -1,7 +1,7 @@
 {
   "name": "lifecycle",
-  "version": "2.1.2",
-  "description": "Feature lifecycle management — structured progression from idea to implementation",
+  "version": "3.0.0",
+  "description": "Feature lifecycle and project memory — context, state, history, and structured progression from idea to implementation",
   "author": {
     "name": "Ornit Shaked",
     "url": "https://github.com/ornit-shaked"
@@ -15,10 +15,17 @@
     "plan",
     "review",
     "product-management",
-    "superpowers"
+    "superpowers",
+    "memory",
+    "history",
+    "second-brain"
   ],
   "requiredPlugins": [
-    { "source": "github", "repo": "obra/superpowers", "ref": "v6.4.1" }
+    {
+      "source": "github",
+      "repo": "obra/superpowers",
+      "ref": "v6.4.1"
+    }
   ],
   "skills": "./skills",
   "agents": "./agents",
