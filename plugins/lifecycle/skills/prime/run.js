@@ -142,10 +142,10 @@ lines.push('Full history: .project-brain/memory/history.md (read on demand). Ask
 
 const digest = lines.join('\n');
 const instructionsBlock = instructions ? `\n\nLearned preferences (instructions.md — apply silently):\n${instructions}` : '';
-const additionalContext = `Project digest (brain plugin). Do NOT re-summarize it unless asked; act on the user's first message, and if they open with no task, offer the open features above.\n\n${digest}${instructionsBlock}`;
+const additionalContext = `Project digest (lifecycle plugin). Do NOT re-summarize it unless asked; act on the user's first message, and if they open with no task, offer the open features above.\n\n${digest}${instructionsBlock}`;
 
 console.log(JSON.stringify({
-  systemMessage: `brain loaded\n${digest}`,
+  systemMessage: `lifecycle loaded\n${digest}`,
   hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext },
 }));
 process.exit(0);

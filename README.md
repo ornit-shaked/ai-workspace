@@ -10,18 +10,17 @@ A Claude Code / Devin plugin marketplace — memory, feature lifecycle managemen
 claude plugin marketplace add https://github.com/ornit-shaked/ai-workspace
 
 # Install a plugin
-claude plugin install brain@ornit-workspace
 claude plugin install lifecycle@ornit-workspace
 claude plugin install flutter@ornit-workspace
 
 # Update to the latest version later
-claude plugin update brain
+claude plugin update lifecycle
 ```
 
 ### Devin CLI
 ```bash
 # Install individual plugin
-devin plugins install "https://github.com/ornit-shaked/ai-workspace.git#plugins/brain"
+devin plugins install "https://github.com/ornit-shaked/ai-workspace.git#plugins/lifecycle"
 
 # Or install all plugins at once
 devin plugins install oshaked/ai-workspace
@@ -41,36 +40,23 @@ Each plugin auto-installs its extra gap that not supported by official plugin on
 
 | Plugin | Purpose | Key Skills | Docs |
 |--------|---------|-------------|------|
-| **brain** | Memory & learning | `/brain:prime`, `/brain:wrap`, `/brain:dream`, `/brain:commit-push-pr` | [README](plugins/brain/README.md) |
-| **lifecycle** | Feature lifecycle | `/lifecycle:plan-product`, `/lifecycle:write-feature`, `/lifecycle:write-spec`, `/lifecycle:write-plan`, `/lifecycle:write-tasks` | [README](plugins/lifecycle/README.md) |
+| **lifecycle** | Feature lifecycle + project memory | `/lifecycle:prime`, `/lifecycle:wrap`, `/lifecycle:dream`, `/lifecycle:commit-push-pr`, `/lifecycle:plan-product`, `/lifecycle:write-feature`, `/lifecycle:write-spec`, `/lifecycle:review`, `/lifecycle:archive-feature` | [README](plugins/lifecycle/README.md) |
 | **flutter** | Flutter project bootstrap | Bloc/Cubit, Freezed, flavors, ADRs, folder structure | [README](plugins/flutter/README.md) |
 
-**Recommended combo:** `brain` + `lifecycle` for full memory + task management.
+`brain` was merged into `lifecycle` 3.0.0. Upgrading: [UPGRADE-3.0.md](plugins/lifecycle/UPGRADE-3.0.md).
 
 ---
 
 ## What Each Plugin Does
 
-### brain
-**Manages:** Memory, learning, session management
-**Installs:** Global AI config + `.project-brain/` directory + `work-state.md`
-**Skills:** `prime`, `wrap`, `dream` (lesson analyzer), `commit-push-pr`, `setup`
-
-**You get:**
-- Cross-session memory (`history.md`, `instructions.md`)
-- Lesson capture inbox → `dream` skill routes to permanent destinations
-- Session start/end workflow
-
-**[Read more →](plugins/brain/README.md)**
-
----
-
 ### lifecycle
-**Manages:** Features, backlog, PRs, task tracking
-**Installs:** `work-state.md` + `.features/` directory
-**Skills:** `plan-product`, `write-feature`, `write-spec`, `write-plan`, `write-tasks`, `archive-feature`, `review-*`
+**Manages:** Memory, learning, session management, features, backlog, PRs, task tracking
+**Installs:** Global AI config + `.project-brain/` + `work-state.md` + `.features/`
+**Skills:** `prime`, `wrap`, `dream`, `record-decision`, `commit-push-pr`, `plan-product`, `write-feature`, `write-spec`, `review`, `archive-feature`, `setup`
 
 **You get:**
+- Cross-session memory (`history.md`, `instructions.md`) and a session start/end workflow
+- Lesson capture inbox → `dream` skill routes to permanent destinations
 - Feature lifecycle: product planning → idea → spec → plan → tasks → done
 - Backlog for ideas not yet promoted to features
 - PR tracking linked to features
@@ -98,17 +84,15 @@ Each plugin auto-installs its extra gap that not supported by official plugin on
 
 ## Plugin Responsibilities
 
-| What | brain | lifecycle | flutter |
-|------|-------|-----------|---------|
-| **Memory** | ✅ | — | — |
-| **Learning** | ✅ | — | — |
-| **Features** | — | ✅ | — |
-| **Backlog** | Writes (dream) | ✅ Owns | — |
-| **PRs** | — | ✅ | — |
-| **Tasks** | — | ✅ | — |
-| **Bootstrap** | — | — | ✅ |
-
-**Integration:** `brain` + `lifecycle` share `work-state.md` with HTML comment fences for multi-writer safety.
+| What | lifecycle | flutter |
+|------|-----------|---------|
+| **Memory** | ✅ | — |
+| **Learning** | ✅ | — |
+| **Features** | ✅ | — |
+| **Backlog** | ✅ | — |
+| **PRs** | ✅ | — |
+| **Tasks** | ✅ | — |
+| **Bootstrap** | — | ✅ |
 
 ---
 
@@ -119,9 +103,9 @@ Each plugin auto-installs its extra gap that not supported by official plugin on
 Each plugin writes `.ai-workspace/plugins/<name>.md` on first install — this is what `setup` checks to avoid reinstalling every session.
 
 **2. Start using skills:**
-- `/brain:prime` — Session start (also runs automatically; summarizes `work-state.md`, including
-  suggested next steps per feature if `lifecycle`'s gate columns are present)
-- `/brain:wrap` — Session end
+- `/lifecycle:prime` — Session start (also runs automatically; summarizes `work-state.md`, including
+  suggested next steps per feature)
+- `/lifecycle:wrap` — Session end
 
 See each plugin's README for detailed usage.
 

@@ -1,11 +1,32 @@
 {
-  "version": "2.1.2",
-  "description": "Installation manifest for lifecycle plugin",
-  "global_files": [],
+  "version": "3.0.0",
+  "description": "Installation manifest for lifecycle plugin (includes the former brain plugin)",
+  "global_files": [
+    {
+      "source": "templates/global/about-me.md",
+      "target": "about-me.md"
+    },
+    {
+      "source": "templates/global/CLAUDE.md",
+      "target": "CLAUDE.md"
+    }
+  ],
   "project_files": [
     {
       "source": "templates/project/.ai-workspace/plugins/lifecycle.md.template",
       "target": ".ai-workspace/plugins/lifecycle.md"
+    },
+    {
+      "source": "templates/project/.project-brain/memory/history.md",
+      "target": ".project-brain/memory/history.md"
+    },
+    {
+      "source": "templates/project/.project-brain/memory/instructions.md",
+      "target": ".project-brain/memory/instructions.md"
+    },
+    {
+      "source": "templates/project/.project-brain/inbox/lessons.md",
+      "target": ".project-brain/inbox/lessons.md"
     },
     {
       "source": "templates/project/work-state.md",
@@ -17,6 +38,8 @@
     }
   ],
   "project_dirs": [
+    ".project-brain/inbox/archive",
+    ".project-brain/runbooks",
     ".features",
     ".ai-workspace/plugins"
   ]

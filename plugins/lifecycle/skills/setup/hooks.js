@@ -12,7 +12,7 @@ module.exports = {
     // edge cases where superpowers was declared but not yet installed.
     const tracking = path.join(projectRoot, '.ai-workspace/plugins/superpowers.md');
     if (!fs.existsSync(tracking)) {
-      console.error('[lifecycle-setup] Warning: superpowers plugin not detected. lifecycle v2 depends on obra/superpowers for planning and execution skills. Install it or verify the plugin system resolved the dependency.');
+      console.error('[lifecycle-setup] Warning: superpowers plugin not detected. lifecycle depends on obra/superpowers for planning and execution skills. Install it or verify the plugin system resolved the dependency.');
     }
   }
 };
