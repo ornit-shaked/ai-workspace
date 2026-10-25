@@ -1,8 +1,3 @@
-# Brain
+# Brain (deprecated shim)
 
-Always-on rule for project memory and session management.
-
-- All writing: minimal, accurate, exact words only. No stories. One fact, one location.
-- At session start, use the `prime` skill to load context.
-- At session end, use the `wrap` skill to update history and capture learnings.
-- When a decision has been made and may need recording, use the `record-decision` skill.
+brain 2.0.0 is a shim: `plugin.json`, a SessionStart hook running `notice.js`, and this file. It deliberately breaks the "Common shape" in `plugins/AGENTS.md` (no `skills/setup/`, no `lib/installer.js`). All brain functionality lives in `plugins/lifecycle/`. Do not add features here.

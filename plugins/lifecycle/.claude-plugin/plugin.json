@@ -1,7 +1,7 @@
 {
   "name": "lifecycle",
-  "version": "2.1.2",
-  "description": "Feature lifecycle management — structured progression from idea to implementation",
+  "version": "3.0.0",
+  "description": "Feature lifecycle and project memory — context, state, history, and structured progression from idea to implementation",
   "author": {
     "name": "Ornit Shaked",
     "url": "https://github.com/ornit-shaked"
@@ -15,9 +15,15 @@
     "plan",
     "review",
     "product-management",
-    "superpowers"
+    "superpowers",
+    "memory",
+    "history",
+    "second-brain"
   ],
   "dependencies": [
-    { "name": "superpowers", "marketplace": "claude-plugins-official" }
+    {
+      "name": "superpowers",
+      "marketplace": "claude-plugins-official"
+    }
   ]
 }

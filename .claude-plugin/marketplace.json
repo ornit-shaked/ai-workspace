@@ -8,12 +8,12 @@
     {
       "name": "brain",
       "source": "./plugins/brain",
-      "description": "Second brain - project memory, tasks, plans, and history"
+      "description": "Deprecated — merged into lifecycle 3.0.0. Uninstall brain."
     },
     {
       "name": "lifecycle",
       "source": "./plugins/lifecycle",
-      "description": "Feature lifecycle management — structured progression from idea to implementation"
+      "description": "Feature lifecycle and project memory — context, state, history, and structured progression from idea to implementation"
     },
     {
       "name": "flutter",

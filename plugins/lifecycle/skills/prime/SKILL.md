@@ -13,7 +13,7 @@ triggers:
 
 First, verify the project-brain structure exists:
 - Check if `.project-brain/memory/history.md` exists
-- If missing → Report: "Brain not initialized. Run /brain:setup first." and exit
+- If missing → Report: "Project memory not initialized. Run /lifecycle:setup first." and exit
 
 ## Run the digest
 

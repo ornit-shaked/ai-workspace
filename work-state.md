@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-flutter-flame-rive-support: plugin v1.2.1 — SessionStart hook indexes rules (Claude ignores plugin rules/), Rive test fakes native layer, .gitkeep for empty asset dirs. Next: update plugin, re-run live rules check in scratch project; then doc-governance spec. Open: remove CLAUDE.md in favour of AGENTS.md workspace-wide.
+lifecycle-v3-merge (router Phase 0, approved 2026-10-23): merge brain into lifecycle v3.0.0, no behaviour change. feature.md + spec.md written. Next, in a new session: lifecycle:review spec → user approves spec_ok → writing-plans → plan review → build. Design: "Lifecycle Mission Router" proposal v4. Uncommitted flutter changes on master are unrelated.
 <!-- brain:current-focus-end -->
 
 ---
@@ -25,6 +25,7 @@ flutter-flame-rive-support: plugin v1.2.1 — SessionStart hook indexes rules (C
 | **doc-governance** - Documentation & Rule-Creation Governance | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **lifecycle-v3-merge** - Merge brain into lifecycle v3.0.0 (router Phase 0) | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---

@@ -2,7 +2,9 @@
 
 Feature lifecycle management — from raw idea to shipped code.
 
-**Version:** 2.1.2 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) (auto-installed)
+**Version:** 3.0.0 • **License:** MIT • **Requires:** [`obra/superpowers`](https://github.com/obra/superpowers) (auto-installed)
+
+> **3.0.0 includes the former `brain` plugin** (project memory, `prime`, `wrap`, `dream`, `record-decision`, `commit-push-pr`). Upgrading from `brain` + `lifecycle` 2.x: see [UPGRADE-3.0.md](UPGRADE-3.0.md).
 
 ---
 
@@ -106,6 +108,26 @@ Defined in `.features/AGENTS.md` (installed by setup, loaded automatically when 
 - work-state.md fence rules (write only inside comment fences, never advance `_ok` gates)
 - Execution mode selection (executing-plans by default, subagent-driven-development for multi-module)
 - Brainstorming trigger rules (when to use, when to skip)
+
+---
+
+## Project Memory
+
+Formerly the `brain` plugin. Keeps context across sessions.
+
+| Skill | When | What it does |
+|-------|------|-------------|
+| `prime` | Session start (runs automatically after setup) | Digest of Current Focus, last session, open features + next step, stale-handoff warning |
+| `wrap` | Session end | Appends to `history.md`, captures lessons, rewrites Current Focus |
+| `dream` | When the inbox has lessons | Routes lessons to runbooks, instructions, rules or backlog |
+| `record-decision` | After a decision is made | Records it as an ADR, a rule, a code comment, or nothing |
+| `commit-push-pr` | Ready to ship | Commit, push, open a PR |
+
+Installed files:
+- `.project-brain/memory/history.md`, `.project-brain/memory/instructions.md`
+- `.project-brain/inbox/lessons.md`, `.project-brain/runbooks/`
+- `work-state.md` (shared with the feature flow below)
+- Global config: `about-me.md`, `CLAUDE.md` in the agent config directory (skipped if present)
 
 ---
 

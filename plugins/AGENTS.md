@@ -1,12 +1,12 @@
 # Plugins — Agent Guide
 
-Read this before creating a new plugin, or changing how an existing one (`brain/`, `flutter/`,
+Read this before creating a new plugin, or changing how an existing one (`flutter/`,
 `lifecycle/`) installs. For what a shipped plugin *does* for its end users, read that plugin's own
 `README.md` instead — this file is about the mechanics all three share.
 
 ## Common shape
 
-Every plugin (`brain/`, `flutter/`, `lifecycle/`) has this shape.
+Every plugin (`flutter/`, `lifecycle/`) has this shape. Exception: `brain/` is a deprecated shim since lifecycle 3.0.0 (see `brain/AGENTS.md`).
 
 | Path | Purpose |
 |------|---------|
@@ -59,14 +59,14 @@ file copying, install-tracking, the preInstall/postInstall hook contract). Rules
 - **Global vs Project Scope** — global config (`~/.claude/`, `~/.config/devin/`) only holds
   cross-project tooling (`global_files`/`global_dirs`); anything framework-specific (rules, ADRs,
   bootstrap skeletons) is `project_files` only, or it silently leaks into every other project on
-  the machine. `brain` → global & project. `flutter` → project only.
+  the machine. `lifecycle` → global & project. `flutter` → project only.
 - **Plugin-Managed Directories** — plugin output lives in hidden dirs: `.ai-workspace/` (tracking),
   `.project-brain/` (brain), `.features/` (lifecycle), `.claude/`/`.devin/`/`.windsurf/` (agent
   config). Exception: `work-state.md`, `product-roadmap.md` stay at project root (read constantly).
 
 ## Adding a new plugin
 
-Build `plugins/<name>/` per "Common shape" above (copy `brain/` as the reference), follow the
+Build `plugins/<name>/` per "Common shape" above (copy `lifecycle/` as the reference), follow the
 shared installer contract, then:
 
 1. Register it in the root `.claude-plugin/marketplace.json`.
