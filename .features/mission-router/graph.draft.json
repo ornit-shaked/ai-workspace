@@ -1,0 +1,148 @@
+{
+  "$schema": "./graph.schema.json",
+  "version": 1,
+  "skillSets": {
+    "lifecycle": { "title": "lifecycle (built in)", "always": true },
+    "superpowers": { "title": "Superpowers", "plugin": "superpowers" },
+    "mattpocock": { "title": "Matt Pocock skills", "plugin": "mattpocock" }
+  },
+  "aliases": {
+    "mattpocock:to-prd": ["mattpocock:write-a-prd"],
+    "mattpocock:to-issues": ["mattpocock:prd-to-plan", "mattpocock:prd-to-issues"],
+    "mattpocock:domain-model": ["mattpocock:grill-me"]
+  },
+  "tracks": {
+    "loop": {
+      "title": "Session loop",
+      "section": null,
+      "when": "Every session, whatever the track. New work becomes a Goal placed in a section; the section is the track.",
+      "sessions": [
+        {
+          "id": "every",
+          "label": "Every session",
+          "steps": [
+            { "id": "setup", "title": "setup", "mode": "script", "model": "none", "run": "skills/setup/script.js", "reads": ["tracking file", ".ai-workspace/lifecycle.json"], "writes": ["missing files only", "lifecycle-flow.html when inputs changed"], "why": "SessionStart hook. Fast path when the version matches. Exits at once for worker sessions." },
+            { "id": "prime", "title": "prime digest", "mode": "script", "model": "none", "run": "skills/prime/run.js", "reads": ["work-state sections", ".features gates"], "writes": ["digest (printed only)"], "why": "SessionStart hook. No LLM. Skipped on resume and for worker sessions." },
+            { "id": "pick", "title": "pick mission", "mode": "main", "model": "session", "reads": ["digest"], "writes": [], "why": "You choose, or accept the suggestion. The section an item sits in is its track." },
+            { "id": "run", "title": "run its track", "mode": "main", "model": "session", "skill": ["lifecycle:run"], "reads": ["resolved plan"], "writes": ["per track"], "why": "Orchestrator. Holds the resolved step list and one-line results only." },
+            { "id": "wrap", "title": "wrap", "mode": "main", "model": "session", "skill": ["lifecycle:wrap"], "run": "skills/wrap/wrap.js", "reads": ["this session"], "writes": ["history line", "Current Focus", "ticks"], "why": "The agent decides the focus text; wrap.js writes it, the history line and ticks. Lessons off." }
+          ]
+        },
+        {
+          "id": "intake",
+          "label": "Intake",
+          "steps": [
+            { "id": "request", "title": "new request", "mode": "gate", "model": "you", "reads": [], "writes": [], "why": "From you, a Spike decision, or the Inbox." },
+            { "id": "goal", "title": "write Goal + place", "mode": "main", "model": "session", "skill": ["lifecycle:write-goal"], "reads": ["request", "AGENTS.md size/risk rule"], "writes": [".features/{id}/feature.md (Feature)", "line in Tasks / Patches / Spikes"], "why": "Replaces a separate classify step. No extra model call." },
+            { "id": "lessons", "title": "lessons → dream", "mode": "off", "model": "none", "skill": ["lifecycle:dream"], "reads": [], "writes": [], "why": "Off until lesson capture is redesigned." }
+          ]
+        }
+      ]
+    },
+    "feature": {
+      "title": "Feature",
+      "section": "lifecycle:features",
+      "when": "L size, a new public contract, or any risk flag. Three sessions separated by your two gates.",
+      "sessions": [
+        {
+          "id": "define",
+          "label": "Define",
+          "endsAt": "spec_ok",
+          "steps": [
+            { "id": "goal", "title": "Goal", "mode": "main", "model": "session", "skill": ["lifecycle:write-goal"], "reads": ["request"], "writes": [".features/{id}/feature.md"], "why": "≤15 lines. Talks to you." },
+            { "id": "scout", "title": "scout", "mode": "sub", "agent": "scout", "model": "sonnet", "skill": ["lifecycle:scout"], "reads": ["repo (read-only)"], "writes": ["returns: touched files, hot files, size"], "why": "Reads a lot, returns ≤10 lines. Confirms the track." },
+            { "id": "explore", "title": "explore Q&A", "mode": "main", "model": "session", "skill": [{ "use": "mattpocock:grill-me", "when": "design_given" }, "superpowers:brainstorming", "mattpocock:domain-model", "lifecycle:write-spec"], "reads": ["feature.md", "scout result"], "writes": [".features/{id}/notes.md (transient)"], "why": "Interactive, so it stays in the main agent." },
+            { "id": "spec", "title": "write spec", "mode": "sub", "agent": "spec-writer", "model": "opus", "skill": ["mattpocock:to-prd", "superpowers:brainstorming", "lifecycle:write-spec"], "reads": ["feature.md", "notes.md", "scout result"], "writes": [".features/{id}/spec.md"], "loop": { "back": "spec", "with": "spec-writer", "after": "review-spec", "max": 2 }, "why": "The one design doc. Output always redirected to spec.md." },
+            { "id": "review-spec", "title": "review spec", "mode": "sub", "agent": "reviewer", "model": "sonnet", "modelOnRisk": "opus", "skill": ["lifecycle:review"], "policy": "spec", "reads": ["spec.md", "feature.md"], "writes": [".features/{id}/spec.review.md"], "why": "Fresh eyes, read-only tools." },
+            { "id": "spec-ok", "title": "approve Goal + spec", "mode": "gate", "model": "you", "gate": "spec_ok", "reads": ["review summary"], "writes": ["spec_ok ✅"], "why": "One gate for both. Then wrap; the session ends." }
+          ]
+        },
+        {
+          "id": "plan",
+          "label": "Plan",
+          "endsAt": "plan_ok",
+          "steps": [
+            { "id": "plan", "title": "plan", "mode": "sub", "agent": "planner", "model": "opus", "skill": ["mattpocock:to-issues", "superpowers:writing-plans", "lifecycle:plan"], "reads": ["spec.md"], "writes": [".features/{id}/plan.md"], "loop": { "back": "plan", "with": "planner", "after": "review-plan", "max": 2 }, "why": "Tasks with Wave, Depends On, Outputs. Vertical slices are split into small tasks." },
+            { "id": "review-plan", "title": "review plan", "mode": "sub", "agent": "reviewer", "model": "sonnet", "skill": ["lifecycle:review"], "policy": "plan", "reads": ["plan.md", "spec.md"], "writes": [".features/{id}/plan.review.md"], "why": "Coverage, granularity, cycles." },
+            { "id": "plan-ok", "title": "approve plan", "mode": "gate", "model": "you", "gate": "plan_ok", "reads": ["review summary"], "writes": ["plan_ok ✅"], "why": "Then wrap; the session ends." }
+          ]
+        },
+        {
+          "id": "build",
+          "label": "Build",
+          "endsAt": "merge",
+          "steps": [
+            { "id": "worktree", "title": "worktrees", "mode": "script", "model": "none", "run": "skills/run/worktree.js", "reads": ["plan.md waves"], "writes": [".worktrees/{id}-{task}", ".ai-workspace/role = worker"], "why": "Deterministic. The role marker makes sessions there skip prime." },
+            { "id": "build", "title": "build tasks", "mode": "sub", "agent": "builder", "model": "sonnet", "parallel": "wave", "background": true, "skill": ["superpowers:subagent-driven-development", "lifecycle:build"], "tddSkill": ["superpowers:test-driven-development", "mattpocock:tdd", "lifecycle:tdd"], "tdd": "rule", "test": "affected", "loop": { "back": "build", "with": "fixer", "max": 3 }, "reads": ["one task of plan.md"], "writes": ["code", "plan.md checkbox"], "why": "One builder per task; tasks in the same wave run in parallel." },
+            { "id": "wave-test", "title": "wave test", "mode": "script", "model": "none", "run": "skills/test-gate/test-gate.js", "test": "area", "background": true, "reads": ["changed dirs"], "writes": ["one line"], "why": "After each wave. The agent sees failures only." },
+            { "id": "review-code", "title": "code ∥ security review", "mode": "sub", "agent": "reviewer", "model": "sonnet", "parallel": "reviewers", "skill": ["lifecycle:review"], "policy": "code", "alsoOnRisk": { "agent": "security-reviewer", "model": "opus" }, "loop": { "back": "review-code", "with": "fixer", "max": 2 }, "reads": ["diff", "plan.md", "spec.md"], "writes": [".features/{id}/reviews/*.code.review.md"], "why": "Security review only with a risk flag. Only the failed reviewer re-runs." },
+            { "id": "full-test", "title": "full + integration", "mode": "script", "model": "none", "run": "skills/test-gate/test-gate.js", "test": "full+integration", "background": true, "reads": ["branch"], "writes": ["one line"], "why": "Once, before the PR." },
+            { "id": "ship", "title": "ship", "mode": "script", "model": "none", "run": "skills/ship/ship.js", "reads": ["mission", "test summary"], "writes": ["commit", "push", "PR"], "why": "Replaces commit-push-pr. An LLM sees stderr only on failure." },
+            { "id": "merge", "title": "merge", "mode": "gate", "model": "you", "gate": "merge", "reads": ["PR"], "writes": ["master"], "why": "Always yours." },
+            { "id": "close", "title": "archive + wrap", "mode": "script", "model": "none", "run": "skills/archive-feature/archive.js", "test": "regression", "reads": ["Features row"], "writes": ["Completed row", "history line"], "why": "Row move is deterministic. Regression runs once per session after merges." }
+          ]
+        }
+      ]
+    },
+    "task": {
+      "title": "Task",
+      "section": "lifecycle:tasks",
+      "when": "M size, no new public contract. One session, no spec, no plan file.",
+      "sessions": [
+        {
+          "id": "one",
+          "label": "One session",
+          "endsAt": "merge",
+          "steps": [
+            { "id": "goal", "title": "Goal line", "mode": "main", "model": "session", "skill": ["lifecycle:write-goal"], "reads": ["request"], "writes": ["line in Tasks"], "why": "Usually already written at intake." },
+            { "id": "scout", "title": "scout + steps", "mode": "sub", "agent": "scout", "model": "sonnet", "skill": ["lifecycle:scout"], "reads": ["repo"], "writes": ["3–8 step checkboxes under the line"], "why": "Warns when the size crosses into Feature." },
+            { "id": "build", "title": "build", "mode": "sub", "agent": "builder", "model": "sonnet", "skill": ["superpowers:executing-plans", "lifecycle:build"], "tddSkill": ["superpowers:test-driven-development", "mattpocock:tdd", "lifecycle:tdd"], "tdd": "rule", "test": "affected", "loop": { "back": "build", "with": "fixer", "max": 3 }, "reads": ["steps"], "writes": ["code", "step ticks"], "why": "TDD only for bugs and logic paths." },
+            { "id": "full-test", "title": "full suite", "mode": "script", "model": "none", "run": "skills/test-gate/test-gate.js", "test": "full", "background": true, "reads": ["branch"], "writes": ["one line"], "why": "Once." },
+            { "id": "review", "title": "review", "mode": "sub", "agent": "reviewer", "model": "sonnet", "skill": ["lifecycle:review"], "policy": "code", "loop": { "back": "review", "with": "fixer", "max": 2 }, "reads": ["diff", "steps"], "writes": ["verdict"], "why": "Against the steps, not a spec." },
+            { "id": "ship", "title": "ship", "mode": "script", "model": "none", "run": "skills/ship/ship.js", "reads": ["mission"], "writes": ["commit", "push", "PR"], "why": "Deterministic." },
+            { "id": "merge", "title": "merge", "mode": "gate", "model": "you", "gate": "merge", "reads": ["PR"], "writes": ["master"], "why": "Yours." },
+            { "id": "close", "title": "tick + wrap", "mode": "script", "model": "none", "run": "skills/wrap/wrap.js", "reads": ["Tasks line"], "writes": ["line → history"], "why": "Mechanical." }
+          ]
+        }
+      ]
+    },
+    "patch": {
+      "title": "Patch",
+      "section": "lifecycle:patches",
+      "when": "S size, one area. Runs in the main agent. Three or more patches in one area run as one batch.",
+      "sessions": [
+        {
+          "id": "one",
+          "label": "One session (or one batch)",
+          "endsAt": "merge",
+          "steps": [
+            { "id": "fix", "title": "fix", "mode": "main", "model": "session", "skill": ["lifecycle:build"], "tdd": "bug-only", "test": "affected", "loop": { "back": "fix", "with": "self", "max": 2 }, "reads": ["Patches line"], "writes": ["code"], "why": "No sub-agent: for a small change a cold context re-reads more than it saves." },
+            { "id": "test", "title": "affected tests", "mode": "script", "model": "none", "run": "skills/test-gate/test-gate.js", "test": "affected", "testOnHotFile": "full", "reads": ["changed files"], "writes": ["one line"], "why": "Full suite only if a hot file changed." },
+            { "id": "ship", "title": "ship", "mode": "script", "model": "none", "run": "skills/ship/ship.js", "reads": ["mission"], "writes": ["commit", "push", "PR"], "why": "Deterministic." },
+            { "id": "merge", "title": "merge", "mode": "gate", "model": "you", "gate": "merge", "reads": ["PR"], "writes": ["master"], "why": "Yours." },
+            { "id": "close", "title": "tick", "mode": "script", "model": "none", "run": "skills/wrap/wrap.js", "reads": ["Patches line"], "writes": ["history line"], "why": "No LLM at all." }
+          ]
+        }
+      ]
+    },
+    "spike": {
+      "title": "Spike",
+      "section": "lifecycle:spikes",
+      "when": "A question. No code, no tests. Ends with your decision.",
+      "sessions": [
+        {
+          "id": "one",
+          "label": "One session",
+          "endsAt": "decision",
+          "steps": [
+            { "id": "frame", "title": "frame questions", "mode": "main", "model": "session", "skill": ["superpowers:brainstorming", "mattpocock:grill-me", "lifecycle:research"], "reads": ["Spikes line"], "writes": ["≤5 questions"], "why": "Talks to you." },
+            { "id": "research", "title": "research", "mode": "sub", "agent": "researcher", "model": "sonnet", "parallel": "question", "background": true, "skill": ["lifecycle:research"], "reads": ["repo, web (read-only)"], "writes": ["returns findings"], "why": "One per question." },
+            { "id": "findings", "title": "findings", "mode": "sub", "agent": "researcher", "model": "opus", "skill": ["lifecycle:research"], "reads": ["research results"], "writes": [".ai-workspace/spikes/{slug}.md"], "why": "2–3 options with their cost." },
+            { "id": "decide", "title": "decide", "mode": "gate", "model": "you", "gate": "decision", "reads": ["findings"], "writes": ["choice"], "why": "Pick or drop." },
+            { "id": "place", "title": "place new items", "mode": "main", "model": "session", "skill": ["lifecycle:write-goal", "lifecycle:record-decision"], "reads": ["choice"], "writes": ["new lines in sections", "ADR if needed"], "why": "Back to intake." }
+          ]
+        }
+      ]
+    }
+  }
+}
