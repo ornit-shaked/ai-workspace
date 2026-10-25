@@ -4,7 +4,7 @@
 *What you're working on right now.*
 
 <!-- brain:current-focus-begin -->
-lifecycle-v3-merge (router Phase 0, approved 2026-10-23): merge brain into lifecycle v3.0.0, no behaviour change. feature.md + spec.md written. Next, in a new session: lifecycle:review spec → user approves spec_ok → writing-plans → plan review → build. Design: "Lifecycle Mission Router" proposal v4. Uncommitted flutter changes on master are unrelated.
+lifecycle 3.0.0 merge (PR #10) awaits review + one real install, then merge. Next: mission-router — Goal, spec, graph.draft.json and flow.html in .features/mission-router/ (stacked on PR #10). Next step: lifecycle:review spec → user approves spec_ok → plan (5 releasable slices, spec §14) → build.
 <!-- brain:current-focus-end -->
 
 ---
@@ -26,6 +26,7 @@ lifecycle-v3-merge (router Phase 0, approved 2026-10-23): merge brain into lifec
 | **usage-cost-optimization** - Usage Cost Optimization for Brain/Lifecycle Plugins | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **flutter-flame-rive-support** - Flame and Rive Support with Profiles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **lifecycle-v3-merge** - Merge brain into lifecycle v3.0.0 (router Phase 0) | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **mission-router** - Graph-driven tracks (Feature/Task/Patch/Spike), scripts, test-gate, flow viewer | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 <!-- lifecycle:features-end -->
 
 ---
